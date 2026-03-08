@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Download, Pencil, Trash2, Check, X } from "lucide-react";
 import { useEditStore } from "@/lib/edit-store";
 import ImageUploader from "@/components/ImageUploader";
-import ManageAssetsModal from "@/components/ManageAssetsModal";
 import type { Category } from "@/lib/types";
 
 interface CategoryCardProps {
@@ -13,20 +12,14 @@ interface CategoryCardProps {
   brandSlug: string;
 }
 
-const isCustom = (id: string) => id.startsWith("cat-");
-
 export default function CategoryCard({ category, brandSlug }: CategoryCardProps) {
-  const { editMode, updateCategory, deleteCategory, getAssets, getColours } = useEditStore();
+  const { editMode, updateCategory, deleteCategory } = useEditStore();
   const isColours = category.categoryType === "colours";
-  const customCount = isCustom(category.id)
-    ? (isColours ? getColours(category.id).length : getAssets(category.id).length)
-    : 0;
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(category.name);
   const [description, setDescription] = useState(category.description);
   const [previewImage, setPreviewImage] = useState(category.previewImage);
   const [downloadAllUrl, setDownloadAllUrl] = useState(category.downloadAllUrl);
-  const [showModal, setShowModal] = useState(false);
 
   // Re-sync local state when prop changes
   useEffect(() => {
@@ -144,50 +137,32 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
           <div>
             <h3 className="font-semibold text-[#e8e8e8]">{name}</h3>
             <p className="text-xs text-[#888] mt-0.5">
-              {isColours ? "Colour palette" : `${isCustom(category.id) ? customCount : category.assetCount} assets`}
+              {isColours ? "Colour palette" : `${category.assetCount} assets`}
             </p>
           </div>
           {description && (
             <p className="text-sm text-[#a0a0a0] flex-1">{description}</p>
           )}
           <div className="flex gap-2 mt-auto pt-2">
-            {isCustom(category.id) ? (
-              /* Custom categories: modal-based browse/manage */
-              <button
-                onClick={() => setShowModal(true)}
-                className="flex-1 inline-flex items-center justify-center text-xs font-medium bg-[#2d2d2d] border border-[#444] text-[#e8e8e8] px-3 py-1.5 rounded hover:bg-[#333] transition-colors whitespace-nowrap"
+            <Link
+              href={`/${brandSlug}/${category.slug}`}
+              className="flex-1 inline-flex items-center justify-center text-xs font-medium bg-[#2d2d2d] border border-[#444] text-[#e8e8e8] px-3 py-1.5 rounded hover:bg-[#333] transition-colors whitespace-nowrap"
+            >
+              {isColours ? "Browse palette" : "Browse assets"}
+            </Link>
+            {!isColours && category.downloadAllUrl && category.downloadAllUrl !== "#" && (
+              <a
+                href={category.downloadAllUrl}
+                className="inline-flex items-center justify-center text-xs font-medium bg-white text-black px-3 py-1.5 rounded hover:opacity-80 active:scale-95 transition-all duration-150"
+                title="Download All"
               >
-                {editMode
-                  ? (isColours ? "Manage palette" : "Manage assets")
-                  : (isColours ? "Browse palette" : "Browse assets")}
-              </button>
-            ) : (
-              /* Static categories: link to dedicated page + download */
-              <>
-                <Link
-                  href={`/${brandSlug}/${category.slug}`}
-                  className="flex-1 inline-flex items-center justify-center text-xs font-medium bg-[#2d2d2d] border border-[#444] text-[#e8e8e8] px-3 py-1.5 rounded hover:bg-[#333] transition-colors whitespace-nowrap"
-                >
-                  {isColours ? "Browse palette" : "Browse assets"}
-                </Link>
-                {!isColours && (
-                  <a
-                    href={category.downloadAllUrl}
-                    className="inline-flex items-center justify-center text-xs font-medium bg-white text-black px-3 py-1.5 rounded hover:opacity-80 active:scale-95 transition-all duration-150"
-                    title="Download All"
-                  >
-                    <Download size={12} />
-                  </a>
-                )}
-              </>
+                <Download size={12} />
+              </a>
             )}
           </div>
         </div>
       </div>
 
-      {showModal && (
-        <ManageAssetsModal category={category} onClose={() => setShowModal(false)} />
-      )}
     </>
   );
 }

@@ -40,6 +40,7 @@ interface EditStoreContextType {
   updateMainSectionName: (brandId: string, name: string) => void;
   // Categories
   getCategories: (brandId: string, subBrandId?: string) => Category[];
+  getCategoryBySlug: (brandId: string, slug: string) => Category | undefined;
   addCategory: (brandId: string, subBrandId?: string, categoryType?: "assets" | "colours") => void;
   updateCategory: (id: string, changes: Partial<Pick<Category, "name" | "description" | "previewImage" | "downloadAllUrl">>) => void;
   deleteCategory: (id: string) => void;
@@ -363,6 +364,28 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
     [data]
   );
 
+  const getCategoryBySlug = useCallback(
+    (brandId: string, slug: string): Category | undefined => {
+      // Search mock categories (main brand + all sub-brands)
+      const subBrands = getMockSubBrands(brandId);
+      const allMock = [
+        ...getMockBrandCategories(brandId),
+        ...subBrands.flatMap((sb) => getMockSubBrandCategories(sb.id)),
+      ];
+      const mockMatch = allMock
+        .filter((c) => !data.deletedCategoryIds.includes(c.id))
+        .find((c) => c.slug === slug);
+      if (mockMatch) {
+        return data.categoryOverrides[mockMatch.id]
+          ? { ...mockMatch, ...data.categoryOverrides[mockMatch.id] }
+          : mockMatch;
+      }
+      // Search custom categories
+      return data.customCategories.find((c) => c.brandId === brandId && c.slug === slug);
+    },
+    [data]
+  );
+
   const addCategory = useCallback(
     (brandId: string, subBrandId?: string, categoryType?: "assets" | "colours") => {
       const id = `cat-${genId()}`;
@@ -602,6 +625,7 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
         getMainSectionName,
         updateMainSectionName,
         getCategories,
+        getCategoryBySlug,
         addCategory,
         updateCategory,
         deleteCategory,

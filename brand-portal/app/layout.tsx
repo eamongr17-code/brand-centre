@@ -11,8 +11,8 @@ const mozillaText = Mozilla_Text({
 });
 
 export const metadata: Metadata = {
-  title: "Easygo Brand Portal",
-  description: "Brand asset portal for Easygo and its brands.",
+  title: "Atlas Brand Centre",
+  description: "Brand asset portal for Atlas and its brands.",
 };
 
 export default function RootLayout({

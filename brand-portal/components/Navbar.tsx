@@ -17,13 +17,18 @@ export default function Navbar() {
       }`}
     >
       {/* Logo */}
-      <Link
-        href="/"
-        className="shrink-0 inline-flex items-center gap-2 font-bold text-base tracking-tight text-[#e8e8e8] hover:text-white transition-colors"
-      >
-        <Home size={16} />
-        <span className="hidden sm:inline">Easygo Brand Portal</span>
-      </Link>
+      <div className="shrink-0 flex items-center gap-3">
+        <Link href="/" className="hover:opacity-80 transition-opacity">
+          <img src="/atlas-wordmark.svg" alt="Atlas" className="h-7 w-auto" />
+        </Link>
+        <Link
+          href="/"
+          className="text-[#666] hover:text-[#e8e8e8] transition-colors"
+          title="Home"
+        >
+          <Home size={16} />
+        </Link>
+      </div>
 
       {/* Search — fills remaining space */}
       <div className="flex-1 flex justify-center">
