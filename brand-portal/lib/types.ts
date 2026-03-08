@@ -41,6 +41,17 @@ export interface Category {
   categoryType?: "assets" | "colours";
 }
 
+export interface BrandSection {
+  id: string;
+  brandId: string;
+  name: string;
+  sortOrder: number;
+  /** True if this section is backed by a real SubBrand from mock-data */
+  isSubBrandBacked?: boolean;
+  /** The SubBrand id this section represents (only set when isSubBrandBacked=true) */
+  subBrandId?: string;
+}
+
 export interface QuickLink {
   id: string;
   brandId: string;

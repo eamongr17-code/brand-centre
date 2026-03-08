@@ -8,12 +8,13 @@ import {
   useCallback,
   ReactNode,
 } from "react";
-import type { QuickLink, Asset, Category, GitHubConfig, BrandColour, BrandColourEntry } from "./types";
+import type { QuickLink, Asset, Category, GitHubConfig, BrandColour, BrandColourEntry, BrandSection } from "./types";
 import {
   quickLinks as mockQuickLinks,
   getAssetsForCategory as getMockAssets,
   getCategoriesForBrand as getMockBrandCategories,
   getCategoriesForSubBrand as getMockSubBrandCategories,
+  getSubBrandsForBrand as getMockSubBrands,
   getColoursForCategory as getMockColours,
 } from "@/data/mock-data";
 
@@ -30,6 +31,13 @@ interface EditStoreContextType {
   setHomeImage: (url: string) => void;
   getBrandImage: (brandId: string) => string;
   setBrandImage: (brandId: string, url: string) => void;
+  // Sections
+  getSections: (brandId: string) => BrandSection[];
+  addSection: (brandId: string) => void;
+  updateSection: (id: string, changes: { name?: string }) => void;
+  deleteSection: (id: string) => void;
+  getMainSectionName: (brandId: string) => string;
+  updateMainSectionName: (brandId: string, name: string) => void;
   // Categories
   getCategories: (brandId: string, subBrandId?: string) => Category[];
   addCategory: (brandId: string, subBrandId?: string, categoryType?: "assets" | "colours") => void;
@@ -62,6 +70,12 @@ interface PersistedData {
   quickLinks: Record<string, QuickLink[]>;
   homeImage: string;
   brandImages: Record<string, string>;
+  // Sections
+  customSections: BrandSection[];
+  deletedSectionIds: string[];
+  sectionOverrides: Record<string, { name?: string }>;
+  mainSectionNames: Record<string, string>;
+  // Categories
   customCategories: Category[];
   deletedCategoryIds: string[];
   categoryOverrides: Record<string, Partial<Category>>;
@@ -78,6 +92,10 @@ const EMPTY: PersistedData = {
   quickLinks: {},
   homeImage: "",
   brandImages: {},
+  customSections: [],
+  deletedSectionIds: [],
+  sectionOverrides: {},
+  mainSectionNames: {},
   customCategories: [],
   deletedCategoryIds: [],
   categoryOverrides: {},
@@ -218,6 +236,108 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
       persist((prev) => ({
         ...prev,
         brandImages: { ...prev.brandImages, [brandId]: url },
+      }));
+    },
+    [persist]
+  );
+
+  // ── Sections ─────────────────────────────────────────────────────────────
+
+  const getSections = useCallback(
+    (brandId: string): BrandSection[] => {
+      const subBrandSections = getMockSubBrands(brandId)
+        .filter((sb) => !data.deletedSectionIds.includes(sb.id))
+        .map((sb) => ({
+          id: sb.id,
+          brandId,
+          name: data.sectionOverrides[sb.id]?.name ?? sb.name,
+          sortOrder: sb.sortOrder,
+          isSubBrandBacked: true,
+          subBrandId: sb.id,
+        }));
+      const custom = data.customSections.filter((s) => s.brandId === brandId);
+      return [...subBrandSections, ...custom].sort((a, b) => a.sortOrder - b.sortOrder);
+    },
+    [data]
+  );
+
+  const addSection = useCallback(
+    (brandId: string) => {
+      const id = `section-${genId()}`;
+      const newSection: BrandSection = {
+        id,
+        brandId,
+        name: "New section",
+        sortOrder: 999,
+      };
+      persist((prev) => ({
+        ...prev,
+        customSections: [...prev.customSections, newSection],
+      }));
+    },
+    [persist]
+  );
+
+  const updateSection = useCallback(
+    (id: string, changes: { name?: string }) => {
+      persist((prev) => {
+        if (prev.customSections.some((s) => s.id === id)) {
+          return {
+            ...prev,
+            customSections: prev.customSections.map((s) =>
+              s.id === id ? { ...s, ...changes } : s
+            ),
+          };
+        }
+        return {
+          ...prev,
+          sectionOverrides: {
+            ...prev.sectionOverrides,
+            [id]: { ...(prev.sectionOverrides[id] ?? {}), ...changes },
+          },
+        };
+      });
+    },
+    [persist]
+  );
+
+  const deleteSection = useCallback(
+    (id: string) => {
+      persist((prev) => {
+        const isCustomSection = prev.customSections.some((s) => s.id === id);
+        if (isCustomSection) {
+          return {
+            ...prev,
+            customSections: prev.customSections.filter((s) => s.id !== id),
+            customCategories: prev.customCategories.filter((c) => c.subBrandId !== id),
+          };
+        }
+        // Sub-brand backed section — also delete its mock categories
+        const mockCatIds = getMockSubBrandCategories(id).map((c) => c.id);
+        return {
+          ...prev,
+          deletedSectionIds: [...prev.deletedSectionIds, id],
+          deletedCategoryIds: [
+            ...prev.deletedCategoryIds,
+            ...mockCatIds.filter((cid) => !prev.deletedCategoryIds.includes(cid)),
+          ],
+          customCategories: prev.customCategories.filter((c) => c.subBrandId !== id),
+        };
+      });
+    },
+    [persist]
+  );
+
+  const getMainSectionName = useCallback(
+    (brandId: string) => data.mainSectionNames[brandId] ?? "",
+    [data.mainSectionNames]
+  );
+
+  const updateMainSectionName = useCallback(
+    (brandId: string, name: string) => {
+      persist((prev) => ({
+        ...prev,
+        mainSectionNames: { ...prev.mainSectionNames, [brandId]: name },
       }));
     },
     [persist]
@@ -475,6 +595,12 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
         setHomeImage,
         getBrandImage,
         setBrandImage,
+        getSections,
+        addSection,
+        updateSection,
+        deleteSection,
+        getMainSectionName,
+        updateMainSectionName,
         getCategories,
         addCategory,
         updateCategory,
