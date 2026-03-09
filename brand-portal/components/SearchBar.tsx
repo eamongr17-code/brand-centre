@@ -18,6 +18,7 @@ interface CategoryResult {
   brandColor: string;
   categorySlug: string;
   assetCount: number;
+  categoryType?: string;
 }
 
 interface AssetResult {
@@ -106,6 +107,21 @@ export default function SearchBar() {
         if (!showInternal && cat.visibility === "internal") continue;
 
         if (cat.categoryType === "colours") {
+          // Index the palette category itself so headings like "Brand Colours" are searchable
+          items.push({
+            type: "category",
+            id: cat.id,
+            name: cat.name,
+            description: cat.description,
+            brandId: brand.id,
+            brandName: brand.name,
+            brandSlug: brand.slug,
+            brandColor: brand.color,
+            categorySlug: cat.slug,
+            assetCount: 0,
+            categoryType: "colours",
+          });
+          // Also index individual colours
           const catColours = getColours(cat.id);
           for (const colour of catColours) {
             items.push({
@@ -321,12 +337,12 @@ export default function SearchBar() {
                           {item.name}
                         </span>
                         <span className="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-amber-900/50 text-amber-400 font-medium">
-                          Category
+                          {item.categoryType === "colours" ? "Palette" : "Category"}
                         </span>
                       </div>
                       <div className="flex items-center gap-1.5 mt-0.5">
                         <span className="text-xs text-[#666] truncate">
-                          {item.brandName} · {item.assetCount} assets
+                          {item.brandName}{item.categoryType !== "colours" ? ` · ${item.assetCount} assets` : ""}
                         </span>
                       </div>
                     </div>
@@ -360,7 +376,9 @@ export default function SearchBar() {
                           Colour
                         </span>
                       </div>
-                      <span className="text-xs text-[#555] font-mono">{item.hex}</span>
+                      <span className="text-xs text-[#555]">
+                        {item.brandName} · <span className="font-mono">{item.hex}</span>
+                      </span>
                     </div>
                     <button
                       onClick={(e) => copyColourHex(item.id, item.hex, e)}

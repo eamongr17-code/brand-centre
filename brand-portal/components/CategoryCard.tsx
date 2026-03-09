@@ -152,14 +152,23 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
             >
               {isColours ? "Browse palette" : "Browse assets"}
             </Link>
-            {!isColours && category.downloadAllUrl && category.downloadAllUrl !== "#" && (
-              <a
-                href={category.downloadAllUrl}
-                className="inline-flex items-center justify-center text-xs font-medium bg-white text-black px-3 py-1.5 rounded hover:opacity-80 active:scale-95 transition-all duration-150"
-                title="Download All"
-              >
-                <Download size={12} />
-              </a>
+            {!isColours && (
+              category.downloadAllUrl && category.downloadAllUrl !== "#" ? (
+                <a
+                  href={category.downloadAllUrl}
+                  className="inline-flex items-center justify-center text-xs font-medium bg-white text-black px-3 py-1.5 rounded hover:opacity-80 active:scale-95 transition-all duration-150"
+                  title="Download All"
+                >
+                  <Download size={12} />
+                </a>
+              ) : (
+                <span
+                  className="inline-flex items-center justify-center text-xs font-medium bg-[#2d2d2d] border border-[#3a3a3a] text-[#555] px-3 py-1.5 rounded cursor-not-allowed"
+                  title={editMode ? "Set a Download All URL in edit mode" : "No download available"}
+                >
+                  <Download size={12} />
+                </span>
+              )
             )}
           </div>
         </div>
