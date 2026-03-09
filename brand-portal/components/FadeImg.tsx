@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 interface FadeImgProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   fallbackSrc?: string;
@@ -14,26 +14,36 @@ export default function FadeImg({
   onError,
   ...props
 }: FadeImgProps) {
+  // prevSrc lets us detect when the src prop changes so we can reset display/loaded
+  // synchronously during render — no useEffect, no race condition with onLoad
+  const [prevSrc, setPrevSrc] = useState(src);
+  const [displaySrc, setDisplaySrc] = useState(src);
   const [loaded, setLoaded] = useState(false);
 
-  // Reset when src changes so the new image fades in fresh
-  useEffect(() => {
+  if (prevSrc !== src) {
+    setPrevSrc(src);
+    setDisplaySrc(src);
     setLoaded(false);
-  }, [src]);
+  }
 
   return (
     <img
       {...props}
-      src={src}
+      src={displaySrc}
       className={`transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"} ${className ?? ""}`}
       onLoad={(e) => {
         setLoaded(true);
         onLoad?.(e);
       }}
       onError={(e) => {
-        e.currentTarget.onerror = null;
-        if (fallbackSrc) e.currentTarget.src = fallbackSrc;
-        setLoaded(true);
+        if (fallbackSrc && displaySrc !== fallbackSrc) {
+          // Switch to fallback via state (not DOM mutation) so React stays in control.
+          // loaded stays false; will become true once the fallback fires onLoad.
+          setDisplaySrc(fallbackSrc);
+        } else {
+          // No fallback, or fallback itself failed — show whatever is there.
+          setLoaded(true);
+        }
         onError?.(e);
       }}
     />
