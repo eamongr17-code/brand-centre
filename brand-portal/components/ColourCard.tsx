@@ -43,10 +43,10 @@ function ColourDetailModal({
           </span>
         </div>
 
-        <div className="p-5">
+        <div className="p-4">
           <div className="flex items-center justify-between mb-4">
             <span className="font-mono text-sm text-[#888]">{colour.hex}</span>
-            <button onClick={onClose} className="text-[#555] hover:text-[#aaa] transition-colors">
+            <button onClick={onClose} className="text-[#666] hover:text-[#aaa] transition-colors">
               <X size={16} />
             </button>
           </div>
@@ -57,11 +57,11 @@ function ColourDetailModal({
                 key={label}
                 className="flex items-center gap-3 bg-[#2d2d2d] rounded px-3 py-2"
               >
-                <span className="text-[10px] font-semibold text-[#555] w-10 shrink-0">{label}</span>
-                <span className="flex-1 text-sm font-mono text-[#d0d0d0] truncate">{value}</span>
+                <span className="text-xs font-semibold text-[#666] w-10 shrink-0">{label}</span>
+                <span className="flex-1 text-sm font-mono text-[#e8e8e8] truncate">{value}</span>
                 <button
                   onClick={() => copy(label, value)}
-                  className="shrink-0 text-[#555] hover:text-[#aaa] transition-colors"
+                  className="shrink-0 text-[#666] hover:text-[#aaa] transition-colors"
                   title={`Copy ${label}`}
                 >
                   {copiedKey === label ? (
@@ -118,7 +118,7 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
     return (
       <div className="border border-amber-500 rounded-lg overflow-hidden bg-[#242424]">
         <div className="h-20 transition-colors" style={{ backgroundColor: previewHex }} />
-        <div className="p-3 space-y-2">
+        <div className="p-4 space-y-2">
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -189,7 +189,7 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
           </div>
         )}
 
-        <div className="p-3 flex items-center justify-between gap-2">
+        <div className="p-4 flex items-center justify-between gap-2">
           <div className="min-w-0">
             <p className="text-sm font-semibold text-[#e8e8e8] truncate">{colour.name}</p>
             <button
@@ -201,7 +201,7 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
           </div>
           <button
             onClick={() => setShowDetails(true)}
-            className="shrink-0 text-[#555] hover:text-[#aaa] transition-colors"
+            className="shrink-0 text-[#666] hover:text-[#aaa] transition-colors"
             title="View colour details"
           >
             <Eye size={14} />

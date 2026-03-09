@@ -88,7 +88,7 @@ export default function QuickLinksPanel({ brandId }: { brandId: string }) {
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 text-sm text-[#a0a0a0] hover:text-[#e8e8e8] flex-1 min-w-0 transition-colors"
               >
-                <ExternalLink size={12} className="shrink-0 text-[#555]" />
+                <ExternalLink size={12} className="shrink-0 text-[#666]" />
                 <span className="truncate">{link.label}</span>
               </a>
               {editMode && (

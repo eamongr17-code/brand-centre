@@ -65,7 +65,7 @@ export default function GitHubSettingsModal({ onClose }: GitHubSettingsModalProp
                 value={owner}
                 onChange={(e) => setOwner(e.target.value)}
                 placeholder="your-username"
-                className="w-full bg-[#2d2d2d] border border-[#444] rounded px-3 py-2 text-sm text-[#e8e8e8] placeholder-[#555]"
+                className="w-full bg-[#2d2d2d] border border-[#444] rounded px-3 py-2 text-sm text-[#e8e8e8] placeholder-[#666]"
               />
             </div>
             <div>
@@ -74,7 +74,7 @@ export default function GitHubSettingsModal({ onClose }: GitHubSettingsModalProp
                 value={repo}
                 onChange={(e) => setRepo(e.target.value)}
                 placeholder="brand-centre"
-                className="w-full bg-[#2d2d2d] border border-[#444] rounded px-3 py-2 text-sm text-[#e8e8e8] placeholder-[#555]"
+                className="w-full bg-[#2d2d2d] border border-[#444] rounded px-3 py-2 text-sm text-[#e8e8e8] placeholder-[#666]"
               />
             </div>
           </div>
@@ -86,7 +86,7 @@ export default function GitHubSettingsModal({ onClose }: GitHubSettingsModalProp
                 value={branch}
                 onChange={(e) => setBranch(e.target.value)}
                 placeholder="main"
-                className="w-full bg-[#2d2d2d] border border-[#444] rounded px-3 py-2 text-sm text-[#e8e8e8] placeholder-[#555]"
+                className="w-full bg-[#2d2d2d] border border-[#444] rounded px-3 py-2 text-sm text-[#e8e8e8] placeholder-[#666]"
               />
             </div>
             <div>
@@ -95,7 +95,7 @@ export default function GitHubSettingsModal({ onClose }: GitHubSettingsModalProp
                 value={imagePath}
                 onChange={(e) => setImagePath(e.target.value)}
                 placeholder="public/images"
-                className="w-full bg-[#2d2d2d] border border-[#444] rounded px-3 py-2 text-sm text-[#e8e8e8] placeholder-[#555]"
+                className="w-full bg-[#2d2d2d] border border-[#444] rounded px-3 py-2 text-sm text-[#e8e8e8] placeholder-[#666]"
               />
             </div>
           </div>
@@ -107,7 +107,7 @@ export default function GitHubSettingsModal({ onClose }: GitHubSettingsModalProp
               onChange={(e) => setToken(e.target.value)}
               type="password"
               placeholder="ghp_••••••••••••••••••••"
-              className="w-full bg-[#2d2d2d] border border-[#444] rounded px-3 py-2 text-sm font-mono text-[#e8e8e8] placeholder-[#555]"
+              className="w-full bg-[#2d2d2d] border border-[#444] rounded px-3 py-2 text-sm font-mono text-[#e8e8e8] placeholder-[#666]"
             />
           </div>
         </div>

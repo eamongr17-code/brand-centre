@@ -6,8 +6,8 @@ export default function HomePage() {
   return (
     <main>
       <HeroHeader variant="home" />
-      <div className="max-w-6xl mx-auto px-8 py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="max-w-6xl mx-auto px-8 py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {brands.map((brand) => (
             <BrandCard key={brand.id} brand={brand} />
           ))}

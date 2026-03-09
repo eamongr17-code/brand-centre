@@ -116,7 +116,7 @@ export default function AssetCard({ asset }: { asset: Asset }) {
               className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded transition-colors ${
                 actionType === "download"
                   ? "bg-[#3a3a3a] text-[#e8e8e8]"
-                  : "text-[#555] hover:text-[#888]"
+                  : "text-[#666] hover:text-[#888]"
               }`}
             >
               <Download size={11} />
@@ -128,7 +128,7 @@ export default function AssetCard({ asset }: { asset: Asset }) {
               className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded transition-colors ${
                 actionType === "view"
                   ? "bg-[#3a3a3a] text-[#e8e8e8]"
-                  : "text-[#555] hover:text-[#888]"
+                  : "text-[#666] hover:text-[#888]"
               }`}
             >
               <Eye size={11} />
@@ -157,7 +157,7 @@ export default function AssetCard({ asset }: { asset: Asset }) {
 
   return (
     <div className="border border-[#333] rounded-lg bg-[#242424] hover:border-[#444] transition-colors relative group flex flex-col">
-      <div className="bg-[#2d2d2d] h-36 flex items-center justify-center text-[#555] text-xs shrink-0 rounded-t-lg overflow-hidden">
+      <div className="bg-[#2d2d2d] h-36 flex items-center justify-center text-[#666] text-xs shrink-0 rounded-t-lg overflow-hidden">
         {asset.previewImage ? (
           <img src={asset.previewImage} alt={asset.name} className="h-full w-full object-contain" />
         ) : (

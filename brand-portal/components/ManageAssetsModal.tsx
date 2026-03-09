@@ -16,21 +16,21 @@ export default function ManageAssetsModal({ category, onClose }: ManageAssetsMod
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/70" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
 
       {/* Panel */}
-      <div className="relative z-10 bg-[#1a1a1a] border border-[#2d2d2d] rounded-xl shadow-2xl w-full max-w-4xl max-h-[85vh] flex flex-col">
+      <div className="relative z-10 bg-[#1e1e1e] border border-[#333] rounded-xl shadow-2xl w-full max-w-4xl max-h-[85vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#2a2a2a] shrink-0">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#333] shrink-0">
           <div>
             <h2 className="text-base font-bold text-[#e8e8e8]">{category.name}</h2>
-            <p className="text-xs text-[#555] mt-0.5">
+            <p className="text-xs text-[#666] mt-0.5">
               {isColours ? "Manage colour palette" : "Manage assets"}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="text-[#555] hover:text-[#aaa] transition-colors p-1"
+            className="text-[#666] hover:text-[#aaa] transition-colors p-1"
             title="Close"
           >
             <X size={18} />
