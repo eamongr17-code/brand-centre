@@ -1,15 +1,16 @@
 import Link from "next/link";
 import type { Brand } from "@/lib/types";
 
-const logoHeight: Record<string, string> = {
-  easygo: "h-[30px]",
-  stake:  "h-[37px]",
-  kick:   "h-[29px]",
-  moon:   "h-[29px]",
+// Height-constrained for compact logos; width-constrained for wide script logos
+const logoClass: Record<string, string> = {
+  easygo: "h-[34px] w-auto",
+  stake:  "h-auto w-[74%]",
+  kick:   "h-[18px] w-auto",
+  moon:   "h-[28px] w-auto",
 };
 
 export default function BrandCard({ brand }: { brand: Brand }) {
-  const height = logoHeight[brand.slug] ?? "h-8";
+  const cls = logoClass[brand.slug] ?? "h-8 w-auto";
   return (
     <Link
       href={`/${brand.slug}`}
@@ -19,7 +20,7 @@ export default function BrandCard({ brand }: { brand: Brand }) {
         <img
           src={`/${brand.slug}-wordmark.svg`}
           alt={brand.name}
-          className={`${height} w-auto max-w-[80%] object-contain`}
+          className={`${cls} max-w-[88%] object-contain`}
         />
       </div>
     </Link>
