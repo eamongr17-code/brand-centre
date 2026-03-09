@@ -2,6 +2,7 @@
 
 import { useState, useEffect, FormEvent } from "react";
 import { Lock } from "lucide-react";
+import { publicPath } from "@/lib/public-path";
 
 const OWNER_KEY = "atlas-owner-access";
 const OWNER_CODE = process.env.NEXT_PUBLIC_OWNER_CODE ?? "atlas-owner";
@@ -38,7 +39,7 @@ export default function OwnerGate({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-[#111] flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="flex justify-center mb-10">
-          <img src="/atlas-wordmark.svg" alt="Atlas" className="h-5 w-auto opacity-70" />
+          <img src={publicPath("/atlas-wordmark.svg")} alt="Atlas" className="h-5 w-auto opacity-70" />
         </div>
 
         <div className="flex flex-col items-center gap-3 mb-6">

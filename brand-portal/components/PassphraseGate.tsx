@@ -3,6 +3,7 @@
 import { useState, useEffect, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Lock } from "lucide-react";
+import { publicPath } from "@/lib/public-path";
 
 const INTERNAL_KEY = "atlas-internal-access";
 const OWNER_KEY = "atlas-owner-access";
@@ -65,7 +66,7 @@ export default function PassphraseGate({ children }: { children: React.ReactNode
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="flex justify-center mb-10">
-          <img src="/atlas-wordmark.svg" alt="Atlas" className="h-5 w-auto opacity-70" />
+          <img src={publicPath("/atlas-wordmark.svg")} alt="Atlas" className="h-5 w-auto opacity-70" />
         </div>
 
         {/* Mode toggle */}

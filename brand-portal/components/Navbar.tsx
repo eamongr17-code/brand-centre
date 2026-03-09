@@ -5,6 +5,7 @@ import { Home, Pencil, Check } from "lucide-react";
 import { useEditStore } from "@/lib/edit-store";
 import { usePortal } from "@/lib/portal-context";
 import SearchBar from "@/components/SearchBar";
+import { publicPath } from "@/lib/public-path";
 
 export default function Navbar() {
   const { editMode, toggleEditMode } = useEditStore();
@@ -23,7 +24,7 @@ export default function Navbar() {
     >
       {/* Logo */}
       <Link href={homeHref} className="shrink-0 hover:opacity-80 transition-opacity">
-        <img src="/atlas-wordmark.svg" alt="Atlas" className="h-5 w-auto" />
+        <img src={publicPath("/atlas-wordmark.svg")} alt="Atlas" className="h-5 w-auto" />
       </Link>
 
       {/* Centre — home button (non-public only) + search */}

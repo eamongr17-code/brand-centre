@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Link2, Check } from "lucide-react";
 import type { Brand } from "@/lib/types";
 import { usePortal } from "@/lib/portal-context";
+import { publicPath } from "@/lib/public-path";
 
 export default function BrandCard({ brand }: { brand: Brand }) {
   const { portalPath, mode } = usePortal();
@@ -28,7 +29,7 @@ export default function BrandCard({ brand }: { brand: Brand }) {
       >
         <div className="h-36 flex items-center justify-center p-6 bg-[#1e1e1e]">
           <img
-            src={`/${brand.slug}-wordmark.png`}
+            src={publicPath(`/${brand.slug}-wordmark.png`)}
             alt={brand.name}
             className="w-full h-full object-contain"
           />
