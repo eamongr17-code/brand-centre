@@ -223,8 +223,8 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
   }, [query, selectedBrandId, searchIndex]);
 
   const hasResults = results.categories.length > 0 || results.assets.length > 0 || results.colours.length > 0;
-  // Show panel when: has query, OR brand is selected (shows brand's categories)
-  const showPanel = open && (query.trim().length > 0 || !!selectedBrandId);
+  // Show panel when: has query, brand selected, or on a brand page (so removing the pill keeps the dropdown open)
+  const showPanel = open && (query.trim().length > 0 || !!selectedBrandId || !!pathBrandId);
 
   const navigate = useCallback(
     (path: string) => {
