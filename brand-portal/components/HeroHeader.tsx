@@ -37,7 +37,7 @@ function ImageBanner({
 
   return (
     <div className="w-full relative border-b border-[#2d2d2d]">
-      <FadeImg src={imageUrl || publicPath("/placeholder-banner.png")} fallbackSrc=publicPath("/placeholder-banner.png") alt="" className="w-full block" />
+      <FadeImg src={imageUrl || publicPath("/placeholder-banner.png")} fallbackSrc={publicPath("/placeholder-banner.png")} alt="" className="w-full block" />
       {!imageUrl && canEditBanner && !editingUrl && (
         <div className="absolute inset-0 flex items-center justify-center">
           <span className="text-white/40 text-sm">{emptyLabel}</span>
