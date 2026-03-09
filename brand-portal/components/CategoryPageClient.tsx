@@ -6,6 +6,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import AssetGrid from "@/components/AssetGrid";
 import ColourGrid from "@/components/ColourGrid";
 import { useEditStore } from "@/lib/edit-store";
+import { usePortal } from "@/lib/portal-context";
 import { getBrandBySlug } from "@/data/mock-data";
 
 interface CategoryPageClientProps {
@@ -15,6 +16,8 @@ interface CategoryPageClientProps {
 
 export default function CategoryPageClient({ brandSlug, categorySlug }: CategoryPageClientProps) {
   const { getCategoryBySlug, getAssets, getColours } = useEditStore();
+  const { portalPath, showInternal, mode } = usePortal();
+  const isPublic = mode === "public";
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -41,8 +44,8 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
       <main>
         <Breadcrumb
           crumbs={[
-            { label: "Home", href: "/" },
-            { label: brand.name, href: `/${brand.slug}` },
+            ...(!isPublic ? [{ label: "Home", href: portalPath("/") }] : []),
+            { label: brand.name, href: portalPath(`/${brand.slug}`) },
             { label: "Not found" },
           ]}
         />
@@ -54,16 +57,18 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
   }
 
   const isColours = category.categoryType === "colours";
+  const allAssets = getAssets(category.id);
+  const visibleAssets = showInternal ? allAssets : allAssets.filter((a) => a.visibility !== "internal");
   const liveCount = isColours
     ? getColours(category.id).length
-    : getAssets(category.id).length;
+    : visibleAssets.length;
 
   return (
     <main>
       <Breadcrumb
         crumbs={[
-          { label: "Home", href: "/" },
-          { label: brand.name, href: `/${brand.slug}` },
+          ...(!isPublic ? [{ label: "Home", href: portalPath("/") }] : []),
+          { label: brand.name, href: portalPath(`/${brand.slug}`) },
           { label: category.name },
         ]}
       />

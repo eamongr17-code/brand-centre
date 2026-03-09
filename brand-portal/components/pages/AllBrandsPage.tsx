@@ -2,7 +2,7 @@ import HeroHeader from "@/components/HeroHeader";
 import BrandCard from "@/components/BrandCard";
 import { brands } from "@/data/mock-data";
 
-export default function HomePage() {
+export default function AllBrandsPage() {
   return (
     <main>
       <HeroHeader variant="home" />

@@ -3,6 +3,7 @@
 import { Palette, Plus } from "lucide-react";
 import CategoryCard from "@/components/CategoryCard";
 import { useEditStore } from "@/lib/edit-store";
+import { usePortal } from "@/lib/portal-context";
 
 interface CategoryGridProps {
   brandSlug: string;
@@ -12,14 +13,18 @@ interface CategoryGridProps {
 
 export default function CategoryGrid({ brandSlug, brandId, subBrandId }: CategoryGridProps) {
   const { editMode, getCategories, addCategory } = useEditStore();
-  const categories = getCategories(brandId, subBrandId);
+  const { canEdit, showInternal } = usePortal();
+  const allCategories = getCategories(brandId, subBrandId);
+  const categories = showInternal
+    ? allCategories
+    : allCategories.filter((c) => c.visibility !== "internal");
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {categories.map((cat) => (
         <CategoryCard key={cat.id} category={cat} brandSlug={brandSlug} />
       ))}
-      {editMode && (
+      {editMode && canEdit && (
         <>
           <button
             onClick={() => addCategory(brandId, subBrandId)}

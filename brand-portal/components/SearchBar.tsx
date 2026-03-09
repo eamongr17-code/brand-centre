@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { Search, FolderOpen, FileText, X, Download, Eye, Copy, Check } from "lucide-react";
 import { brands, categories, assets } from "@/data/mock-data";
 import { useEditStore } from "@/lib/edit-store";
+import { usePortal } from "@/lib/portal-context";
 
 interface CategoryResult {
   type: "category";
@@ -52,6 +53,7 @@ export default function SearchBar() {
   const router = useRouter();
   const pathname = usePathname();
   const { editMode, getCategories, getAssets, getColours } = useEditStore();
+  const { brandScope, showInternal, portalPath, mode } = usePortal();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const [selectedBrandId, setSelectedBrandId] = useState<string | null>(null);
@@ -59,27 +61,51 @@ export default function SearchBar() {
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Derive brand from current path and sync the filter
+  // In public portal, always lock to the scoped brand
+  const lockedBrandId = useMemo(
+    () => (brandScope ? brands.find((b) => b.slug === brandScope)?.id ?? null : null),
+    [brandScope]
+  );
+
+  // Derive brand from current path and sync the filter (only for non-scoped portals)
   const pathBrandId = useMemo(() => {
-    const slug = pathname.split("/").filter(Boolean)[0];
+    if (lockedBrandId) return lockedBrandId;
+    // Strip portal prefix before reading brand slug
+    const segments = pathname.split("/").filter(Boolean);
+    const slug =
+      segments[0] === "owner" || segments[0] === "internal"
+        ? segments[1]
+        : segments[0];
     return brands.find((b) => b.slug === slug)?.id ?? null;
-  }, [pathname]);
+  }, [pathname, lockedBrandId]);
 
   useEffect(() => {
     setSelectedBrandId(pathBrandId);
   }, [pathBrandId]);
 
+  // Brands available for filter chips — restricted to scoped brand in public portals
+  const availableBrands = useMemo(
+    () => (lockedBrandId ? brands.filter((b) => b.id === lockedBrandId) : brands),
+    [lockedBrandId]
+  );
+
   // Build search index: in edit mode use live data, otherwise use static data
   const searchIndex = useMemo<SearchItem[]>(() => {
     const items: SearchItem[] = [];
-    for (const brand of brands) {
+    const brandsToIndex = lockedBrandId
+      ? brands.filter((b) => b.id === lockedBrandId)
+      : brands;
+
+    for (const brand of brandsToIndex) {
       const brandCategories = editMode
         ? getCategories(brand.id)
         : categories.filter((c) => c.brandId === brand.id && !c.subBrandId);
 
       for (const cat of brandCategories) {
+        // Filter internal categories in public portal
+        if (!showInternal && cat.visibility === "internal") continue;
+
         if (cat.categoryType === "colours") {
-          // Index colour entries
           const catColours = getColours(cat.id);
           for (const colour of catColours) {
             items.push({
@@ -95,7 +121,6 @@ export default function SearchBar() {
             });
           }
         } else {
-          // Index category
           items.push({
             type: "category",
             id: cat.id,
@@ -109,12 +134,13 @@ export default function SearchBar() {
             assetCount: cat.assetCount,
           });
 
-          // Index assets
           const catAssets = editMode
             ? getAssets(cat.id)
             : assets.filter((a) => a.categoryId === cat.id);
 
           for (const asset of catAssets) {
+            // Filter internal assets in public portal
+            if (!showInternal && asset.visibility === "internal") continue;
             items.push({
               type: "asset",
               id: asset.id,
@@ -135,7 +161,7 @@ export default function SearchBar() {
     }
     return items;
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editMode]);
+  }, [editMode, showInternal, lockedBrandId]);
 
   const results = useMemo<{ categories: CategoryResult[]; assets: AssetResult[]; colours: ColourResult[] }>(() => {
     const q = query.trim().toLowerCase();
@@ -170,9 +196,9 @@ export default function SearchBar() {
     (path: string) => {
       setQuery("");
       setOpen(false);
-      router.push(path);
+      router.push(portalPath(path));
     },
-    [router]
+    [router, portalPath]
   );
 
   const copyColourHex = useCallback((id: string, hex: string, e: React.MouseEvent) => {
@@ -201,6 +227,11 @@ export default function SearchBar() {
     }
   };
 
+  const placeholder =
+    mode === "public" && brandScope
+      ? `Search ${brandScope.charAt(0).toUpperCase() + brandScope.slice(1)}…`
+      : "Search assets, categories…";
+
   return (
     <div ref={containerRef} className="relative w-full max-w-lg">
       {/* Input */}
@@ -215,7 +246,7 @@ export default function SearchBar() {
           onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
           onFocus={() => setOpen(true)}
           onKeyDown={handleKeyDown}
-          placeholder="Search assets, categories…"
+          placeholder={placeholder}
           className="w-full bg-[#2d2d2d] border border-[#444] rounded-lg pl-8 pr-8 py-2 text-sm text-[#e8e8e8] placeholder-[#555] focus:outline-none focus:border-[#666] transition-colors"
         />
         {query && (
@@ -231,32 +262,34 @@ export default function SearchBar() {
       {/* Dropdown */}
       {showPanel && (
         <div className="absolute top-full left-0 right-0 mt-1.5 bg-[#1e1e1e] border border-[#333] rounded-xl shadow-2xl z-50 overflow-hidden">
-          {/* Brand filters */}
-          <div className="flex gap-1.5 px-3 pt-3 pb-2 border-b border-[#2a2a2a] flex-wrap">
-            <button
-              onClick={() => setSelectedBrandId(null)}
-              className={`text-xs px-2.5 py-1 rounded-full font-medium transition-colors ${
-                !selectedBrandId
-                  ? "bg-amber-500 text-white"
-                  : "bg-[#2d2d2d] text-[#a0a0a0] hover:bg-[#333]"
-              }`}
-            >
-              All
-            </button>
-            {brands.map((b) => (
+          {/* Brand filters — hidden when locked to one brand */}
+          {!lockedBrandId && (
+            <div className="flex gap-1.5 px-3 pt-3 pb-2 border-b border-[#2a2a2a] flex-wrap">
               <button
-                key={b.id}
-                onClick={() => setSelectedBrandId(selectedBrandId === b.id ? null : b.id)}
+                onClick={() => setSelectedBrandId(null)}
                 className={`text-xs px-2.5 py-1 rounded-full font-medium transition-colors ${
-                  selectedBrandId === b.id
+                  !selectedBrandId
                     ? "bg-amber-500 text-white"
                     : "bg-[#2d2d2d] text-[#a0a0a0] hover:bg-[#333]"
                 }`}
               >
-                {b.name}
+                All
               </button>
-            ))}
-          </div>
+              {availableBrands.map((b) => (
+                <button
+                  key={b.id}
+                  onClick={() => setSelectedBrandId(selectedBrandId === b.id ? null : b.id)}
+                  className={`text-xs px-2.5 py-1 rounded-full font-medium transition-colors ${
+                    selectedBrandId === b.id
+                      ? "bg-amber-500 text-white"
+                      : "bg-[#2d2d2d] text-[#a0a0a0] hover:bg-[#333]"
+                  }`}
+                >
+                  {b.name}
+                </button>
+              ))}
+            </div>
+          )}
 
           <div className="max-h-[420px] overflow-y-auto">
             {!hasResults && (

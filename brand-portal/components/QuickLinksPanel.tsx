@@ -3,11 +3,14 @@
 import { useState } from "react";
 import { ExternalLink, Plus, Trash2, Pencil, Check, X } from "lucide-react";
 import { useEditStore } from "@/lib/edit-store";
+import { usePortal } from "@/lib/portal-context";
 
 export default function QuickLinksPanel({ brandId }: { brandId: string }) {
   const { editMode, getQuickLinks, addQuickLink, updateQuickLink, deleteQuickLink } =
     useEditStore();
+  const { canEdit } = usePortal();
   const links = getQuickLinks(brandId);
+  const canEditLinks = editMode && canEdit;
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const [draftLabel, setDraftLabel] = useState("");
@@ -34,7 +37,7 @@ export default function QuickLinksPanel({ brandId }: { brandId: string }) {
         <h3 className="text-xs font-semibold uppercase tracking-wider text-[#888]">
           Quick Links
         </h3>
-        {editMode && (
+        {canEditLinks && (
           <button
             onClick={() => addQuickLink(brandId)}
             className="text-[#666] hover:text-[#aaa] transition-colors"
@@ -45,13 +48,13 @@ export default function QuickLinksPanel({ brandId }: { brandId: string }) {
         )}
       </div>
 
-      {links.length === 0 && !editMode && (
+      {links.length === 0 && !canEditLinks && (
         <p className="text-xs text-[#666]">No quick links yet.</p>
       )}
 
       <ul className="space-y-1">
         {links.map((link) =>
-          editMode && editingId === link.id ? (
+          canEditLinks && editingId === link.id ? (
             <li key={link.id} className="space-y-1 bg-[#242424] border border-[#333] rounded p-2">
               <input
                 value={draftLabel}
@@ -91,7 +94,7 @@ export default function QuickLinksPanel({ brandId }: { brandId: string }) {
                 <ExternalLink size={12} className="shrink-0 text-[#666]" />
                 <span className="truncate">{link.label}</span>
               </a>
-              {editMode && (
+              {canEditLinks && (
                 <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
                   <button
                     onClick={() => startEdit(link.id, link.label, link.url)}

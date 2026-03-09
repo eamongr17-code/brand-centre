@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Plus, Pencil, Trash2, Check, X } from "lucide-react";
 import CategoryGrid from "@/components/CategoryGrid";
 import { useEditStore } from "@/lib/edit-store";
+import { usePortal } from "@/lib/portal-context";
 
 interface SectionHeaderProps {
   name: string;
@@ -14,6 +15,7 @@ interface SectionHeaderProps {
 
 function SectionHeader({ name, canDelete, onRename, onDelete }: SectionHeaderProps) {
   const { editMode } = useEditStore();
+  const { canEdit } = usePortal();
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState(name);
 
@@ -61,7 +63,7 @@ function SectionHeader({ name, canDelete, onRename, onDelete }: SectionHeaderPro
   return (
     <div className="flex items-center gap-3 mb-6 group/header">
       <h2 className="text-xl font-bold text-[#e8e8e8]">{name}</h2>
-      {editMode && (
+      {editMode && canEdit && (
         <div className="flex items-center gap-1.5 opacity-0 group-hover/header:opacity-100 transition-opacity">
           <button
             onClick={() => setEditing(true)}
@@ -101,12 +103,13 @@ export default function BrandSections({ brandId, brandSlug }: BrandSectionsProps
     updateMainSectionName,
     getCategories,
   } = useEditStore();
+  const { canEdit } = usePortal();
 
   const sections = getSections(brandId);
   const mainSectionName = getMainSectionName(brandId) || "Categories";
   const mainCategories = getCategories(brandId, undefined);
 
-  const showMainSection = mainCategories.length > 0 || editMode;
+  const showMainSection = mainCategories.length > 0 || (editMode && canEdit);
 
   return (
     <div className="space-y-16">
@@ -140,7 +143,7 @@ export default function BrandSections({ brandId, brandSlug }: BrandSectionsProps
       ))}
 
       {/* Add section button */}
-      {editMode && (
+      {editMode && canEdit && (
         <button
           onClick={() => addSection(brandId)}
           className="flex items-center gap-2 text-sm text-[#666] hover:text-[#aaa] border border-dashed border-[#3a3a3a] hover:border-[#555] rounded-lg px-5 py-3 transition-colors w-full justify-center"

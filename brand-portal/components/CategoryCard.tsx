@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Download, Pencil, Trash2, Check, X } from "lucide-react";
 import { useEditStore } from "@/lib/edit-store";
+import { usePortal } from "@/lib/portal-context";
 import ImageUploader from "@/components/ImageUploader";
 import type { Category } from "@/lib/types";
 
@@ -14,6 +15,7 @@ interface CategoryCardProps {
 
 export default function CategoryCard({ category, brandSlug }: CategoryCardProps) {
   const { editMode, updateCategory, deleteCategory } = useEditStore();
+  const { portalPath } = usePortal();
   const isColours = category.categoryType === "colours";
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(category.name);
@@ -145,7 +147,7 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
           )}
           <div className="flex gap-2 mt-auto pt-2">
             <Link
-              href={`/${brandSlug}/${category.slug}`}
+              href={portalPath(`/${brandSlug}/${category.slug}`)}
               className="flex-1 inline-flex items-center justify-center text-xs font-medium bg-[#2d2d2d] border border-[#444] text-[#e8e8e8] px-3 py-1.5 rounded hover:bg-[#333] transition-colors whitespace-nowrap"
             >
               {isColours ? "Browse palette" : "Browse assets"}

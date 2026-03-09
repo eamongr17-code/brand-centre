@@ -39,6 +39,7 @@ export interface Category {
   assetCount: number;
   sortOrder: number;
   categoryType?: "assets" | "colours";
+  visibility?: "public" | "internal";
 }
 
 export interface BrandSection {
@@ -80,4 +81,5 @@ export interface Asset {
   featured: boolean;
   sortOrder: number;
   actionType?: "download" | "view";
+  visibility?: "public" | "internal";
 }

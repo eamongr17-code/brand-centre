@@ -281,6 +281,7 @@ export const assets: Asset[] = [
     previewImage: "/previews/asset-placeholder.jpg",
     featured: false,
     sortOrder: 3,
+    visibility: "internal",
   },
   {
     id: "stake-logo-icon",
@@ -293,6 +294,7 @@ export const assets: Asset[] = [
     previewImage: "/previews/asset-placeholder.jpg",
     featured: false,
     sortOrder: 4,
+    visibility: "internal",
   },
 
   // KICK logos

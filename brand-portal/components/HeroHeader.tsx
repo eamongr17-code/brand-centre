@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Pencil, Check, X } from "lucide-react";
 import { useEditStore } from "@/lib/edit-store";
+import { usePortal } from "@/lib/portal-context";
 import ImageUploader from "@/components/ImageUploader";
 import type { Brand, Category } from "@/lib/types";
 
@@ -22,6 +23,7 @@ function ImageBanner({
   onSave: (url: string) => void;
 }) {
   const { editMode } = useEditStore();
+  const { canEdit } = usePortal();
   const [editingUrl, setEditingUrl] = useState(false);
   const [draft, setDraft] = useState("");
 
@@ -29,19 +31,21 @@ function ImageBanner({
   const save = () => { onSave(draft); setEditingUrl(false); };
   const cancel = () => setEditingUrl(false);
 
+  const canEditBanner = editMode && canEdit;
+
   return (
     <div className="w-full relative border-b border-[#2d2d2d]">
       {imageUrl ? (
         <img src={imageUrl} alt="" className="w-full block" />
       ) : (
         <div className="w-full h-64 flex items-center justify-center bg-[#242424]">
-          {editMode && !editingUrl && (
+          {canEditBanner && !editingUrl && (
             <span className="text-[#666] text-sm">{emptyLabel}</span>
           )}
         </div>
       )}
 
-      {editMode && !editingUrl && (
+      {canEditBanner && !editingUrl && (
         <button
           onClick={startEdit}
           className="absolute top-3 right-3 bg-[#2d2d2d] border border-[#444] rounded p-1.5 hover:bg-[#333]"
@@ -51,7 +55,7 @@ function ImageBanner({
         </button>
       )}
 
-      {editMode && editingUrl && (
+      {canEditBanner && editingUrl && (
         <div className="absolute inset-x-0 bottom-0 bg-[#1a1a1a] border-t border-[#333] px-4 py-3">
           <div className="flex gap-2 items-center">
             <div className="flex-1 min-w-0">

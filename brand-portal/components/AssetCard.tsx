@@ -1,13 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Download, Eye, Pencil, Trash2, Check, X } from "lucide-react";
+import { Download, Eye, Pencil, Trash2, Check, X, Lock } from "lucide-react";
 import { useEditStore } from "@/lib/edit-store";
+import { usePortal } from "@/lib/portal-context";
 import ImageUploader from "@/components/ImageUploader";
 import type { Asset } from "@/lib/types";
 
 export default function AssetCard({ asset }: { asset: Asset }) {
   const { editMode, updateAsset, deleteAsset } = useEditStore();
+  const { canEdit, showInternal } = usePortal();
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(asset.name);
   const [description, setDescription] = useState(asset.description);
@@ -17,6 +19,9 @@ export default function AssetCard({ asset }: { asset: Asset }) {
   const [downloadUrl, setDownloadUrl] = useState(asset.downloadUrl);
   const [actionType, setActionType] = useState<"download" | "view">(
     asset.actionType ?? "download"
+  );
+  const [visibility, setVisibility] = useState<"public" | "internal">(
+    asset.visibility ?? "public"
   );
 
   // Re-sync local state when prop changes (e.g. after store update)
@@ -29,6 +34,7 @@ export default function AssetCard({ asset }: { asset: Asset }) {
       setPreviewImage(asset.previewImage);
       setDownloadUrl(asset.downloadUrl);
       setActionType(asset.actionType ?? "download");
+      setVisibility(asset.visibility ?? "public");
     }
   }, [asset, editing]);
 
@@ -41,6 +47,7 @@ export default function AssetCard({ asset }: { asset: Asset }) {
       previewImage,
       downloadUrl,
       actionType,
+      visibility,
     });
     setEditing(false);
   };
@@ -53,10 +60,12 @@ export default function AssetCard({ asset }: { asset: Asset }) {
     setPreviewImage(asset.previewImage);
     setDownloadUrl(asset.downloadUrl);
     setActionType(asset.actionType ?? "download");
+    setVisibility(asset.visibility ?? "public");
     setEditing(false);
   };
 
   const isView = (asset.actionType ?? "download") === "view";
+  const isInternal = (asset.visibility ?? "public") === "internal";
 
   if (editing) {
     return (
@@ -136,6 +145,35 @@ export default function AssetCard({ asset }: { asset: Asset }) {
             </button>
           </div>
 
+          {/* Visibility toggle — owner only */}
+          {canEdit && (
+            <div className="flex gap-1 p-1 bg-[#1a1a1a] rounded text-xs">
+              <button
+                type="button"
+                onClick={() => setVisibility("public")}
+                className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded transition-colors ${
+                  visibility === "public"
+                    ? "bg-[#3a3a3a] text-[#e8e8e8]"
+                    : "text-[#666] hover:text-[#888]"
+                }`}
+              >
+                Public
+              </button>
+              <button
+                type="button"
+                onClick={() => setVisibility("internal")}
+                className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded transition-colors ${
+                  visibility === "internal"
+                    ? "bg-blue-900/60 text-blue-300"
+                    : "text-[#666] hover:text-[#888]"
+                }`}
+              >
+                <Lock size={10} />
+                Internal only
+              </button>
+            </div>
+          )}
+
           <div className="flex gap-2 pt-1">
             <button
               onClick={save}
@@ -164,6 +202,17 @@ export default function AssetCard({ asset }: { asset: Asset }) {
           <span>No preview</span>
         )}
       </div>
+
+      {/* Internal badge — visible in owner/internal portals */}
+      {isInternal && showInternal && (
+        <div className="absolute top-2 left-2">
+          <span className="inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded bg-blue-900/70 text-blue-300 border border-blue-800/50">
+            <Lock size={9} />
+            Internal
+          </span>
+        </div>
+      )}
+
       {editMode && (
         <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
