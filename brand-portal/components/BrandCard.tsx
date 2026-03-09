@@ -15,7 +15,8 @@ export default function BrandCard({ brand }: { brand: Brand }) {
 
   const copyPublicLink = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
-    const url = `${window.location.origin}/${brand.slug}`;
+    const url = `${window.location.origin}${publicPath(`/${brand.slug}`)}`;
+
     navigator.clipboard.writeText(url).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
