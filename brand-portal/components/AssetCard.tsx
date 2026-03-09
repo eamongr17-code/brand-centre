@@ -6,6 +6,7 @@ import { useEditStore } from "@/lib/edit-store";
 import { usePortal } from "@/lib/portal-context";
 import ImageUploader from "@/components/ImageUploader";
 import FadeImg from "@/components/FadeImg";
+import { publicPath } from "@/lib/public-path";
 import type { Asset } from "@/lib/types";
 
 export default function AssetCard({ asset }: { asset: Asset }) {
@@ -72,7 +73,7 @@ export default function AssetCard({ asset }: { asset: Asset }) {
     return (
       <div className="border border-[#f77614] rounded-lg bg-[#242424] flex flex-col overflow-hidden [animation:fade-up_0.3s_ease-out_forwards]">
         <div className="bg-[#2d2d2d] h-36 shrink-0 rounded-t-lg overflow-hidden">
-          <FadeImg src={previewImage || "/placeholder-asset.png"} fallbackSrc="/placeholder-asset.png" alt="" className="h-full w-full object-cover" />
+          <FadeImg src={previewImage || publicPath("/placeholder-asset.png")} fallbackSrc=publicPath("/placeholder-asset.png") alt="" className="h-full w-full object-cover" />
         </div>
         <div className="p-4 space-y-2 flex-1">
           <input
@@ -185,7 +186,7 @@ export default function AssetCard({ asset }: { asset: Asset }) {
   return (
     <div className="border border-[#333] rounded-lg bg-[#242424] hover:border-[#444] transition-colors relative group flex flex-col [animation:fade-up_0.3s_ease-out_forwards]">
       <div className="bg-[#2d2d2d] h-36 shrink-0 rounded-t-lg overflow-hidden">
-        <FadeImg src={asset.previewImage || "/placeholder-asset.png"} fallbackSrc="/placeholder-asset.png" alt={asset.name} className="h-full w-full object-cover" />
+        <FadeImg src={asset.previewImage || publicPath("/placeholder-asset.png")} fallbackSrc=publicPath("/placeholder-asset.png") alt={asset.name} className="h-full w-full object-cover" />
       </div>
 
       {/* Internal badge — visible in owner/internal portals */}

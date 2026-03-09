@@ -6,6 +6,7 @@ import { useEditStore } from "@/lib/edit-store";
 import { usePortal } from "@/lib/portal-context";
 import ImageUploader from "@/components/ImageUploader";
 import FadeImg from "@/components/FadeImg";
+import { publicPath } from "@/lib/public-path";
 import type { Brand, Category } from "@/lib/types";
 
 interface HeroHeaderProps {
@@ -36,7 +37,7 @@ function ImageBanner({
 
   return (
     <div className="w-full relative border-b border-[#2d2d2d]">
-      <FadeImg src={imageUrl || "/placeholder-banner.png"} fallbackSrc="/placeholder-banner.png" alt="" className="w-full block" />
+      <FadeImg src={imageUrl || publicPath("/placeholder-banner.png")} fallbackSrc=publicPath("/placeholder-banner.png") alt="" className="w-full block" />
       {!imageUrl && canEditBanner && !editingUrl && (
         <div className="absolute inset-0 flex items-center justify-center">
           <span className="text-white/40 text-sm">{emptyLabel}</span>
