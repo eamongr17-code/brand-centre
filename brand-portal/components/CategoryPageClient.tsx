@@ -78,14 +78,25 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
           <p className="text-sm text-[#888]">
             {isColours ? "Colour palette" : `${liveCount} assets`}
           </p>
-          {!isColours && category.downloadAllUrl && category.downloadAllUrl !== "#" && (
-            <a
-              href={category.downloadAllUrl}
-              className="inline-flex items-center gap-1.5 text-sm font-medium bg-white text-black px-4 py-2 rounded hover:opacity-80 active:scale-95 transition-all duration-150"
-              title="Download All"
-            >
-              <Download size={14} />
-            </a>
+          {!isColours && (
+            category.downloadAllUrl && category.downloadAllUrl !== "#" ? (
+              <a
+                href={category.downloadAllUrl}
+                className="inline-flex items-center gap-1.5 text-sm font-medium bg-white text-black px-4 py-2 rounded hover:opacity-80 active:scale-95 transition-all duration-150"
+                title="Download All"
+              >
+                <Download size={14} />
+                Download all
+              </a>
+            ) : (
+              <span
+                className="inline-flex items-center gap-1.5 text-sm font-medium bg-[#2d2d2d] border border-[#3a3a3a] text-[#555] px-4 py-2 rounded cursor-not-allowed"
+                title="No download URL set"
+              >
+                <Download size={14} />
+                Download all
+              </span>
+            )
           )}
         </div>
         {isColours

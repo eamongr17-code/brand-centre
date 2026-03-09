@@ -14,9 +14,13 @@ interface CategoryCardProps {
 }
 
 export default function CategoryCard({ category, brandSlug }: CategoryCardProps) {
-  const { editMode, updateCategory, deleteCategory } = useEditStore();
-  const { portalPath } = usePortal();
+  const { editMode, updateCategory, deleteCategory, getAssets } = useEditStore();
+  const { portalPath, showInternal } = usePortal();
   const isColours = category.categoryType === "colours";
+  const allAssets = getAssets(category.id);
+  const liveAssetCount = showInternal
+    ? allAssets.length
+    : allAssets.filter((a) => a.visibility !== "internal").length;
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(category.name);
   const [description, setDescription] = useState(category.description);
@@ -139,7 +143,7 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
           <div>
             <h3 className="font-semibold text-[#e8e8e8]">{name}</h3>
             <p className="text-xs text-[#888] mt-0.5">
-              {isColours ? "Colour palette" : `${category.assetCount} assets`}
+              {isColours ? "Colour palette" : `${liveAssetCount} assets`}
             </p>
           </div>
           {description && (

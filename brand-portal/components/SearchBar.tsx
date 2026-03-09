@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { Search, FolderOpen, FileText, X, Download, Eye, Copy, Check } from "lucide-react";
+import { Search, FolderOpen, Palette, FileText, X, Download, Eye, Copy, Check } from "lucide-react";
 import { brands, categories, assets } from "@/data/mock-data";
 import { useEditStore } from "@/lib/edit-store";
 import { usePortal } from "@/lib/portal-context";
@@ -137,6 +137,13 @@ export default function SearchBar() {
             });
           }
         } else {
+          const catAssets = editMode
+            ? getAssets(cat.id)
+            : assets.filter((a) => a.categoryId === cat.id);
+          const visibleAssets = catAssets.filter(
+            (a) => showInternal || a.visibility !== "internal"
+          );
+
           items.push({
             type: "category",
             id: cat.id,
@@ -147,16 +154,11 @@ export default function SearchBar() {
             brandSlug: brand.slug,
             brandColor: brand.color,
             categorySlug: cat.slug,
-            assetCount: cat.assetCount,
+            assetCount: visibleAssets.length,
           });
 
-          const catAssets = editMode
-            ? getAssets(cat.id)
-            : assets.filter((a) => a.categoryId === cat.id);
-
-          for (const asset of catAssets) {
-            // Filter internal assets in public portal
-            if (!showInternal && asset.visibility === "internal") continue;
+          for (const asset of visibleAssets) {
+            // already filtered above
             items.push({
               type: "asset",
               id: asset.id,
@@ -326,17 +328,19 @@ export default function SearchBar() {
                   <div
                     key={item.id}
                     onClick={() => navigate(`/${item.brandSlug}/${item.categorySlug}`)}
-                    className="flex items-center gap-3 px-3 py-2.5 bg-[#221f14] hover:bg-[#2a2518] transition-colors cursor-pointer"
+                    className="flex items-center gap-3 px-3 py-2.5 hover:bg-[#262626] transition-colors cursor-pointer"
                   >
-                    <div className="shrink-0 w-7 h-7 rounded-md bg-amber-900/40 flex items-center justify-center">
-                      <FolderOpen size={14} className="text-amber-400" />
+                    <div className="shrink-0 w-7 h-7 rounded-md bg-[#2d2d2d] flex items-center justify-center">
+                      {item.categoryType === "colours"
+                        ? <Palette size={14} className="text-[#888]" />
+                        : <FolderOpen size={14} className="text-[#888]" />}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-medium text-[#e8e8e8] truncate">
                           {item.name}
                         </span>
-                        <span className="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-amber-900/50 text-amber-400 font-medium">
+                        <span className="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-[#2d2d2d] text-[#666] font-medium">
                           {item.categoryType === "colours" ? "Palette" : "Category"}
                         </span>
                       </div>
