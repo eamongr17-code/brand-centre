@@ -50,10 +50,12 @@ export default function Navbar() {
           : "bg-[#1a1a1a] border-[#2d2d2d]"
       }`}
     >
-      {/* Logo */}
-      <Link href={homeHref} className="shrink-0 hover:opacity-80 transition-opacity">
-        <img src={publicPath("/atlas-wordmark.svg")} alt="Atlas" className="h-5 w-auto" />
-      </Link>
+      {/* Logo — hidden on home page (it shows large in the page body there) */}
+      {!isHomePage && (
+        <Link href={homeHref} className="shrink-0 hover:opacity-80 transition-opacity">
+          <img src={publicPath("/atlas-wordmark.svg")} alt="Atlas" className="h-5 w-auto" />
+        </Link>
+      )}
 
       {/* Centre — hidden on home page; home button + search on inner pages */}
       <div className="flex-1 flex justify-center items-center gap-2">

@@ -50,7 +50,7 @@ interface ColourResult {
 
 type SearchItem = CategoryResult | AssetResult | ColourResult;
 
-export default function SearchBar({ large = false }: { large?: boolean }) {
+export default function SearchBar({ large = false, placeholder: placeholderOverride }: { large?: boolean; placeholder?: string }) {
   const router = useRouter();
   const pathname = usePathname();
   const { editMode, getCategories, getAssets, getColours } = useEditStore();
@@ -245,10 +245,11 @@ export default function SearchBar({ large = false }: { large?: boolean }) {
     }
   };
 
-  const placeholder =
+  const placeholder = placeholderOverride ?? (
     mode === "public" && brandScope
       ? `Search ${brandScope.charAt(0).toUpperCase() + brandScope.slice(1)}…`
-      : "Search assets, categories…";
+      : "Search assets, categories…"
+  );
 
   return (
     <div ref={containerRef} className={`relative w-full ${large ? "max-w-none" : "max-w-lg"}`}>
@@ -313,7 +314,7 @@ export default function SearchBar({ large = false }: { large?: boolean }) {
             </div>
           )}
 
-          <div className="max-h-[420px] overflow-y-auto">
+          <div className="max-h-[min(420px,55vh)] overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-[#1a1a1a] [&::-webkit-scrollbar-thumb]:bg-[#3a3a3a] [&::-webkit-scrollbar-thumb]:rounded-full">
             {!hasResults && (
               <div className="px-4 py-6 text-center text-sm text-[#555]">
                 No results for &ldquo;{query}&rdquo;

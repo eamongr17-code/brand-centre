@@ -17,17 +17,14 @@ export default function AllBrandsPage() {
         <img
           src={publicPath("/atlas-wordmark.svg")}
           alt="Atlas"
-          className="h-7 w-auto mb-10 opacity-80"
+          className="h-12 w-auto mb-12 opacity-90"
         />
-        <h1 className="text-[2rem] font-semibold text-[#e8e8e8] text-center mb-8 max-w-xl leading-snug">
-          Find what you need<br />across any brand
-        </h1>
         <div className="w-full max-w-2xl">
-          <SearchBar large />
+          <SearchBar large placeholder="Find what you need across any brand…" />
         </div>
 
-        {/* Brand quick-access */}
-        <div className="mt-12 w-full max-w-2xl">
+        {/* Brand quick-access — logos only */}
+        <div className="mt-10 w-full max-w-2xl">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-[#444] mb-4 text-center">
             Quick access
           </p>
@@ -36,18 +33,13 @@ export default function AllBrandsPage() {
               <Link
                 key={brand.id}
                 href={portalPath(`/${brand.slug}`)}
-                className="group flex flex-col items-center gap-3 p-4 rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] hover:border-[#3a3a3a] hover:bg-[#202020] transition-colors"
+                className="group flex items-center justify-center p-5 rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] hover:border-[#3a3a3a] hover:bg-[#202020] transition-colors"
               >
-                <div className="h-8 flex items-center justify-center w-full">
-                  <img
-                    src={publicPath(`/${brand.slug}-wordmark.png`)}
-                    alt={brand.name}
-                    className="max-h-full max-w-full object-contain opacity-70 group-hover:opacity-100 transition-opacity"
-                  />
-                </div>
-                <span className="text-[11px] text-[#555] group-hover:text-[#888] transition-colors font-medium">
-                  {brand.name}
-                </span>
+                <img
+                  src={publicPath(`/${brand.slug}-wordmark.png`)}
+                  alt={brand.name}
+                  className="h-7 w-full object-contain opacity-60 group-hover:opacity-100 transition-opacity"
+                />
               </Link>
             ))}
           </div>
