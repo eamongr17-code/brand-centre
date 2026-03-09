@@ -47,7 +47,7 @@ interface EditStoreContextType {
   // Assets
   getAssets: (categoryId: string) => Asset[];
   addAsset: (categoryId: string) => string;
-  updateAsset: (id: string, changes: Partial<Pick<Asset, "name" | "description" | "fileType" | "fileSize" | "downloadUrl" | "previewImage" | "actionType">>) => void;
+  updateAsset: (id: string, changes: Partial<Pick<Asset, "name" | "description" | "fileType" | "fileSize" | "downloadUrl" | "previewImage" | "actionType" | "visibility">>) => void;
   deleteAsset: (id: string) => void;
   // Colours
   getColours: (categoryId: string) => BrandColour[];
