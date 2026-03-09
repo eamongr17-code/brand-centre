@@ -29,12 +29,12 @@ export default function AllBrandsPage() {
               <Link
                 key={brand.id}
                 href={portalPath(`/${brand.slug}`)}
-                className="group relative rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] hover:border-[#3a3a3a] transition-colors overflow-hidden aspect-[4/3]"
+                className="group relative rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] hover:border-[#3a3a3a] transition-colors overflow-hidden aspect-[2/1]"
               >
                 <img
                   src={publicPath(`/${brand.slug}-card.png`)}
                   alt={brand.name}
-                  className="w-full h-full object-contain opacity-50 group-hover:opacity-100 transition-opacity duration-200"
+                  className="w-full h-full object-contain"
                 />
               </Link>
             ))}
