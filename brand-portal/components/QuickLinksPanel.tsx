@@ -32,7 +32,7 @@ export default function QuickLinksPanel({ brandId }: { brandId: string }) {
   const cancelEdit = () => setEditingId(null);
 
   return (
-    <aside className="w-full lg:w-56 shrink-0 lg:border-l lg:border-[#2d2d2d] lg:pl-8">
+    <aside className="w-full lg:w-56 shrink-0 lg:self-start lg:border-l lg:border-[#2d2d2d] lg:pl-8">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-xs font-semibold uppercase tracking-wider text-[#888]">
           Quick Links
