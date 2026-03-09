@@ -310,7 +310,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
           ref={inputRef}
           value={query}
           onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
-          onFocus={() => { setOpen(true); setSelectedBrandId(pathBrandId); }}
+          onFocus={() => { if (!open) setSelectedBrandId(pathBrandId); setOpen(true); }}
           onKeyDown={handleKeyDown}
           placeholder={selectedBrand ? `Search in ${selectedBrand.name}…` : placeholder}
           className={`flex-1 bg-transparent text-[#e8e8e8] placeholder-[#555] focus:outline-none ${
