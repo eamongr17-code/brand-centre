@@ -17,21 +17,23 @@ export default function Navbar() {
       }`}
     >
       {/* Logo */}
-      <div className="shrink-0 flex items-center gap-3">
-        <Link href="/" className="hover:opacity-80 transition-opacity">
-          <img src="/atlas-wordmark.svg" alt="Atlas" className="h-7 w-auto" />
-        </Link>
+      <Link href="/" className="shrink-0 hover:opacity-80 transition-opacity">
+        <img src="/atlas-wordmark.svg" alt="Atlas" className="h-5 w-auto" />
+      </Link>
+
+      {/* Centre — home button + search */}
+      <div className="flex-1 flex justify-center items-center gap-2">
         <Link
           href="/"
-          className="text-[#666] hover:text-[#e8e8e8] transition-colors"
+          className={`shrink-0 inline-flex items-center justify-center w-8 h-8 rounded border text-[#e8e8e8] transition-colors ${
+            editMode
+              ? "bg-[#2d2200] border-[#5a3e00] hover:bg-[#3a2d00]"
+              : "bg-[#2d2d2d] border-[#444] hover:bg-[#333]"
+          }`}
           title="Home"
         >
-          <Home size={16} />
+          <Home size={14} />
         </Link>
-      </div>
-
-      {/* Search — fills remaining space */}
-      <div className="flex-1 flex justify-center">
         <SearchBar />
       </div>
 
