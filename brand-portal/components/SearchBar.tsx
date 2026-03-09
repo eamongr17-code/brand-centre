@@ -71,7 +71,6 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
   // Derive brand from current path and sync the filter (only for non-scoped portals)
   const pathBrandId = useMemo(() => {
     if (lockedBrandId) return lockedBrandId;
-    // Strip portal prefix before reading brand slug
     const segments = pathname.split("/").filter(Boolean);
     const slug =
       segments[0] === "owner" || segments[0] === "internal"
@@ -90,6 +89,22 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
     [lockedBrandId]
   );
 
+  // Auto-detect brand name typed at the start of query and convert to tag
+  useEffect(() => {
+    if (!query || lockedBrandId) return;
+    const q = query.toLowerCase();
+    const matched = availableBrands.find((b) => {
+      const name = b.name.toLowerCase();
+      return q === name || q.startsWith(name + " ");
+    });
+    if (matched && selectedBrandId !== matched.id) {
+      setSelectedBrandId(matched.id);
+      // Strip the brand name (+ optional space) from the front of query
+      const remainder = query.slice(matched.name.length).replace(/^\s+/, "");
+      setQuery(remainder);
+    }
+  }, [query, availableBrands, lockedBrandId, selectedBrandId]);
+
   // Build search index: in edit mode use live data, otherwise use static data
   const searchIndex = useMemo<SearchItem[]>(() => {
     const items: SearchItem[] = [];
@@ -103,11 +118,9 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
         : categories.filter((c) => c.brandId === brand.id && !c.subBrandId);
 
       for (const cat of brandCategories) {
-        // Filter internal categories in public portal
         if (!showInternal && cat.visibility === "internal") continue;
 
         if (cat.categoryType === "colours") {
-          // Index the palette category itself so headings like "Brand Colours" are searchable
           items.push({
             type: "category",
             id: cat.id,
@@ -121,7 +134,6 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
             assetCount: 0,
             categoryType: "colours",
           });
-          // Also index individual colours
           const catColours = getColours(cat.id);
           for (const colour of catColours) {
             items.push({
@@ -158,7 +170,6 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
           });
 
           for (const asset of visibleAssets) {
-            // already filtered above
             items.push({
               type: "asset",
               id: asset.id,
@@ -183,10 +194,14 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
 
   const results = useMemo<{ categories: CategoryResult[]; assets: AssetResult[]; colours: ColourResult[] }>(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return { categories: [], assets: [], colours: [] };
+    // When brand is selected and query is empty, show all categories for that brand
+    const showAll = !q && !!selectedBrandId;
+
+    if (!q && !showAll) return { categories: [], assets: [], colours: [] };
 
     const filtered = searchIndex.filter((item) => {
       if (selectedBrandId && item.brandId !== selectedBrandId) return false;
+      if (!q) return item.type === "category"; // show categories when brand selected, no query
       const haystack = [
         item.name,
         item.type === "colour" ? item.hex : "",
@@ -208,7 +223,8 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
   }, [query, selectedBrandId, searchIndex]);
 
   const hasResults = results.categories.length > 0 || results.assets.length > 0 || results.colours.length > 0;
-  const showPanel = open && query.trim().length > 0;
+  // Show panel when: has query, OR brand is selected (shows brand's categories)
+  const showPanel = open && (query.trim().length > 0 || !!selectedBrandId);
 
   const navigate = useCallback(
     (path: string) => {
@@ -243,7 +259,13 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
       setOpen(false);
       inputRef.current?.blur();
     }
+    // Backspace on empty query removes brand tag
+    if (e.key === "Backspace" && !query && selectedBrandId && !lockedBrandId) {
+      setSelectedBrandId(null);
+    }
   };
+
+  const selectedBrand = selectedBrandId ? availableBrands.find((b) => b.id === selectedBrandId) : null;
 
   const placeholder = placeholderOverride ?? (
     mode === "public" && brandScope
@@ -253,29 +275,47 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
 
   return (
     <div ref={containerRef} className={`relative w-full ${large ? "max-w-none" : "max-w-lg"}`}>
-      {/* Input */}
-      <div className="relative">
+      {/* Input with optional brand pill */}
+      <div
+        className={`flex items-center gap-2 bg-[#2d2d2d] border border-[#444] focus-within:border-[#666] transition-colors ${
+          large ? "rounded-xl px-4 py-3.5" : "rounded-lg px-3 py-2"
+        }`}
+      >
         <Search
           size={large ? 16 : 14}
-          className={`absolute ${large ? "left-4" : "left-3"} top-1/2 -translate-y-1/2 text-[#555] pointer-events-none`}
+          className="shrink-0 text-[#555] pointer-events-none"
         />
+
+        {/* Brand tag pill — shown when a brand is selected */}
+        {selectedBrand && !lockedBrandId && (
+          <span className="inline-flex items-center gap-1 shrink-0 bg-[#f77614] text-white rounded-full px-2 py-0.5 text-xs font-medium">
+            {selectedBrand.name}
+            <button
+              onClick={() => { setSelectedBrandId(null); inputRef.current?.focus(); }}
+              className="hover:opacity-75 transition-opacity"
+              aria-label="Remove brand filter"
+            >
+              <X size={10} />
+            </button>
+          </span>
+        )}
+
         <input
           ref={inputRef}
           value={query}
           onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
           onFocus={() => setOpen(true)}
           onKeyDown={handleKeyDown}
-          placeholder={placeholder}
-          className={`w-full bg-[#2d2d2d] border border-[#444] text-[#e8e8e8] placeholder-[#555] focus:outline-none focus:border-[#666] transition-colors ${
-            large
-              ? "rounded-xl pl-11 pr-11 py-3.5 text-base"
-              : "rounded-lg pl-8 pr-8 py-2 text-sm"
+          placeholder={selectedBrand ? `Search in ${selectedBrand.name}…` : placeholder}
+          className={`flex-1 bg-transparent text-[#e8e8e8] placeholder-[#555] focus:outline-none ${
+            large ? "text-base" : "text-sm"
           }`}
         />
-        {query && (
+
+        {(query || (selectedBrand && !lockedBrandId)) && (
           <button
-            onClick={() => { setQuery(""); inputRef.current?.focus(); }}
-            className={`absolute ${large ? "right-4" : "right-2.5"} top-1/2 -translate-y-1/2 text-[#555] hover:text-[#aaa] transition-colors`}
+            onClick={() => { setQuery(""); if (!lockedBrandId) setSelectedBrandId(null); inputRef.current?.focus(); }}
+            className="shrink-0 text-[#555] hover:text-[#aaa] transition-colors"
           >
             <X size={13} />
           </button>
@@ -285,8 +325,8 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
       {/* Dropdown */}
       {showPanel && (
         <div className="absolute top-full left-0 right-0 mt-1.5 bg-[#1e1e1e] border border-[#333] rounded-xl shadow-2xl z-50 overflow-hidden">
-          {/* Brand filters — hidden when locked to one brand */}
-          {!lockedBrandId && (
+          {/* Brand filters — hidden when locked to one brand or a brand pill is active */}
+          {!lockedBrandId && !selectedBrandId && (
             <div className="flex gap-1.5 px-3 pt-3 pb-2 border-b border-[#2a2a2a] flex-wrap">
               <button
                 onClick={() => setSelectedBrandId(null)}
@@ -301,12 +341,8 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
               {availableBrands.map((b) => (
                 <button
                   key={b.id}
-                  onClick={() => setSelectedBrandId(selectedBrandId === b.id ? null : b.id)}
-                  className={`text-xs px-2.5 py-1 rounded-full font-medium transition-colors ${
-                    selectedBrandId === b.id
-                      ? "bg-[#f77614] text-white"
-                      : "bg-[#2d2d2d] text-[#a0a0a0] hover:bg-[#333]"
-                  }`}
+                  onClick={() => { setSelectedBrandId(b.id); setQuery(""); inputRef.current?.focus(); }}
+                  className="text-xs px-2.5 py-1 rounded-full font-medium transition-colors bg-[#2d2d2d] text-[#a0a0a0] hover:bg-[#333]"
                 >
                   {b.name}
                 </button>
@@ -317,7 +353,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
           <div className="max-h-[min(240px,35vh)] overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-[#1a1a1a] [&::-webkit-scrollbar-thumb]:bg-[#3a3a3a] [&::-webkit-scrollbar-thumb]:rounded-full">
             {!hasResults && (
               <div className="px-4 py-6 text-center text-sm text-[#555]">
-                No results for &ldquo;{query}&rdquo;
+                {query ? `No results for "${query}"` : "No categories found"}
               </div>
             )}
 
@@ -434,7 +470,6 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
                         {item.fileType ? ` · ${item.fileType}` : ""}
                       </span>
                     </div>
-                    {/* Action icon */}
                     <a
                       href={item.downloadUrl}
                       target={item.actionType === "view" ? "_blank" : undefined}

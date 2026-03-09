@@ -4,7 +4,6 @@ import Link from "next/link";
 import { brands } from "@/data/mock-data";
 import { publicPath } from "@/lib/public-path";
 import SearchBar from "@/components/SearchBar";
-import Footer from "@/components/Footer";
 import { usePortal } from "@/lib/portal-context";
 
 export default function AllBrandsPage() {
@@ -35,15 +34,13 @@ export default function AllBrandsPage() {
                 <img
                   src={publicPath(`/${brand.slug}-card.png`)}
                   alt={brand.name}
-                  className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+                  className="w-full h-full object-contain opacity-50 group-hover:opacity-100 transition-opacity duration-200"
                 />
               </Link>
             ))}
           </div>
         </div>
       </div>
-
-      <Footer />
     </main>
   );
 }

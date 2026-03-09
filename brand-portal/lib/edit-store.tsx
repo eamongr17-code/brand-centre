@@ -59,6 +59,9 @@ interface EditStoreContextType {
   addFooterLink: () => void;
   updateFooterLink: (id: string, changes: Partial<Pick<FooterLink, "label" | "href">>) => void;
   deleteFooterLink: (id: string) => void;
+  // Footer text
+  getFooterText: () => string;
+  setFooterText: (text: string) => void;
   // GitHub config
   getGitHubConfig: () => GitHubConfig | null;
   setGitHubConfig: (config: GitHubConfig | null) => void;
@@ -92,6 +95,7 @@ interface PersistedData {
   deletedColourIds: string[];
   colourOverrides: Record<string, Partial<BrandColour>>;
   footerLinks: FooterLink[] | null;
+  footerText: string | null;
   githubConfig: GitHubConfig | null;
 }
 
@@ -113,6 +117,7 @@ const EMPTY: PersistedData = {
   deletedColourIds: [],
   colourOverrides: {},
   footerLinks: null,
+  footerText: null,
   githubConfig: null,
 };
 
@@ -645,6 +650,22 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
     [persist]
   );
 
+  // ── Footer text ───────────────────────────────────────────────────────────
+
+  const DEFAULT_FOOTER_TEXT = "Have any issues? Reach out to the brand team on Slack";
+
+  const getFooterText = useCallback(
+    () => data.footerText ?? DEFAULT_FOOTER_TEXT,
+    [data.footerText]
+  );
+
+  const setFooterText = useCallback(
+    (text: string) => {
+      persist((prev) => ({ ...prev, footerText: text }));
+    },
+    [persist]
+  );
+
   // ── GitHub config ─────────────────────────────────────────────────────────
 
   const getGitHubConfig = useCallback(() => data.githubConfig ?? null, [data.githubConfig]);
@@ -692,6 +713,8 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
         addFooterLink,
         updateFooterLink,
         deleteFooterLink,
+        getFooterText,
+        setFooterText,
         getGitHubConfig,
         setGitHubConfig,
       }}
