@@ -286,8 +286,8 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
           className="shrink-0 text-[#555] pointer-events-none"
         />
 
-        {/* Brand tag pill — shown when brand was manually selected, not when implied by the current page */}
-        {selectedBrand && !lockedBrandId && selectedBrandId !== pathBrandId && (
+        {/* Brand tag pill — only visible while search is open so the user can remove the filter */}
+        {selectedBrand && !lockedBrandId && open && (
           <span className="inline-flex items-center gap-1 shrink-0 bg-[#f77614] text-white rounded-full px-2 py-0.5 text-xs font-medium">
             {selectedBrand.name}
             <button
@@ -312,7 +312,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
           }`}
         />
 
-        {(query || (selectedBrand && !lockedBrandId && selectedBrandId !== pathBrandId)) && (
+        {(query || (selectedBrand && !lockedBrandId && open)) && (
           <button
             onClick={() => { setQuery(""); if (!lockedBrandId) setSelectedBrandId(null); inputRef.current?.focus(); }}
             className="shrink-0 text-[#555] hover:text-[#aaa] transition-colors"
