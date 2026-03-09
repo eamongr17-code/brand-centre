@@ -89,19 +89,38 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
     [lockedBrandId]
   );
 
-  // Auto-detect brand name typed at the start of query and convert to tag
+  // Auto-detect brand name typed anywhere in query and convert to tag
   useEffect(() => {
     if (!query || lockedBrandId) return;
-    const q = query.toLowerCase();
+    const words = query.trim().split(/\s+/);
+
     const matched = availableBrands.find((b) => {
-      const name = b.name.toLowerCase();
-      return q === name || q.startsWith(name + " ");
+      const nameParts = b.name.toLowerCase().split(/\s+/);
+      if (nameParts.length === 1) {
+        return words.some((w) => w.toLowerCase() === nameParts[0]);
+      }
+      // Multi-word brand name — check for consecutive match
+      for (let i = 0; i <= words.length - nameParts.length; i++) {
+        if (nameParts.every((part, j) => words[i + j].toLowerCase() === part)) return true;
+      }
+      return false;
     });
+
     if (matched && selectedBrandId !== matched.id) {
       setSelectedBrandId(matched.id);
-      // Strip the brand name (+ optional space) from the front of query
-      const remainder = query.slice(matched.name.length).replace(/^\s+/, "");
-      setQuery(remainder);
+      const nameParts = matched.name.toLowerCase().split(/\s+/);
+      let remaining = [...words];
+      if (nameParts.length === 1) {
+        remaining = remaining.filter((w) => w.toLowerCase() !== nameParts[0]);
+      } else {
+        for (let i = 0; i <= remaining.length - nameParts.length; i++) {
+          if (nameParts.every((part, j) => remaining[i + j].toLowerCase() === part)) {
+            remaining.splice(i, nameParts.length);
+            break;
+          }
+        }
+      }
+      setQuery(remaining.join(" "));
     }
   }, [query, availableBrands, lockedBrandId, selectedBrandId]);
 
