@@ -25,7 +25,7 @@ export default function Navbar() {
       <div className="flex-1 flex justify-center items-center gap-2">
         <Link
           href="/"
-          className={`shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-lg border text-[#e8e8e8] transition-colors ${
+          className={`shrink-0 inline-flex items-center justify-center w-[38px] h-[38px] rounded-lg border text-[#e8e8e8] transition-colors ${
             editMode
               ? "bg-[#2d2200] border-[#5a3e00] hover:bg-[#3a2d00]"
               : "bg-[#2d2d2d] border-[#444] hover:bg-[#333]"
