@@ -25,7 +25,7 @@ export default function Navbar() {
       <div className="flex-1 flex justify-center items-center gap-2">
         <Link
           href="/"
-          className={`shrink-0 inline-flex items-center justify-center w-8 h-8 rounded border text-[#e8e8e8] transition-colors ${
+          className={`shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-lg border text-[#e8e8e8] transition-colors ${
             editMode
               ? "bg-[#2d2200] border-[#5a3e00] hover:bg-[#3a2d00]"
               : "bg-[#2d2d2d] border-[#444] hover:bg-[#333]"
@@ -41,7 +41,7 @@ export default function Navbar() {
       <div className="shrink-0 flex items-center gap-2">
         <button
           onClick={toggleEditMode}
-          className={`inline-flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded border transition-colors ${
+          className={`inline-flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border transition-colors ${
             editMode
               ? "bg-amber-500 text-white border-amber-500 hover:bg-amber-600"
               : "bg-[#2d2d2d] text-[#e8e8e8] border-[#444] hover:bg-[#333]"

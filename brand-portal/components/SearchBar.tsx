@@ -216,7 +216,7 @@ export default function SearchBar() {
           onFocus={() => setOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder="Search assets, categories…"
-          className="w-full bg-[#2d2d2d] border border-[#3a3a3a] rounded-lg pl-8 pr-8 py-2 text-sm text-[#e8e8e8] placeholder-[#555] focus:outline-none focus:border-[#555] transition-colors"
+          className="w-full bg-[#2d2d2d] border border-[#444] rounded-lg pl-8 pr-8 py-2 text-sm text-[#e8e8e8] placeholder-[#555] focus:outline-none focus:border-[#666] transition-colors"
         />
         {query && (
           <button
