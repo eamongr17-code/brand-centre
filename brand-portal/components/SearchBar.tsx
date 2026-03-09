@@ -242,24 +242,30 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
     setTimeout(() => setCopiedColourId(null), 1500);
   }, []);
 
+  // Closing the search always resets the brand filter back to the page's context
+  const closeSearch = useCallback(() => {
+    setOpen(false);
+    setQuery("");
+    setSelectedBrandId(pathBrandId);
+  }, [pathBrandId]);
+
   // Close on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setOpen(false);
+        closeSearch();
       }
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
-  }, []);
+  }, [closeSearch]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
-      setQuery("");
-      setOpen(false);
+      closeSearch();
       inputRef.current?.blur();
     }
-    // Backspace on empty query removes brand tag
+    // Backspace on empty query removes brand tag (temporarily, resets on close)
     if (e.key === "Backspace" && !query && selectedBrandId && !lockedBrandId) {
       setSelectedBrandId(null);
     }
@@ -304,7 +310,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
           ref={inputRef}
           value={query}
           onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
-          onFocus={() => setOpen(true)}
+          onFocus={() => { setOpen(true); setSelectedBrandId(pathBrandId); }}
           onKeyDown={handleKeyDown}
           placeholder={selectedBrand ? `Search in ${selectedBrand.name}…` : placeholder}
           className={`flex-1 bg-transparent text-[#e8e8e8] placeholder-[#555] focus:outline-none ${
