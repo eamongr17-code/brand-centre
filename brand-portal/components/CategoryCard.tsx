@@ -6,6 +6,7 @@ import { Download, Pencil, Trash2, Check, X } from "lucide-react";
 import { useEditStore } from "@/lib/edit-store";
 import { usePortal } from "@/lib/portal-context";
 import ImageUploader from "@/components/ImageUploader";
+import FadeImg from "@/components/FadeImg";
 import type { Category } from "@/lib/types";
 
 interface CategoryCardProps {
@@ -52,13 +53,9 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
 
   if (editing) {
     return (
-      <div className="border border-[#f77614] rounded-lg bg-[#242424] flex flex-col overflow-hidden">
-        <div className="bg-[#2d2d2d] h-36 flex items-center justify-center text-[#666] text-xs shrink-0">
-          {previewImage ? (
-            <img src={previewImage} alt="" className="h-full w-full object-contain" />
-          ) : (
-            <span>No preview image</span>
-          )}
+      <div className="border border-[#f77614] rounded-lg bg-[#242424] flex flex-col overflow-hidden [animation:fade-up_0.3s_ease-out_forwards]">
+        <div className="bg-[#2d2d2d] h-36 shrink-0 overflow-hidden">
+          <FadeImg src={previewImage || "/placeholder-asset.png"} fallbackSrc="/placeholder-asset.png" alt="" className="h-full w-full object-cover" />
         </div>
         <div className="p-4 space-y-2 flex-1">
           <input
@@ -110,14 +107,10 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
 
   return (
     <>
-      <div className="border border-[#333] rounded-lg bg-[#242424] hover:border-[#444] transition-colors relative group flex flex-col">
+      <div className="border border-[#333] rounded-lg bg-[#242424] hover:border-[#444] transition-colors relative group flex flex-col [animation:fade-up_0.3s_ease-out_forwards]">
         {/* Preview image — shown for all category types */}
-        <div className="bg-[#2d2d2d] h-36 flex items-center justify-center text-[#555] text-xs shrink-0 rounded-t-lg overflow-hidden">
-          {category.previewImage ? (
-            <img src={category.previewImage} alt={category.name} className="h-full w-full object-cover" />
-          ) : (
-            <span>No preview</span>
-          )}
+        <div className="bg-[#2d2d2d] h-36 shrink-0 rounded-t-lg overflow-hidden">
+          <FadeImg src={category.previewImage || "/placeholder-asset.png"} fallbackSrc="/placeholder-asset.png" alt={category.name} className="h-full w-full object-cover" />
         </div>
 
         {editMode && (

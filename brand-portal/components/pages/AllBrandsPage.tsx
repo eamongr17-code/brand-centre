@@ -4,13 +4,14 @@ import Link from "next/link";
 import { brands } from "@/data/mock-data";
 import { publicPath } from "@/lib/public-path";
 import SearchBar from "@/components/SearchBar";
+import FadeImg from "@/components/FadeImg";
 import { usePortal } from "@/lib/portal-context";
 
 export default function AllBrandsPage() {
   const { portalPath } = usePortal();
 
   return (
-    <main className="flex flex-col min-h-[calc(100vh-57px)]">
+    <main className="flex flex-col min-h-[calc(100vh-57px)] [animation:fade-in_0.3s_ease-out_forwards]">
       {/* Hero — centred search */}
       <div className="flex flex-col items-center justify-center flex-1 px-8 pt-4 pb-12">
         <img
@@ -31,7 +32,7 @@ export default function AllBrandsPage() {
                 href={portalPath(`/${brand.slug}`)}
                 className="group relative rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] hover:border-[#3a3a3a] transition-colors overflow-hidden aspect-[2/1]"
               >
-                <img
+                <FadeImg
                   src={publicPath(`/${brand.slug}-card.png`)}
                   alt={brand.name}
                   className="w-full h-full object-contain"

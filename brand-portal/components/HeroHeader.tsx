@@ -5,6 +5,7 @@ import { Pencil, Check, X } from "lucide-react";
 import { useEditStore } from "@/lib/edit-store";
 import { usePortal } from "@/lib/portal-context";
 import ImageUploader from "@/components/ImageUploader";
+import FadeImg from "@/components/FadeImg";
 import type { Brand, Category } from "@/lib/types";
 
 interface HeroHeaderProps {
@@ -35,13 +36,10 @@ function ImageBanner({
 
   return (
     <div className="w-full relative border-b border-[#2d2d2d]">
-      {imageUrl ? (
-        <img src={imageUrl} alt="" className="w-full block" />
-      ) : (
-        <div className="w-full h-64 flex items-center justify-center bg-[#242424]">
-          {canEditBanner && !editingUrl && (
-            <span className="text-[#666] text-sm">{emptyLabel}</span>
-          )}
+      <FadeImg src={imageUrl || "/placeholder-banner.png"} fallbackSrc="/placeholder-banner.png" alt="" className="w-full block" />
+      {!imageUrl && canEditBanner && !editingUrl && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="text-white/40 text-sm">{emptyLabel}</span>
         </div>
       )}
 
