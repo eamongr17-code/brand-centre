@@ -1,18 +1,46 @@
 "use client";
 
+import { useState, useCallback, useMemo } from "react";
 import Link from "next/link";
-import { Home, Pencil, Check } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { Home, Pencil, Check, Link2 } from "lucide-react";
 import { useEditStore } from "@/lib/edit-store";
 import { usePortal } from "@/lib/portal-context";
 import SearchBar from "@/components/SearchBar";
 import { publicPath } from "@/lib/public-path";
+import { brands } from "@/data/mock-data";
 
 export default function Navbar() {
   const { editMode, toggleEditMode } = useEditStore();
   const { canEdit, mode, portalPath } = usePortal();
+  const pathname = usePathname();
+  const [copied, setCopied] = useState(false);
 
   const homeHref = portalPath("/");
   const isPublic = mode === "public";
+
+  // Detect the brand slug from the current path
+  const currentBrandSlug = useMemo(() => {
+    const segments = pathname.split("/").filter(Boolean);
+    const slug =
+      segments[0] === "owner" || segments[0] === "internal"
+        ? segments[1]
+        : segments[0];
+    return brands.find((b) => b.slug === slug)?.slug ?? null;
+  }, [pathname]);
+
+  // True when on the portal home (no brand in path)
+  const isHomePage = !isPublic && !currentBrandSlug;
+
+  // Internal users see a "Copy public link" button when on a brand page
+  const showCopyLink = mode === "internal" && !!currentBrandSlug;
+
+  const copyPublicLink = useCallback(() => {
+    const url = `${window.location.origin}${publicPath(`/${currentBrandSlug}`)}`;
+    navigator.clipboard.writeText(url).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }, [currentBrandSlug]);
 
   return (
     <header
@@ -27,9 +55,9 @@ export default function Navbar() {
         <img src={publicPath("/atlas-wordmark.svg")} alt="Atlas" className="h-5 w-auto" />
       </Link>
 
-      {/* Centre — home button (non-public only) + search */}
+      {/* Centre — hidden on home page; home button + search on inner pages */}
       <div className="flex-1 flex justify-center items-center gap-2">
-        {!isPublic && (
+        {!isHomePage && !isPublic && (
           <Link
             href={homeHref}
             className={`shrink-0 inline-flex items-center justify-center w-[38px] h-[38px] rounded-lg border text-[#e8e8e8] transition-colors ${
@@ -42,11 +70,33 @@ export default function Navbar() {
             <Home size={14} />
           </Link>
         )}
-        <SearchBar />
+        {/* Search bar: hidden on home page (it lives in the page body there) */}
+        {!isHomePage && <SearchBar />}
       </div>
 
-      {/* Right actions — edit button for owner only */}
-      <div className="shrink-0">
+      {/* Right actions */}
+      <div className="shrink-0 flex items-center gap-2">
+        {/* Copy public link — internal portal, brand pages only */}
+        {showCopyLink && (
+          <button
+            onClick={copyPublicLink}
+            className="inline-flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border bg-[#2d2d2d] border-[#444] hover:bg-[#333] transition-colors"
+          >
+            {copied ? (
+              <>
+                <Check size={14} className="text-green-400" />
+                <span className="text-green-400">Copied</span>
+              </>
+            ) : (
+              <>
+                <Link2 size={14} className="text-[#e8e8e8]" />
+                <span className="text-[#e8e8e8]">Public link</span>
+              </>
+            )}
+          </button>
+        )}
+
+        {/* Edit button — owner only */}
         {canEdit && (
           <button
             onClick={toggleEditMode}

@@ -50,7 +50,7 @@ interface ColourResult {
 
 type SearchItem = CategoryResult | AssetResult | ColourResult;
 
-export default function SearchBar() {
+export default function SearchBar({ large = false }: { large?: boolean }) {
   const router = useRouter();
   const pathname = usePathname();
   const { editMode, getCategories, getAssets, getColours } = useEditStore();
@@ -251,12 +251,12 @@ export default function SearchBar() {
       : "Search assets, categories…";
 
   return (
-    <div ref={containerRef} className="relative w-full max-w-lg">
+    <div ref={containerRef} className={`relative w-full ${large ? "max-w-none" : "max-w-lg"}`}>
       {/* Input */}
       <div className="relative">
         <Search
-          size={14}
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-[#555] pointer-events-none"
+          size={large ? 16 : 14}
+          className={`absolute ${large ? "left-4" : "left-3"} top-1/2 -translate-y-1/2 text-[#555] pointer-events-none`}
         />
         <input
           ref={inputRef}
@@ -265,12 +265,16 @@ export default function SearchBar() {
           onFocus={() => setOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="w-full bg-[#2d2d2d] border border-[#444] rounded-lg pl-8 pr-8 py-2 text-sm text-[#e8e8e8] placeholder-[#555] focus:outline-none focus:border-[#666] transition-colors"
+          className={`w-full bg-[#2d2d2d] border border-[#444] text-[#e8e8e8] placeholder-[#555] focus:outline-none focus:border-[#666] transition-colors ${
+            large
+              ? "rounded-xl pl-11 pr-11 py-3.5 text-base"
+              : "rounded-lg pl-8 pr-8 py-2 text-sm"
+          }`}
         />
         {query && (
           <button
             onClick={() => { setQuery(""); inputRef.current?.focus(); }}
-            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#555] hover:text-[#aaa] transition-colors"
+            className={`absolute ${large ? "right-4" : "right-2.5"} top-1/2 -translate-y-1/2 text-[#555] hover:text-[#aaa] transition-colors`}
           >
             <X size={13} />
           </button>
