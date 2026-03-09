@@ -87,7 +87,7 @@ export default function PassphraseGate({ children }: { children: React.ReactNode
             onClick={() => switchMode("owner")}
             className={`flex-1 text-xs font-medium py-2 rounded-md transition-colors ${
               isOwner
-                ? "bg-amber-900/60 text-amber-400"
+                ? "bg-[#f77614]/25 text-[#f77614]"
                 : "text-[#555] hover:text-[#888]"
             }`}
           >
@@ -99,10 +99,10 @@ export default function PassphraseGate({ children }: { children: React.ReactNode
         <div className="flex flex-col items-center gap-3 mb-6">
           <div className={`w-10 h-10 rounded-full flex items-center justify-center border ${
             isOwner
-              ? "bg-amber-900/30 border-amber-800/50"
+              ? "bg-[#f77614]/15 border-[#f77614]/35"
               : "bg-[#1e1e1e] border-[#333]"
           }`}>
-            <Lock size={16} className={isOwner ? "text-amber-500" : "text-[#666]"} />
+            <Lock size={16} className={isOwner ? "text-[#f77614]" : "text-[#666]"} />
           </div>
           <div className="text-center">
             <h1 className="text-base font-semibold text-[#e8e8e8]">
@@ -125,7 +125,7 @@ export default function PassphraseGate({ children }: { children: React.ReactNode
               error
                 ? "border-red-500 focus:border-red-500"
                 : isOwner
-                ? "border-amber-800/50 focus:border-amber-700/70"
+                ? "border-[#f77614]/35 focus:border-[#f77614]/55"
                 : "border-[#2d2d2d] focus:border-[#444]"
             }`}
           />
@@ -136,7 +136,7 @@ export default function PassphraseGate({ children }: { children: React.ReactNode
             type="submit"
             className={`w-full text-sm font-medium px-4 py-3 rounded-lg border transition-colors ${
               isOwner
-                ? "bg-amber-900/40 hover:bg-amber-900/60 border-amber-800/50 text-amber-300"
+                ? "bg-[#f77614]/20 hover:bg-[#f77614]/30 border-[#f77614]/35 text-[#f8a260]"
                 : "bg-[#1e1e1e] hover:bg-[#252525] border-[#2d2d2d] text-[#e8e8e8]"
             }`}
           >

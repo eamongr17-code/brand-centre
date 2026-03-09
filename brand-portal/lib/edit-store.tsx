@@ -8,7 +8,7 @@ import {
   useCallback,
   ReactNode,
 } from "react";
-import type { QuickLink, Asset, Category, GitHubConfig, BrandColour, BrandColourEntry, BrandSection } from "./types";
+import type { QuickLink, Asset, Category, GitHubConfig, BrandColour, BrandColourEntry, BrandSection, FooterLink } from "./types";
 import {
   quickLinks as mockQuickLinks,
   getAssetsForCategory as getMockAssets,
@@ -54,6 +54,11 @@ interface EditStoreContextType {
   addColour: (categoryId: string) => void;
   updateColour: (id: string, changes: Partial<Pick<BrandColour, "name" | "hex">>) => void;
   deleteColour: (id: string) => void;
+  // Footer links
+  getFooterLinks: () => FooterLink[];
+  addFooterLink: () => void;
+  updateFooterLink: (id: string, changes: Partial<Pick<FooterLink, "label" | "href">>) => void;
+  deleteFooterLink: (id: string) => void;
   // GitHub config
   getGitHubConfig: () => GitHubConfig | null;
   setGitHubConfig: (config: GitHubConfig | null) => void;
@@ -86,6 +91,7 @@ interface PersistedData {
   customColours: BrandColourEntry[];
   deletedColourIds: string[];
   colourOverrides: Record<string, Partial<BrandColour>>;
+  footerLinks: FooterLink[] | null;
   githubConfig: GitHubConfig | null;
 }
 
@@ -106,6 +112,7 @@ const EMPTY: PersistedData = {
   customColours: [],
   deletedColourIds: [],
   colourOverrides: {},
+  footerLinks: null,
   githubConfig: null,
 };
 
@@ -594,6 +601,50 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
     [persist]
   );
 
+  // ── Footer links ─────────────────────────────────────────────────────────
+
+  const DEFAULT_FOOTER_LINKS: FooterLink[] = [
+    { id: "fl-1", label: "Brand Guidelines", href: "#" },
+    { id: "fl-2", label: "Asset Request", href: "#" },
+    { id: "fl-3", label: "Style Guide", href: "#" },
+    { id: "fl-4", label: "Slack Channel", href: "#" },
+  ];
+
+  const getFooterLinks = useCallback(
+    () => data.footerLinks ?? DEFAULT_FOOTER_LINKS,
+    [data.footerLinks]
+  );
+
+  const addFooterLink = useCallback(() => {
+    const newLink: FooterLink = { id: `fl-${genId()}`, label: "New link", href: "#" };
+    persist((prev) => ({
+      ...prev,
+      footerLinks: [...(prev.footerLinks ?? DEFAULT_FOOTER_LINKS), newLink],
+    }));
+  }, [persist]);
+
+  const updateFooterLink = useCallback(
+    (id: string, changes: Partial<Pick<FooterLink, "label" | "href">>) => {
+      persist((prev) => ({
+        ...prev,
+        footerLinks: (prev.footerLinks ?? DEFAULT_FOOTER_LINKS).map((l) =>
+          l.id === id ? { ...l, ...changes } : l
+        ),
+      }));
+    },
+    [persist]
+  );
+
+  const deleteFooterLink = useCallback(
+    (id: string) => {
+      persist((prev) => ({
+        ...prev,
+        footerLinks: (prev.footerLinks ?? DEFAULT_FOOTER_LINKS).filter((l) => l.id !== id),
+      }));
+    },
+    [persist]
+  );
+
   // ── GitHub config ─────────────────────────────────────────────────────────
 
   const getGitHubConfig = useCallback(() => data.githubConfig ?? null, [data.githubConfig]);
@@ -637,6 +688,10 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
         addColour,
         updateColour,
         deleteColour,
+        getFooterLinks,
+        addFooterLink,
+        updateFooterLink,
+        deleteFooterLink,
         getGitHubConfig,
         setGitHubConfig,
       }}

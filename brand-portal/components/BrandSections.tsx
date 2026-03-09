@@ -39,7 +39,7 @@ function SectionHeader({ name, canDelete, onRename, onDelete }: SectionHeaderPro
             if (e.key === "Enter") save();
             if (e.key === "Escape") setEditing(false);
           }}
-          className="text-xl font-bold bg-[#2d2d2d] border border-amber-500 rounded px-3 py-1 text-[#e8e8e8] w-72 focus:outline-none"
+          className="text-xl font-bold bg-[#2d2d2d] border border-[#f77614] rounded px-3 py-1 text-[#e8e8e8] w-72 focus:outline-none"
           autoFocus
         />
         <button

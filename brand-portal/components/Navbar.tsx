@@ -44,9 +44,9 @@ export default function Navbar() {
 
   return (
     <header
-      className={`border-b px-6 py-3 flex items-center gap-4 transition-colors ${
+      className={`${isHomePage ? "" : "border-b"} px-6 py-3 flex items-center gap-4 transition-colors ${
         editMode
-          ? "bg-[#1e1500] border-[#5a3e00]"
+          ? "bg-[#1a0c00] border-[#5a2800]"
           : "bg-[#1a1a1a] border-[#2d2d2d]"
       }`}
     >
@@ -64,7 +64,7 @@ export default function Navbar() {
             href={homeHref}
             className={`shrink-0 inline-flex items-center justify-center w-[38px] h-[38px] rounded-lg border text-[#e8e8e8] transition-colors ${
               editMode
-                ? "bg-[#2d2200] border-[#5a3e00] hover:bg-[#3a2d00]"
+                ? "bg-[#2d1500] border-[#5a2800] hover:bg-[#3a1c00]"
                 : "bg-[#2d2d2d] border-[#444] hover:bg-[#333]"
             }`}
             title="Home"
@@ -104,7 +104,7 @@ export default function Navbar() {
             onClick={toggleEditMode}
             className={`inline-flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border transition-colors ${
               editMode
-                ? "bg-amber-500 text-white border-amber-500 hover:bg-amber-600"
+                ? "bg-[#f77614] text-white border-[#f77614] hover:bg-[#e06810]"
                 : "bg-[#2d2d2d] text-[#e8e8e8] border-[#444] hover:bg-[#333]"
             }`}
           >

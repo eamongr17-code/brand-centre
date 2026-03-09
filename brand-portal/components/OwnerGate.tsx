@@ -43,8 +43,8 @@ export default function OwnerGate({ children }: { children: React.ReactNode }) {
         </div>
 
         <div className="flex flex-col items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-full bg-amber-900/30 border border-amber-800/50 flex items-center justify-center">
-            <Lock size={16} className="text-amber-500" />
+          <div className="w-10 h-10 rounded-full bg-[#f77614]/15 border border-[#f77614]/35 flex items-center justify-center">
+            <Lock size={16} className="text-[#f77614]" />
           </div>
           <div className="text-center">
             <h1 className="text-base font-semibold text-[#e8e8e8]">Owner Access</h1>
@@ -62,7 +62,7 @@ export default function OwnerGate({ children }: { children: React.ReactNode }) {
             className={`w-full bg-[#1e1e1e] border rounded-lg px-4 py-3 text-sm text-[#e8e8e8] placeholder-[#444] focus:outline-none transition-colors ${
               error
                 ? "border-red-500 focus:border-red-500"
-                : "border-amber-800/50 focus:border-amber-700/70"
+                : "border-[#f77614]/35 focus:border-[#f77614]/55"
             }`}
           />
           {error && (
@@ -70,7 +70,7 @@ export default function OwnerGate({ children }: { children: React.ReactNode }) {
           )}
           <button
             type="submit"
-            className="w-full bg-amber-900/40 hover:bg-amber-900/60 border border-amber-800/50 text-amber-300 text-sm font-medium px-4 py-3 rounded-lg transition-colors"
+            className="w-full bg-[#f77614]/20 hover:bg-[#f77614]/30 border border-[#f77614]/35 text-[#f8a260] text-sm font-medium px-4 py-3 rounded-lg transition-colors"
           >
             Continue
           </button>

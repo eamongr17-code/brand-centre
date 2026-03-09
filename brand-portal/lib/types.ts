@@ -61,6 +61,12 @@ export interface QuickLink {
   sortOrder: number;
 }
 
+export interface FooterLink {
+  id: string;
+  label: string;
+  href: string;
+}
+
 export interface GitHubConfig {
   owner: string;
   repo: string;

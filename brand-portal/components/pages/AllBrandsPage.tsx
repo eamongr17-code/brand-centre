@@ -23,22 +23,19 @@ export default function AllBrandsPage() {
           <SearchBar large placeholder="Find what you need across any brand…" />
         </div>
 
-        {/* Brand quick-access — logos only */}
-        <div className="mt-10 w-full max-w-2xl">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-[#444] mb-4 text-center">
-            Quick access
-          </p>
+        {/* Brand quick-access — card images */}
+        <div className="mt-5 w-full max-w-2xl">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {brands.map((brand) => (
               <Link
                 key={brand.id}
                 href={portalPath(`/${brand.slug}`)}
-                className="group flex items-center justify-center p-5 rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] hover:border-[#3a3a3a] hover:bg-[#202020] transition-colors"
+                className="group relative rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] hover:border-[#3a3a3a] transition-colors overflow-hidden aspect-[4/3]"
               >
                 <img
-                  src={publicPath(`/${brand.slug}-wordmark.png`)}
+                  src={publicPath(`/${brand.slug}-card.png`)}
                   alt={brand.name}
-                  className="h-7 w-full object-contain opacity-60 group-hover:opacity-100 transition-opacity"
+                  className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
                 />
               </Link>
             ))}

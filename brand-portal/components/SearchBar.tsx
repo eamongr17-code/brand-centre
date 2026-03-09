@@ -292,7 +292,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
                 onClick={() => setSelectedBrandId(null)}
                 className={`text-xs px-2.5 py-1 rounded-full font-medium transition-colors ${
                   !selectedBrandId
-                    ? "bg-amber-500 text-white"
+                    ? "bg-[#f77614] text-white"
                     : "bg-[#2d2d2d] text-[#a0a0a0] hover:bg-[#333]"
                 }`}
               >
@@ -304,7 +304,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
                   onClick={() => setSelectedBrandId(selectedBrandId === b.id ? null : b.id)}
                   className={`text-xs px-2.5 py-1 rounded-full font-medium transition-colors ${
                     selectedBrandId === b.id
-                      ? "bg-amber-500 text-white"
+                      ? "bg-[#f77614] text-white"
                       : "bg-[#2d2d2d] text-[#a0a0a0] hover:bg-[#333]"
                   }`}
                 >
@@ -314,7 +314,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
             </div>
           )}
 
-          <div className="max-h-[min(420px,55vh)] overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-[#1a1a1a] [&::-webkit-scrollbar-thumb]:bg-[#3a3a3a] [&::-webkit-scrollbar-thumb]:rounded-full">
+          <div className="max-h-[min(240px,35vh)] overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-[#1a1a1a] [&::-webkit-scrollbar-thumb]:bg-[#3a3a3a] [&::-webkit-scrollbar-thumb]:rounded-full">
             {!hasResults && (
               <div className="px-4 py-6 text-center text-sm text-[#555]">
                 No results for &ldquo;{query}&rdquo;

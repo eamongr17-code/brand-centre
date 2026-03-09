@@ -52,7 +52,7 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
 
   if (editing) {
     return (
-      <div className="border border-amber-500 rounded-lg bg-[#242424] flex flex-col overflow-hidden">
+      <div className="border border-[#f77614] rounded-lg bg-[#242424] flex flex-col overflow-hidden">
         <div className="bg-[#2d2d2d] h-36 flex items-center justify-center text-[#666] text-xs shrink-0">
           {previewImage ? (
             <img src={previewImage} alt="" className="h-full w-full object-contain" />
@@ -142,9 +142,9 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
         <div className="p-4 flex flex-col flex-1 gap-2">
           <div>
             <h3 className="font-semibold text-[#e8e8e8]">{name}</h3>
-            <p className="text-xs text-[#888] mt-0.5">
-              {isColours ? "Colour palette" : `${liveAssetCount} assets`}
-            </p>
+            {!isColours && (
+              <p className="text-xs text-[#888] mt-0.5">{liveAssetCount} assets</p>
+            )}
           </div>
           {description && (
             <p className="text-sm text-[#a0a0a0] flex-1">{description}</p>

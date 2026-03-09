@@ -69,7 +69,7 @@ export default function AssetCard({ asset }: { asset: Asset }) {
 
   if (editing) {
     return (
-      <div className="border border-amber-500 rounded-lg bg-[#242424] flex flex-col overflow-hidden">
+      <div className="border border-[#f77614] rounded-lg bg-[#242424] flex flex-col overflow-hidden">
         <div className="bg-[#2d2d2d] h-36 flex items-center justify-center text-[#666] text-xs shrink-0 rounded-t-lg overflow-hidden">
           {previewImage ? (
             <img src={previewImage} alt="" className="h-full w-full object-contain" />
@@ -91,20 +91,12 @@ export default function AssetCard({ asset }: { asset: Asset }) {
             rows={2}
             placeholder="Description"
           />
-          <div className="flex gap-2">
-            <input
-              value={fileType}
-              onChange={(e) => setFileType(e.target.value)}
-              className="flex-1 bg-[#2d2d2d] border border-[#444] rounded px-2 py-1 text-xs text-[#e8e8e8] placeholder-[#666]"
-              placeholder="File type (e.g. SVG + PNG)"
-            />
-            <input
-              value={fileSize}
-              onChange={(e) => setFileSize(e.target.value)}
-              className="flex-1 bg-[#2d2d2d] border border-[#444] rounded px-2 py-1 text-xs text-[#e8e8e8] placeholder-[#666]"
-              placeholder="File size"
-            />
-          </div>
+          <input
+            value={fileType}
+            onChange={(e) => setFileType(e.target.value)}
+            className="w-full bg-[#2d2d2d] border border-[#444] rounded px-2 py-1 text-xs text-[#e8e8e8] placeholder-[#666]"
+            placeholder="File type (e.g. SVG + PNG)"
+          />
           <ImageUploader
             value={previewImage}
             onChange={setPreviewImage}

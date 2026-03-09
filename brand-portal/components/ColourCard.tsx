@@ -116,7 +116,7 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
   if (editing) {
     const previewHex = hex.match(/^#[0-9A-Fa-f]{3,6}$/) ? hex : colour.hex;
     return (
-      <div className="border border-amber-500 rounded-lg overflow-hidden bg-[#242424]">
+      <div className="border border-[#f77614] rounded-lg overflow-hidden bg-[#242424]">
         <div className="h-20 transition-colors" style={{ backgroundColor: previewHex }} />
         <div className="p-4 space-y-2">
           <input
