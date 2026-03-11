@@ -224,7 +224,6 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
       const haystack = [
         item.name,
         item.type === "colour" ? item.hex : "",
-        item.type !== "colour" ? item.description : "",
         item.brandName,
         item.type === "asset" ? item.fileType : "",
         item.type === "asset" ? item.categoryName : "",

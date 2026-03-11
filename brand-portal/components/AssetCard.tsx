@@ -25,6 +25,7 @@ export default function AssetCard({ asset }: { asset: Asset }) {
   const [visibility, setVisibility] = useState<"public" | "internal">(
     asset.visibility ?? "public"
   );
+  const [rulesText, setRulesText] = useState((asset.rules ?? []).join("\n"));
 
   // Re-sync local state when prop changes (e.g. after store update)
   useEffect(() => {
@@ -37,6 +38,7 @@ export default function AssetCard({ asset }: { asset: Asset }) {
       setDownloadUrl(asset.downloadUrl);
       setActionType(asset.actionType ?? "download");
       setVisibility(asset.visibility ?? "public");
+      setRulesText((asset.rules ?? []).join("\n"));
     }
   }, [asset, editing]);
 
@@ -50,6 +52,7 @@ export default function AssetCard({ asset }: { asset: Asset }) {
       downloadUrl,
       actionType,
       visibility,
+      rules: rulesText.split("\n").map((r) => r.trim()).filter(Boolean),
     });
     setEditing(false);
   };
@@ -63,6 +66,7 @@ export default function AssetCard({ asset }: { asset: Asset }) {
     setDownloadUrl(asset.downloadUrl);
     setActionType(asset.actionType ?? "download");
     setVisibility(asset.visibility ?? "public");
+    setRulesText((asset.rules ?? []).join("\n"));
     setEditing(false);
   };
 
@@ -95,16 +99,23 @@ export default function AssetCard({ asset }: { asset: Asset }) {
             className="w-full bg-[#2d2d2d] border border-[#444] rounded px-2 py-1 text-xs text-[#e8e8e8] placeholder-[#666]"
             placeholder="File type (e.g. SVG + PNG)"
           />
+          <textarea
+            value={rulesText}
+            onChange={(e) => setRulesText(e.target.value)}
+            className="w-full bg-[#2d2d2d] border border-[#444] rounded px-2 py-1 text-xs resize-none text-[#e8e8e8] placeholder-[#666]"
+            rows={3}
+            placeholder={"Usage rules — one per line\ne.g. Use on dark backgrounds only"}
+          />
           <ImageUploader
             value={previewImage}
             onChange={setPreviewImage}
             placeholder="Preview image URL (https://...)"
           />
-          <input
+          <ImageUploader
             value={downloadUrl}
-            onChange={(e) => setDownloadUrl(e.target.value)}
-            className="w-full bg-[#2d2d2d] border border-[#444] rounded px-2 py-1 text-xs font-mono text-[#e8e8e8] placeholder-[#666]"
-            placeholder="URL (https://...)"
+            onChange={setDownloadUrl}
+            placeholder="Asset URL (https://...)"
+            accept="*/*"
           />
 
           {/* Action type toggle */}
@@ -220,6 +231,16 @@ export default function AssetCard({ asset }: { asset: Asset }) {
       <div className="p-4 flex flex-col flex-1 gap-2">
         <h3 className="font-semibold text-sm text-[#e8e8e8]">{name}</h3>
         <p className="text-xs text-[#a0a0a0] flex-1">{description}</p>
+        {asset.rules && asset.rules.length > 0 && (
+          <ul className="space-y-1 pt-1">
+            {asset.rules.map((rule, i) => (
+              <li key={i} className="flex gap-1.5 text-[11px] text-[#888] leading-snug">
+                <span className="mt-0.5 shrink-0 text-[#555]">—</span>
+                <span>{rule}</span>
+              </li>
+            ))}
+          </ul>
+        )}
         <div className="mt-auto flex items-center justify-between gap-2">
           <span className="text-xs text-[#666]">
             {fileType}{fileSize ? ` · ${fileSize}` : ""}

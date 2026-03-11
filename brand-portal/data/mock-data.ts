@@ -104,6 +104,12 @@ export const categories: Category[] = [
     downloadAllUrl: "#",
     assetCount: 12,
     sortOrder: 1,
+    rules: [
+      "Always maintain a minimum clear space equal to the height of the 'S' in Stake on all sides",
+      "Never recolour, distort, rotate, or add effects to any logo variant",
+      "Do not place logos on backgrounds that reduce legibility — use the appropriate light or dark variant",
+      "The wordmark and icon mark must never be separated from their approved lockup proportions",
+    ],
   },
   {
     id: "stake-icons",
@@ -179,6 +185,12 @@ export const categories: Category[] = [
     downloadAllUrl: "#",
     assetCount: 10,
     sortOrder: 1,
+    rules: [
+      "The KICK green (#53FC18) logo is the primary version — use on dark backgrounds only",
+      "Never place the green logo on a light or white background — use the white variant instead",
+      "Do not combine KICK branding with competitor streaming platform logos",
+      "Minimum digital size: 32px height",
+    ],
   },
   {
     id: "kick-overlays",
@@ -257,6 +269,11 @@ export const assets: Asset[] = [
     previewImage: "",
     featured: true,
     sortOrder: 1,
+    rules: [
+      "Use exclusively on dark backgrounds (#0B0B0B or equivalent)",
+      "SVG preferred for all digital use — PNG only when SVG is not supported",
+      "Do not use below 48px width in digital contexts",
+    ],
   },
   {
     id: "stake-logo-primary-light",
@@ -269,6 +286,10 @@ export const assets: Asset[] = [
     previewImage: "",
     featured: true,
     sortOrder: 2,
+    rules: [
+      "Use on light or white backgrounds only — minimum background lightness #F0F0F0",
+      "Do not use on photographic backgrounds without sufficient contrast review",
+    ],
   },
   {
     id: "stake-logo-wordmark",
@@ -309,6 +330,11 @@ export const assets: Asset[] = [
     previewImage: "",
     featured: true,
     sortOrder: 1,
+    rules: [
+      "Dark backgrounds only — do not use on white or light backgrounds",
+      "Never alter the green (#53FC18) — no tinting, shadowing, or opacity changes",
+      "Approved for external partner usage with prior written consent",
+    ],
   },
   {
     id: "kick-logo-white",

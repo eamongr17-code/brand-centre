@@ -40,6 +40,7 @@ export interface Category {
   sortOrder: number;
   categoryType?: "assets" | "colours";
   visibility?: "public" | "internal";
+  rules?: string[];
 }
 
 export interface BrandSection {
@@ -67,14 +68,6 @@ export interface FooterLink {
   href: string;
 }
 
-export interface GitHubConfig {
-  owner: string;
-  repo: string;
-  branch: string;
-  token: string;
-  imagePath: string;
-}
-
 export interface Asset {
   id: string;
   categoryId: string;
@@ -88,4 +81,5 @@ export interface Asset {
   sortOrder: number;
   actionType?: "download" | "view";
   visibility?: "public" | "internal";
+  rules?: string[];
 }
