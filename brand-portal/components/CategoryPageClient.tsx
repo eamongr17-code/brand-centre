@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Download, Code2, Check, HelpCircle, ChevronDown, X } from "lucide-react";
+import { Download, Code2, Check } from "lucide-react";
 import Breadcrumb from "@/components/Breadcrumb";
 import AssetGrid from "@/components/AssetGrid";
 import ColourGrid from "@/components/ColourGrid";
@@ -15,16 +15,13 @@ interface CategoryPageClientProps {
 }
 
 export default function CategoryPageClient({ brandSlug, categorySlug }: CategoryPageClientProps) {
-  const { getCategoryBySlug, getAssets, getColours, updateCategory, editMode } = useEditStore();
+  const { getCategoryBySlug, getAssets, getColours, editMode } = useEditStore();
   const { portalPath, showInternal, mode } = usePortal();
   const isPublic = mode === "public";
   const [mounted, setMounted] = useState(false);
   const [embedOpen, setEmbedOpen] = useState(false);
   const [embedCopied, setEmbedCopied] = useState(false);
   const embedRef = useRef<HTMLDivElement>(null);
-  const [rulesLines, setRulesLines] = useState<string[]>([""]);
-  const [showRules, setShowRules] = useState(false);
-
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -42,12 +39,6 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
 
   const brand = getBrandBySlug(brandSlug);
   const category = mounted && brand ? getCategoryBySlug(brand.id, categorySlug) : undefined;
-
-  // Sync rules inputs when category data changes (e.g. after localStorage hydration or save)
-  useEffect(() => {
-    if (category) setRulesLines([...(category.rules ?? []), ""]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [category?.id, (category?.rules ?? []).join("|")]);
 
   // Wait for client mount before reading localStorage-backed data
   if (!mounted || !brand) {
@@ -157,66 +148,6 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
             )}
           </div>
         </div>
-
-        {/* Category rules */}
-        {editMode ? (
-          <div className="mb-8">
-            <p className="text-xs font-medium text-[#666] mb-1.5 uppercase tracking-wide">Usage rules</p>
-            <div className="space-y-1.5">
-              {rulesLines.map((rule, i) => (
-                <div key={i} className="flex gap-1.5 items-center">
-                  <input
-                    value={rule}
-                    onChange={(e) => {
-                      const next = [...rulesLines];
-                      next[i] = e.target.value;
-                      if (i === rulesLines.length - 1 && e.target.value) next.push("");
-                      setRulesLines(next);
-                    }}
-                    onBlur={() => updateCategory(category.id, { rules: rulesLines.filter(Boolean) })}
-                    className="flex-1 bg-[#1e1e1e] border border-[#333] focus:border-[#555] rounded px-3 py-2 text-xs text-[#e8e8e8] placeholder-[#444] outline-none transition-colors"
-                    placeholder={i === rulesLines.length - 1 ? (i === 0 ? "e.g. Always maintain minimum clear space" : "Add another rule…") : ""}
-                  />
-                  {rule !== "" && (
-                    <button
-                      onClick={() => {
-                        const next = rulesLines.filter((_, j) => j !== i);
-                        const withTrailing = next[next.length - 1] !== "" ? [...next, ""] : next;
-                        const final = withTrailing.length ? withTrailing : [""];
-                        setRulesLines(final);
-                        updateCategory(category.id, { rules: next.filter(Boolean) });
-                      }}
-                      className="text-[#555] hover:text-red-400 transition-colors"
-                    >
-                      <X size={12} />
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : category.rules && category.rules.length > 0 ? (
-          <div className="mb-8">
-            <button
-              onClick={() => setShowRules((v) => !v)}
-              className="inline-flex items-center gap-1.5 text-xs text-[#555] hover:text-[#888] transition-colors"
-            >
-              <HelpCircle size={13} />
-              Usage rules
-              <ChevronDown size={11} className={`transition-transform ${showRules ? "rotate-180" : ""}`} />
-            </button>
-            {showRules && (
-              <ul className="mt-2 space-y-1.5 pl-1">
-                {category.rules.map((rule, i) => (
-                  <li key={i} className="flex gap-2 text-xs text-[#888] leading-snug">
-                    <span className="mt-0.5 shrink-0 text-[#444]">—</span>
-                    <span>{rule}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        ) : null}
 
         {isColours
           ? <ColourGrid categoryId={category.id} />

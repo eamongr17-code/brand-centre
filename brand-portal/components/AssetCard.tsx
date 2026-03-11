@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Download, Eye, Pencil, Trash2, Check, X, Lock, HelpCircle, ChevronDown } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Download, Eye, Pencil, Trash2, Check, X, Lock, HelpCircle } from "lucide-react";
 import { useEditStore } from "@/lib/edit-store";
 import { usePortal } from "@/lib/portal-context";
 import ImageUploader from "@/components/ImageUploader";
@@ -26,7 +26,19 @@ export default function AssetCard({ asset }: { asset: Asset }) {
     asset.visibility ?? "public"
   );
   const [rulesLines, setRulesLines] = useState<string[]>([...(asset.rules ?? []), ""]);
-  const [showRules, setShowRules] = useState(false);
+  const [rulesOpen, setRulesOpen] = useState(false);
+  const rulesRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!rulesOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (rulesRef.current && !rulesRef.current.contains(e.target as Node)) {
+        setRulesOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [rulesOpen]);
 
   // Re-sync local state when prop changes (e.g. after store update)
   useEffect(() => {
@@ -256,24 +268,26 @@ export default function AssetCard({ asset }: { asset: Asset }) {
         <h3 className="font-semibold text-sm text-[#e8e8e8]">{name}</h3>
         <p className="text-xs text-[#a0a0a0] flex-1">{description}</p>
         {asset.rules && asset.rules.length > 0 && (
-          <div>
+          <div className="relative" ref={rulesRef}>
             <button
-              onClick={() => setShowRules((v) => !v)}
+              onClick={() => setRulesOpen((v) => !v)}
               className="inline-flex items-center gap-1 text-[11px] text-[#555] hover:text-[#888] transition-colors"
             >
               <HelpCircle size={11} />
               Usage rules
-              <ChevronDown size={10} className={`transition-transform ${showRules ? "rotate-180" : ""}`} />
             </button>
-            {showRules && (
-              <ul className="mt-1.5 space-y-1">
-                {asset.rules.map((rule, i) => (
-                  <li key={i} className="flex gap-1.5 text-[11px] text-[#888] leading-snug">
-                    <span className="mt-0.5 shrink-0 text-[#555]">—</span>
-                    <span>{rule}</span>
-                  </li>
-                ))}
-              </ul>
+            {rulesOpen && (
+              <div className="absolute bottom-full left-0 mb-2 w-56 bg-[#1e1e1e] border border-[#333] rounded-lg shadow-2xl p-3 z-50">
+                <p className="text-[10px] font-semibold text-[#555] uppercase tracking-widest mb-2">Usage rules</p>
+                <ul className="space-y-1.5">
+                  {asset.rules.map((rule, i) => (
+                    <li key={i} className="flex gap-1.5 text-[11px] text-[#888] leading-snug">
+                      <span className="shrink-0 text-[#555]">—</span>
+                      <span>{rule}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
           </div>
         )}
