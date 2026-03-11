@@ -40,6 +40,7 @@ export interface Category {
   sortOrder: number;
   categoryType?: "assets" | "colours";
   visibility?: "public" | "internal";
+  rules?: string[];
 }
 
 export interface BrandSection {
@@ -80,4 +81,5 @@ export interface Asset {
   sortOrder: number;
   actionType?: "download" | "view";
   visibility?: "public" | "internal";
+  rules?: string[];
 }

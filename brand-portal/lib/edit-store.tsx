@@ -42,12 +42,12 @@ interface EditStoreContextType {
   getCategories: (brandId: string, subBrandId?: string) => Category[];
   getCategoryBySlug: (brandId: string, slug: string) => Category | undefined;
   addCategory: (brandId: string, subBrandId?: string, categoryType?: "assets" | "colours") => void;
-  updateCategory: (id: string, changes: Partial<Pick<Category, "name" | "description" | "previewImage" | "downloadAllUrl">>) => void;
+  updateCategory: (id: string, changes: Partial<Pick<Category, "name" | "description" | "previewImage" | "downloadAllUrl" | "rules">>) => void;
   deleteCategory: (id: string) => void;
   // Assets
   getAssets: (categoryId: string) => Asset[];
   addAsset: (categoryId: string) => string;
-  updateAsset: (id: string, changes: Partial<Pick<Asset, "name" | "description" | "fileType" | "fileSize" | "downloadUrl" | "previewImage" | "actionType" | "visibility">>) => void;
+  updateAsset: (id: string, changes: Partial<Pick<Asset, "name" | "description" | "fileType" | "fileSize" | "downloadUrl" | "previewImage" | "actionType" | "visibility" | "rules">>) => void;
   deleteAsset: (id: string) => void;
   // Colours
   getColours: (categoryId: string) => BrandColour[];
@@ -419,7 +419,7 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
   );
 
   const updateCategory = useCallback(
-    (id: string, changes: Partial<Pick<Category, "name" | "description" | "previewImage" | "downloadAllUrl">>) => {
+    (id: string, changes: Partial<Pick<Category, "name" | "description" | "previewImage" | "downloadAllUrl" | "rules">>) => {
       persist((prev) => {
         if (prev.customCategories.some((c) => c.id === id)) {
           return {
@@ -497,7 +497,7 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
   );
 
   const updateAsset = useCallback(
-    (id: string, changes: Partial<Pick<Asset, "name" | "description" | "fileType" | "fileSize" | "downloadUrl" | "previewImage" | "actionType">>) => {
+    (id: string, changes: Partial<Pick<Asset, "name" | "description" | "fileType" | "fileSize" | "downloadUrl" | "previewImage" | "actionType" | "visibility" | "rules">>) => {
       persist((prev) => {
         if (prev.customAssets.some((a) => a.id === id)) {
           return {
