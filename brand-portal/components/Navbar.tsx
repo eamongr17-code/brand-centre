@@ -2,10 +2,11 @@
 
 import { useState, useCallback, useMemo } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Home, Pencil, Check, Link2 } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { Home, Pencil, Check, Link2, LogOut } from "lucide-react";
 import { useEditStore } from "@/lib/edit-store";
 import { usePortal } from "@/lib/portal-context";
+import { useAuth } from "@/lib/auth-context";
 import SearchBar from "@/components/SearchBar";
 import { publicPath } from "@/lib/public-path";
 import { brands } from "@/data/mock-data";
@@ -13,7 +14,9 @@ import { brands } from "@/data/mock-data";
 export default function Navbar() {
   const { editMode, toggleEditMode } = useEditStore();
   const { canEdit, mode, portalPath } = usePortal();
+  const { signOut } = useAuth();
   const pathname = usePathname();
+  const router = useRouter();
   const [copied, setCopied] = useState(false);
 
   const homeHref = portalPath("/");
@@ -41,6 +44,11 @@ export default function Navbar() {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }, [currentBrandSlug]);
+
+  const handleSignOut = useCallback(async () => {
+    await signOut();
+    router.push("/login");
+  }, [signOut, router]);
 
   return (
     <header
@@ -119,6 +127,17 @@ export default function Navbar() {
                 Edit
               </>
             )}
+          </button>
+        )}
+
+        {/* Sign out — internal and owner portals */}
+        {!isPublic && (
+          <button
+            onClick={handleSignOut}
+            className="inline-flex items-center justify-center w-[38px] h-[38px] rounded-lg border bg-[#2d2d2d] border-[#444] hover:bg-[#333] text-[#666] hover:text-[#e8e8e8] transition-colors"
+            title="Sign out"
+          >
+            <LogOut size={14} />
           </button>
         )}
       </div>
