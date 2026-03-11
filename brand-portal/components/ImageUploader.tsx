@@ -26,7 +26,9 @@ export default function ImageUploader({
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const workerUrl = process.env.NEXT_PUBLIC_UPLOAD_WORKER_URL;
+      if (!workerUrl) throw new Error("NEXT_PUBLIC_UPLOAD_WORKER_URL is not set");
+      const res = await fetch(workerUrl, { method: "POST", body: formData });
       if (!res.ok) throw new Error("Upload failed");
       const { url } = await res.json();
       onChange(url);

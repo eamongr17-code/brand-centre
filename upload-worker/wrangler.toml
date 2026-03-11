@@ -1,0 +1,7 @@
+name = "atlas-upload"
+main = "index.js"
+compatibility_date = "2024-01-01"
+
+[[r2_buckets]]
+binding = "ATLAS_STORAGE"
+bucket_name = "atlas-storage"
