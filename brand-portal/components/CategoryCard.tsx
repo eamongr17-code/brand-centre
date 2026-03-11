@@ -80,11 +80,11 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
           />
           {/* Download URL only for non-colour categories */}
           {!isColours && (
-            <input
+            <ImageUploader
               value={downloadAllUrl}
-              onChange={(e) => setDownloadAllUrl(e.target.value)}
-              className="w-full bg-[#2d2d2d] border border-[#444] rounded px-2 py-1 text-xs font-mono text-[#e8e8e8] placeholder-[#666]"
+              onChange={setDownloadAllUrl}
               placeholder="Download All URL (https://...)"
+              accept="*/*"
             />
           )}
           <div className="flex gap-2 pt-1">

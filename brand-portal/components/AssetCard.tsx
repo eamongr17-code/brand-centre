@@ -100,11 +100,11 @@ export default function AssetCard({ asset }: { asset: Asset }) {
             onChange={setPreviewImage}
             placeholder="Preview image URL (https://...)"
           />
-          <input
+          <ImageUploader
             value={downloadUrl}
-            onChange={(e) => setDownloadUrl(e.target.value)}
-            className="w-full bg-[#2d2d2d] border border-[#444] rounded px-2 py-1 text-xs font-mono text-[#e8e8e8] placeholder-[#666]"
-            placeholder="URL (https://...)"
+            onChange={setDownloadUrl}
+            placeholder="Asset URL (https://...)"
+            accept="*/*"
           />
 
           {/* Action type toggle */}

@@ -67,14 +67,6 @@ export interface FooterLink {
   href: string;
 }
 
-export interface GitHubConfig {
-  owner: string;
-  repo: string;
-  branch: string;
-  token: string;
-  imagePath: string;
-}
-
 export interface Asset {
   id: string;
   categoryId: string;

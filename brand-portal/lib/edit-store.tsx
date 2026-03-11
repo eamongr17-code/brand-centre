@@ -8,7 +8,7 @@ import {
   useCallback,
   ReactNode,
 } from "react";
-import type { QuickLink, Asset, Category, GitHubConfig, BrandColour, BrandColourEntry, BrandSection, FooterLink } from "./types";
+import type { QuickLink, Asset, Category, BrandColour, BrandColourEntry, BrandSection, FooterLink } from "./types";
 import {
   quickLinks as mockQuickLinks,
   getAssetsForCategory as getMockAssets,
@@ -62,9 +62,6 @@ interface EditStoreContextType {
   // Footer text
   getFooterText: () => string;
   setFooterText: (text: string) => void;
-  // GitHub config
-  getGitHubConfig: () => GitHubConfig | null;
-  setGitHubConfig: (config: GitHubConfig | null) => void;
 }
 
 const EditStoreContext = createContext<EditStoreContextType | null>(null);
@@ -96,7 +93,6 @@ interface PersistedData {
   colourOverrides: Record<string, Partial<BrandColour>>;
   footerLinks: FooterLink[] | null;
   footerText: string | null;
-  githubConfig: GitHubConfig | null;
 }
 
 const EMPTY: PersistedData = {
@@ -118,7 +114,6 @@ const EMPTY: PersistedData = {
   colourOverrides: {},
   footerLinks: null,
   footerText: null,
-  githubConfig: null,
 };
 
 const STORAGE_KEY = "bap-edit";
@@ -666,17 +661,6 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
     [persist]
   );
 
-  // ── GitHub config ─────────────────────────────────────────────────────────
-
-  const getGitHubConfig = useCallback(() => data.githubConfig ?? null, [data.githubConfig]);
-
-  const setGitHubConfig = useCallback(
-    (config: GitHubConfig | null) => {
-      persist((prev) => ({ ...prev, githubConfig: config }));
-    },
-    [persist]
-  );
-
   return (
     <EditStoreContext.Provider
       value={{
@@ -715,8 +699,6 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
         deleteFooterLink,
         getFooterText,
         setFooterText,
-        getGitHubConfig,
-        setGitHubConfig,
       }}
     >
       {children}
