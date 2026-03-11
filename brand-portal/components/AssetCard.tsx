@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Download, Eye, Pencil, Trash2, Check, X, Lock } from "lucide-react";
+import { Download, Eye, Pencil, Trash2, Check, X, Lock, HelpCircle, ChevronDown } from "lucide-react";
 import { useEditStore } from "@/lib/edit-store";
 import { usePortal } from "@/lib/portal-context";
 import ImageUploader from "@/components/ImageUploader";
@@ -25,7 +25,8 @@ export default function AssetCard({ asset }: { asset: Asset }) {
   const [visibility, setVisibility] = useState<"public" | "internal">(
     asset.visibility ?? "public"
   );
-  const [rulesText, setRulesText] = useState((asset.rules ?? []).join("\n"));
+  const [rulesLines, setRulesLines] = useState<string[]>([...(asset.rules ?? []), ""]);
+  const [showRules, setShowRules] = useState(false);
 
   // Re-sync local state when prop changes (e.g. after store update)
   useEffect(() => {
@@ -38,7 +39,7 @@ export default function AssetCard({ asset }: { asset: Asset }) {
       setDownloadUrl(asset.downloadUrl);
       setActionType(asset.actionType ?? "download");
       setVisibility(asset.visibility ?? "public");
-      setRulesText((asset.rules ?? []).join("\n"));
+      setRulesLines([...(asset.rules ?? []), ""]);
     }
   }, [asset, editing]);
 
@@ -52,7 +53,7 @@ export default function AssetCard({ asset }: { asset: Asset }) {
       downloadUrl,
       actionType,
       visibility,
-      rules: rulesText.split("\n").map((r) => r.trim()).filter(Boolean),
+      rules: rulesLines.filter(Boolean),
     });
     setEditing(false);
   };
@@ -66,7 +67,7 @@ export default function AssetCard({ asset }: { asset: Asset }) {
     setDownloadUrl(asset.downloadUrl);
     setActionType(asset.actionType ?? "download");
     setVisibility(asset.visibility ?? "public");
-    setRulesText((asset.rules ?? []).join("\n"));
+    setRulesLines([...(asset.rules ?? []), ""]);
     setEditing(false);
   };
 
@@ -99,13 +100,36 @@ export default function AssetCard({ asset }: { asset: Asset }) {
             className="w-full bg-[#2d2d2d] border border-[#444] rounded px-2 py-1 text-xs text-[#e8e8e8] placeholder-[#666]"
             placeholder="File type (e.g. SVG + PNG)"
           />
-          <textarea
-            value={rulesText}
-            onChange={(e) => setRulesText(e.target.value)}
-            className="w-full bg-[#2d2d2d] border border-[#444] rounded px-2 py-1 text-xs resize-none text-[#e8e8e8] placeholder-[#666]"
-            rows={3}
-            placeholder={"Usage rules — one per line\ne.g. Use on dark backgrounds only"}
-          />
+          <div className="space-y-1.5">
+            {rulesLines.map((rule, i) => (
+              <div key={i} className="flex gap-1 items-center">
+                <input
+                  value={rule}
+                  onChange={(e) => {
+                    const next = [...rulesLines];
+                    next[i] = e.target.value;
+                    if (i === rulesLines.length - 1 && e.target.value) next.push("");
+                    setRulesLines(next);
+                  }}
+                  className="flex-1 bg-[#2d2d2d] border border-[#444] rounded px-2 py-1 text-xs text-[#e8e8e8] placeholder-[#666]"
+                  placeholder={i === rulesLines.length - 1 ? (i === 0 ? "e.g. Use on dark backgrounds only" : "Add another rule…") : ""}
+                />
+                {rule !== "" && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const next = rulesLines.filter((_, j) => j !== i);
+                      const withTrailing = next[next.length - 1] !== "" ? [...next, ""] : next;
+                      setRulesLines(withTrailing.length ? withTrailing : [""]);
+                    }}
+                    className="text-[#555] hover:text-red-400 transition-colors"
+                  >
+                    <X size={11} />
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
           <ImageUploader
             value={previewImage}
             onChange={setPreviewImage}
@@ -232,14 +256,26 @@ export default function AssetCard({ asset }: { asset: Asset }) {
         <h3 className="font-semibold text-sm text-[#e8e8e8]">{name}</h3>
         <p className="text-xs text-[#a0a0a0] flex-1">{description}</p>
         {asset.rules && asset.rules.length > 0 && (
-          <ul className="space-y-1 pt-1">
-            {asset.rules.map((rule, i) => (
-              <li key={i} className="flex gap-1.5 text-[11px] text-[#888] leading-snug">
-                <span className="mt-0.5 shrink-0 text-[#555]">—</span>
-                <span>{rule}</span>
-              </li>
-            ))}
-          </ul>
+          <div>
+            <button
+              onClick={() => setShowRules((v) => !v)}
+              className="inline-flex items-center gap-1 text-[11px] text-[#555] hover:text-[#888] transition-colors"
+            >
+              <HelpCircle size={11} />
+              Usage rules
+              <ChevronDown size={10} className={`transition-transform ${showRules ? "rotate-180" : ""}`} />
+            </button>
+            {showRules && (
+              <ul className="mt-1.5 space-y-1">
+                {asset.rules.map((rule, i) => (
+                  <li key={i} className="flex gap-1.5 text-[11px] text-[#888] leading-snug">
+                    <span className="mt-0.5 shrink-0 text-[#555]">—</span>
+                    <span>{rule}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         )}
         <div className="mt-auto flex items-center justify-between gap-2">
           <span className="text-xs text-[#666]">
