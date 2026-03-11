@@ -52,21 +52,6 @@ export default async function EmbedCategoryPage({
       </div>
 
       <div className="px-6 py-6">
-        {/* Category rules */}
-        {category.rules && category.rules.length > 0 && (
-          <div className="mb-6 bg-[#161616] border border-[#222] rounded-lg px-4 py-3.5">
-            <p className="text-[10px] font-semibold text-[#555] uppercase tracking-widest mb-2.5">Usage rules</p>
-            <ul className="space-y-1.5">
-              {category.rules.map((rule, i) => (
-                <li key={i} className="flex gap-2 text-xs text-[#888] leading-snug">
-                  <span className="mt-0.5 shrink-0 text-[#444]">—</span>
-                  <span>{rule}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
         {/* Assets grid */}
         {!isColours && assets.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
