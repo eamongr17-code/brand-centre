@@ -42,7 +42,7 @@ interface EditStoreContextType {
   getCategories: (brandId: string, subBrandId?: string) => Category[];
   getCategoryBySlug: (brandId: string, slug: string) => Category | undefined;
   addCategory: (brandId: string, subBrandId?: string, categoryType?: "assets" | "colours") => void;
-  updateCategory: (id: string, changes: Partial<Pick<Category, "name" | "description" | "previewImage" | "downloadAllUrl" | "rules">>) => void;
+  updateCategory: (id: string, changes: Partial<Pick<Category, "name" | "description" | "previewImage" | "downloadAllUrl">>) => void;
   deleteCategory: (id: string) => void;
   // Assets
   getAssets: (categoryId: string) => Asset[];
@@ -419,7 +419,7 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
   );
 
   const updateCategory = useCallback(
-    (id: string, changes: Partial<Pick<Category, "name" | "description" | "previewImage" | "downloadAllUrl" | "rules">>) => {
+    (id: string, changes: Partial<Pick<Category, "name" | "description" | "previewImage" | "downloadAllUrl">>) => {
       persist((prev) => {
         if (prev.customCategories.some((c) => c.id === id)) {
           return {

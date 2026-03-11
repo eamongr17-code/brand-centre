@@ -1,9 +1,10 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Mozilla+Text:wght@400;500;600;700&display=swap");
 
 body {
   background: #1a1a1a;
   color: #e8e8e8;
-  font-family: var(--font-mozilla-text), Arial, sans-serif;
+  font-family: "Mozilla Text", Arial, sans-serif;
 }
 
 /* Ensure all interactive elements show a pointer cursor */
