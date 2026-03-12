@@ -1,14 +1,14 @@
 import Navbar from "@/components/Navbar";
-import OwnerGate from "@/components/OwnerGate";
+import AuthGate from "@/components/AuthGate";
 import { PortalProvider } from "@/lib/portal-context";
 
 export default function OwnerLayout({ children }: { children: React.ReactNode }) {
   return (
     <PortalProvider mode="owner" brandScope={null}>
-      <OwnerGate>
+      <AuthGate requireOwner>
         <Navbar />
         {children}
-      </OwnerGate>
+      </AuthGate>
     </PortalProvider>
   );
 }

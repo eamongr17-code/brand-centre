@@ -17,6 +17,7 @@ import {
   getSubBrandsForBrand as getMockSubBrands,
   getColoursForCategory as getMockColours,
 } from "@/data/mock-data";
+import { supabase } from "./supabase";
 
 interface EditStoreContextType {
   editMode: boolean;
@@ -116,17 +117,6 @@ const EMPTY: PersistedData = {
   footerText: null,
 };
 
-const STORAGE_KEY = "bap-edit";
-
-function readStorage(): PersistedData {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? { ...EMPTY, ...(JSON.parse(raw) as PersistedData) } : EMPTY;
-  } catch {
-    return EMPTY;
-  }
-}
-
 function genId() {
   return Math.random().toString(36).slice(2, 10);
 }
@@ -147,13 +137,44 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<PersistedData>(EMPTY);
 
   useEffect(() => {
-    setData(readStorage());
+    // Initial load
+    supabase
+      .from("brand_data")
+      .select("data")
+      .eq("id", "global")
+      .single()
+      .then(({ data: row }) => {
+        if (row?.data) {
+          setData({ ...EMPTY, ...(row.data as PersistedData) });
+        }
+      });
+
+    // Real-time subscription
+    const channel = supabase
+      .channel("brand_data_changes")
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "brand_data", filter: "id=eq.global" },
+        (payload) => {
+          if (payload.new?.data) {
+            setData({ ...EMPTY, ...(payload.new.data as PersistedData) });
+          }
+        }
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
   }, []);
 
   const persist = useCallback((updater: (prev: PersistedData) => PersistedData) => {
     setData((prev) => {
       const next = updater(prev);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      supabase
+        .from("brand_data")
+        .upsert({ id: "global", data: next })
+        .then(({ error }) => {
+          if (error) console.error("Failed to persist:", error.message);
+        });
       return next;
     });
   }, []);

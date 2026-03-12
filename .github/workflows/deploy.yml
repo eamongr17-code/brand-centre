@@ -36,6 +36,8 @@ jobs:
         working-directory: brand-portal
         env:
           NODE_ENV: production
+          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
 
       - uses: actions/configure-pages@v4
 
