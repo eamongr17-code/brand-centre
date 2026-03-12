@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { Upload, Loader } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 interface ImageUploaderProps {
   value: string;
@@ -24,14 +25,14 @@ export default function ImageUploader({
     setUploading(true);
     setError(null);
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const workerUrl = process.env.NEXT_PUBLIC_UPLOAD_WORKER_URL;
-      if (!workerUrl) throw new Error("NEXT_PUBLIC_UPLOAD_WORKER_URL is not set");
-      const res = await fetch(workerUrl, { method: "POST", body: formData });
-      if (!res.ok) throw new Error("Upload failed");
-      const { url } = await res.json();
-      onChange(url);
+      const safeName = file.name.replace(/[^a-z0-9.\-_]/gi, "_");
+      const key = `${Date.now()}-${safeName}`;
+      const { error: uploadError } = await supabase.storage
+        .from("assets")
+        .upload(key, file, { contentType: file.type || "application/octet-stream" });
+      if (uploadError) throw uploadError;
+      const { data } = supabase.storage.from("assets").getPublicUrl(key);
+      onChange(data.publicUrl);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Upload failed");
     } finally {
@@ -53,7 +54,7 @@ export default function ImageUploader({
           onClick={() => inputRef.current?.click()}
           disabled={uploading}
           className="shrink-0 px-2 py-1 bg-[#2d2d2d] border border-[#444] rounded text-[#888] hover:text-[#e8e8e8] hover:border-[#666] transition-colors disabled:opacity-50"
-          title="Upload file to R2"
+          title="Upload file"
         >
           {uploading ? <Loader size={12} className="animate-spin" /> : <Upload size={12} />}
         </button>
