@@ -1,10 +1,13 @@
-const ALLOWED_ORIGINS = [
-  "http://localhost:3000",
-  "https://eamongr17-code.github.io",
-];
+function isAllowedOrigin(origin) {
+  if (!origin) return false;
+  if (/^https?:\/\/localhost(:\d+)?$/.test(origin)) return true;
+  if (origin === "https://eamongr17-code.github.io") return true;
+  if (/^https:\/\/[a-z0-9-]+(\.vercel\.app)$/.test(origin)) return true;
+  return false;
+}
 
 function corsHeaders(origin) {
-  const allowed = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  const allowed = isAllowedOrigin(origin) ? origin : "https://eamongr17-code.github.io";
   return {
     "Access-Control-Allow-Origin": allowed,
     "Access-Control-Allow-Methods": "POST, OPTIONS",
