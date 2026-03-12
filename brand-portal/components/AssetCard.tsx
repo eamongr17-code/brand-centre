@@ -306,13 +306,28 @@ export default function AssetCard({ asset }: { asset: Asset }) {
               <Eye size={12} />
             </a>
           ) : (
-            <a
-              href={asset.downloadUrl}
+            <button
+              onClick={async () => {
+                try {
+                  const res = await fetch(asset.downloadUrl);
+                  const blob = await res.blob();
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement("a");
+                  a.href = url;
+                  a.download = asset.name || "download";
+                  document.body.appendChild(a);
+                  a.click();
+                  a.remove();
+                  URL.revokeObjectURL(url);
+                } catch {
+                  window.open(asset.downloadUrl, "_blank");
+                }
+              }}
               className="inline-flex items-center gap-1.5 text-xs font-medium bg-white text-black px-3 py-1.5 rounded hover:opacity-80 active:scale-95 transition-all duration-150"
               title="Download"
             >
               <Download size={12} />
-            </a>
+            </button>
           )}
         </div>
       </div>
