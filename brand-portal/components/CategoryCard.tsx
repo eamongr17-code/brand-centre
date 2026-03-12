@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Download, Pencil, Trash2, Check, X } from "lucide-react";
+import { Download, Pencil, Trash2, Check, X, Loader } from "lucide-react";
+import { zipSync } from "fflate";
 import { useEditStore } from "@/lib/edit-store";
 import { usePortal } from "@/lib/portal-context";
 import ImageUploader from "@/components/ImageUploader";
@@ -20,9 +21,49 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
   const { portalPath, showInternal } = usePortal();
   const isColours = category.categoryType === "colours";
   const allAssets = getAssets(category.id);
-  const liveAssetCount = showInternal
-    ? allAssets.length
-    : allAssets.filter((a) => a.visibility !== "internal").length;
+  const visibleAssets = showInternal
+    ? allAssets
+    : allAssets.filter((a) => a.visibility !== "internal");
+  const liveAssetCount = visibleAssets.length;
+  const [zipping, setZipping] = useState(false);
+
+  const handleDownloadAll = async () => {
+    if (zipping || visibleAssets.length === 0) return;
+    setZipping(true);
+    try {
+      const files: Record<string, Uint8Array> = {};
+      const seen = new Set<string>();
+      await Promise.all(
+        visibleAssets
+          .filter((a) => a.downloadUrl && a.downloadUrl !== "#")
+          .map(async (a) => {
+            try {
+              const res = await fetch(a.downloadUrl);
+              const buf = new Uint8Array(await res.arrayBuffer());
+              const ext = a.downloadUrl.split(".").pop()?.split("?")[0] || "bin";
+              let name = (a.name || "asset").replace(/[^a-z0-9.\-_ ]/gi, "_");
+              if (!name.includes(".")) name = `${name}.${ext}`;
+              while (seen.has(name)) name = `_${name}`;
+              seen.add(name);
+              files[name] = buf;
+            } catch {}
+          })
+      );
+      if (Object.keys(files).length === 0) return;
+      const zipped = zipSync(files, { level: 0 });
+      const blob = new Blob([zipped], { type: "application/zip" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${category.name || "assets"}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } finally {
+      setZipping(false);
+    }
+  };
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(category.name);
   const [description, setDescription] = useState(category.description);
@@ -150,7 +191,7 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
             >
               {isColours ? "Browse palette" : "Browse assets"}
             </Link>
-            {!isColours && (
+            {!isColours && visibleAssets.length > 0 && (
               category.downloadAllUrl && category.downloadAllUrl !== "#" ? (
                 <a
                   href={category.downloadAllUrl}
@@ -160,12 +201,14 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
                   <Download size={12} />
                 </a>
               ) : (
-                <span
-                  className="inline-flex items-center justify-center text-xs font-medium bg-[#2d2d2d] border border-[#3a3a3a] text-[#555] px-3 py-1.5 rounded cursor-not-allowed"
-                  title={editMode ? "Set a Download All URL in edit mode" : "No download available"}
+                <button
+                  onClick={handleDownloadAll}
+                  disabled={zipping}
+                  className="inline-flex items-center justify-center text-xs font-medium bg-white text-black px-3 py-1.5 rounded hover:opacity-80 active:scale-95 transition-all duration-150 disabled:opacity-60"
+                  title="Download all assets as ZIP"
                 >
-                  <Download size={12} />
-                </span>
+                  {zipping ? <Loader size={12} className="animate-spin" /> : <Download size={12} />}
+                </button>
               )
             )}
           </div>

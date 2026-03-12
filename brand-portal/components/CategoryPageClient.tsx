@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Download, Code2, Check } from "lucide-react";
+import { Download, Code2, Check, Loader } from "lucide-react";
+import { zipSync, strToU8 } from "fflate";
 import Breadcrumb from "@/components/Breadcrumb";
 import AssetGrid from "@/components/AssetGrid";
 import ColourGrid from "@/components/ColourGrid";
@@ -75,6 +76,46 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
     ? getColours(category.id).length
     : visibleAssets.length;
 
+  const [zipping, setZipping] = useState(false);
+
+  const handleDownloadAll = async () => {
+    if (zipping || visibleAssets.length === 0) return;
+    setZipping(true);
+    try {
+      const files: Record<string, Uint8Array> = {};
+      const seen = new Set<string>();
+      await Promise.all(
+        visibleAssets
+          .filter((a) => a.downloadUrl && a.downloadUrl !== "#")
+          .map(async (a) => {
+            try {
+              const res = await fetch(a.downloadUrl);
+              const buf = new Uint8Array(await res.arrayBuffer());
+              const ext = a.downloadUrl.split(".").pop()?.split("?")[0] || "bin";
+              let name = (a.name || "asset").replace(/[^a-z0-9.\-_ ]/gi, "_");
+              if (!name.includes(".")) name = `${name}.${ext}`;
+              while (seen.has(name)) name = `_${name}`;
+              seen.add(name);
+              files[name] = buf;
+            } catch {}
+          })
+      );
+      if (Object.keys(files).length === 0) return;
+      const zipped = zipSync(files, { level: 0 });
+      const blob = new Blob([zipped], { type: "application/zip" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${category.name || "assets"}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } finally {
+      setZipping(false);
+    }
+  };
+
   return (
     <main>
       <Breadcrumb
@@ -126,7 +167,7 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
               )}
             </div>
             {/* Download all */}
-            {!isColours && (
+            {!isColours && visibleAssets.length > 0 && (
               category.downloadAllUrl && category.downloadAllUrl !== "#" ? (
                 <a
                   href={category.downloadAllUrl}
@@ -137,13 +178,15 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
                   Download all
                 </a>
               ) : (
-                <span
-                  className="inline-flex items-center gap-1.5 text-sm font-medium bg-[#2d2d2d] border border-[#3a3a3a] text-[#555] px-4 py-2 rounded cursor-not-allowed"
-                  title="No download URL set"
+                <button
+                  onClick={handleDownloadAll}
+                  disabled={zipping}
+                  className="inline-flex items-center gap-1.5 text-sm font-medium bg-white text-black px-4 py-2 rounded hover:opacity-80 active:scale-95 transition-all duration-150 disabled:opacity-60"
+                  title="Download all assets as ZIP"
                 >
-                  <Download size={14} />
-                  Download all
-                </span>
+                  {zipping ? <Loader size={14} className="animate-spin" /> : <Download size={14} />}
+                  {zipping ? "Zipping…" : "Download all"}
+                </button>
               )
             )}
           </div>
