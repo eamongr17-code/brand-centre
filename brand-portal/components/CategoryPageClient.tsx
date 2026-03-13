@@ -22,6 +22,7 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
   const [mounted, setMounted] = useState(false);
   const [embedOpen, setEmbedOpen] = useState(false);
   const [embedCopied, setEmbedCopied] = useState(false);
+  const [zipping, setZipping] = useState(false);
   const embedRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     setMounted(true);
@@ -75,8 +76,6 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
   const liveCount = isColours
     ? getColours(category.id).length
     : visibleAssets.length;
-
-  const [zipping, setZipping] = useState(false);
 
   const handleDownloadAll = async () => {
     if (zipping || visibleAssets.length === 0) return;
