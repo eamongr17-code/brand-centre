@@ -39,6 +39,7 @@ export interface Category {
   assetCount: number;
   sortOrder: number;
   categoryType?: "assets" | "colours";
+  actionType?: "download" | "view";
   visibility?: "public" | "internal";
 }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Download, Code2, Check, Loader } from "lucide-react";
+import { Download, Eye, Code2, Check, Loader } from "lucide-react";
 import { zipSync } from "fflate";
 import Breadcrumb from "@/components/Breadcrumb";
 import AssetGrid from "@/components/AssetGrid";
@@ -165,28 +165,42 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
                 </div>
               )}
             </div>
-            {/* Download all */}
-            {!isColours && visibleAssets.length > 0 && (
-              category.downloadAllUrl && category.downloadAllUrl !== "#" ? (
-                <a
-                  href={category.downloadAllUrl}
-                  className="inline-flex items-center gap-1.5 text-sm font-medium bg-white text-black px-4 py-2 rounded hover:opacity-80 active:scale-95 transition-all duration-150"
-                  title="Download All"
-                >
-                  <Download size={14} />
-                  Download all
-                </a>
-              ) : (
-                <button
-                  onClick={handleDownloadAll}
-                  disabled={zipping}
-                  className="inline-flex items-center gap-1.5 text-sm font-medium bg-white text-black px-4 py-2 rounded hover:opacity-80 active:scale-95 transition-all duration-150 disabled:opacity-60"
-                  title="Download all assets as ZIP"
-                >
-                  {zipping ? <Loader size={14} className="animate-spin" /> : <Download size={14} />}
-                  {zipping ? "Zipping…" : "Download all"}
-                </button>
-              )
+            {/* View / Download all */}
+            {!isColours && (category.actionType === "view"
+              ? (category.downloadAllUrl && category.downloadAllUrl !== "#" && (
+                  <a
+                    href={category.downloadAllUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-sm font-medium bg-white text-black px-4 py-2 rounded hover:opacity-80 active:scale-95 transition-all duration-150"
+                    title="View"
+                  >
+                    <Eye size={14} />
+                    View
+                  </a>
+                ))
+              : (visibleAssets.length > 0 && (
+                  category.downloadAllUrl && category.downloadAllUrl !== "#" ? (
+                    <a
+                      href={category.downloadAllUrl}
+                      className="inline-flex items-center gap-1.5 text-sm font-medium bg-white text-black px-4 py-2 rounded hover:opacity-80 active:scale-95 transition-all duration-150"
+                      title="Download All"
+                    >
+                      <Download size={14} />
+                      Download all
+                    </a>
+                  ) : (
+                    <button
+                      onClick={handleDownloadAll}
+                      disabled={zipping}
+                      className="inline-flex items-center gap-1.5 text-sm font-medium bg-white text-black px-4 py-2 rounded hover:opacity-80 active:scale-95 transition-all duration-150 disabled:opacity-60"
+                      title="Download all assets as ZIP"
+                    >
+                      {zipping ? <Loader size={14} className="animate-spin" /> : <Download size={14} />}
+                      {zipping ? "Zipping…" : "Download all"}
+                    </button>
+                  )
+                ))
             )}
           </div>
         </div>

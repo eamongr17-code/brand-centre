@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Download, Pencil, Trash2, Check, X, Loader } from "lucide-react";
+import { Download, Eye, Pencil, Trash2, Check, X, Loader } from "lucide-react";
 import { zipSync } from "fflate";
 import { useEditStore } from "@/lib/edit-store";
 import { usePortal } from "@/lib/portal-context";
@@ -69,6 +69,7 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
   const [description, setDescription] = useState(category.description);
   const [previewImage, setPreviewImage] = useState(category.previewImage);
   const [downloadAllUrl, setDownloadAllUrl] = useState(category.downloadAllUrl);
+  const [actionType, setActionType] = useState<"download" | "view">(category.actionType ?? "download");
 
   // Re-sync local state when prop changes
   useEffect(() => {
@@ -77,11 +78,12 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
       setDescription(category.description);
       setPreviewImage(category.previewImage);
       setDownloadAllUrl(category.downloadAllUrl);
+      setActionType(category.actionType ?? "download");
     }
   }, [category, editing]);
 
   const save = () => {
-    updateCategory(category.id, { name, description, previewImage, downloadAllUrl });
+    updateCategory(category.id, { name, description, previewImage, downloadAllUrl, actionType });
     setEditing(false);
   };
 
@@ -90,6 +92,7 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
     setDescription(category.description);
     setPreviewImage(category.previewImage);
     setDownloadAllUrl(category.downloadAllUrl);
+    setActionType(category.actionType ?? "download");
     setEditing(false);
   };
 
@@ -119,14 +122,32 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
             onChange={setPreviewImage}
             placeholder="Preview image URL (https://...)"
           />
-          {/* Download URL only for non-colour categories */}
+          {/* Action type toggle & URL — only for non-colour categories */}
           {!isColours && (
-            <ImageUploader
-              value={downloadAllUrl}
-              onChange={setDownloadAllUrl}
-              placeholder="Download All URL (https://...)"
-              accept="*/*"
-            />
+            <>
+              <div className="flex gap-1">
+                <button
+                  type="button"
+                  onClick={() => setActionType("download")}
+                  className={`flex-1 inline-flex items-center justify-center gap-1 text-[10px] px-2 py-1 rounded border ${actionType === "download" ? "bg-white text-black border-white font-semibold" : "border-[#444] text-[#888] hover:text-[#e8e8e8]"}`}
+                >
+                  <Download size={10} /> Download
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActionType("view")}
+                  className={`flex-1 inline-flex items-center justify-center gap-1 text-[10px] px-2 py-1 rounded border ${actionType === "view" ? "bg-white text-black border-white font-semibold" : "border-[#444] text-[#888] hover:text-[#e8e8e8]"}`}
+                >
+                  <Eye size={10} /> View
+                </button>
+              </div>
+              <ImageUploader
+                value={downloadAllUrl}
+                onChange={setDownloadAllUrl}
+                placeholder={actionType === "view" ? "View URL (https://...)" : "Download All URL (https://...)"}
+                accept="*/*"
+              />
+            </>
           )}
           <div className="flex gap-2 pt-1">
             <button
@@ -191,25 +212,38 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
             >
               {isColours ? "Browse palette" : "Browse assets"}
             </Link>
-            {!isColours && visibleAssets.length > 0 && (
-              category.downloadAllUrl && category.downloadAllUrl !== "#" ? (
-                <a
-                  href={category.downloadAllUrl}
-                  className="inline-flex items-center justify-center text-xs font-medium bg-white text-black px-3 py-1.5 rounded hover:opacity-80 active:scale-95 transition-all duration-150"
-                  title="Download All"
-                >
-                  <Download size={12} />
-                </a>
-              ) : (
-                <button
-                  onClick={handleDownloadAll}
-                  disabled={zipping}
-                  className="inline-flex items-center justify-center text-xs font-medium bg-white text-black px-3 py-1.5 rounded hover:opacity-80 active:scale-95 transition-all duration-150 disabled:opacity-60"
-                  title="Download all assets as ZIP"
-                >
-                  {zipping ? <Loader size={12} className="animate-spin" /> : <Download size={12} />}
-                </button>
-              )
+            {!isColours && (category.actionType === "view"
+              ? (category.downloadAllUrl && category.downloadAllUrl !== "#" && (
+                  <a
+                    href={category.downloadAllUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center text-xs font-medium bg-white text-black px-3 py-1.5 rounded hover:opacity-80 active:scale-95 transition-all duration-150"
+                    title="View"
+                  >
+                    <Eye size={12} />
+                  </a>
+                ))
+              : (visibleAssets.length > 0 && (
+                  category.downloadAllUrl && category.downloadAllUrl !== "#" ? (
+                    <a
+                      href={category.downloadAllUrl}
+                      className="inline-flex items-center justify-center text-xs font-medium bg-white text-black px-3 py-1.5 rounded hover:opacity-80 active:scale-95 transition-all duration-150"
+                      title="Download All"
+                    >
+                      <Download size={12} />
+                    </a>
+                  ) : (
+                    <button
+                      onClick={handleDownloadAll}
+                      disabled={zipping}
+                      className="inline-flex items-center justify-center text-xs font-medium bg-white text-black px-3 py-1.5 rounded hover:opacity-80 active:scale-95 transition-all duration-150 disabled:opacity-60"
+                      title="Download all assets as ZIP"
+                    >
+                      {zipping ? <Loader size={12} className="animate-spin" /> : <Download size={12} />}
+                    </button>
+                  )
+                ))
             )}
           </div>
         </div>
