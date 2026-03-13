@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Download, Code2, Check, Loader } from "lucide-react";
-import { zipSync, strToU8 } from "fflate";
+import { zipSync } from "fflate";
 import Breadcrumb from "@/components/Breadcrumb";
 import AssetGrid from "@/components/AssetGrid";
 import ColourGrid from "@/components/ColourGrid";
