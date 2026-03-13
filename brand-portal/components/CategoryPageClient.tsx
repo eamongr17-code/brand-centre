@@ -102,7 +102,7 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
       );
       if (Object.keys(files).length === 0) return;
       const zipped = zipSync(files, { level: 0 });
-      const blob = new Blob([zipped], { type: "application/zip" });
+      const blob = new Blob([zipped.buffer], { type: "application/zip" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
