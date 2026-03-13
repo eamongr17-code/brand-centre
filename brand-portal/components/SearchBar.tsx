@@ -3,7 +3,7 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { Search, FolderOpen, Palette, FileText, X, Download, Eye, Copy, Check } from "lucide-react";
-import { brands, categories, assets } from "@/data/mock-data";
+import { brands } from "@/data/mock-data";
 import { useEditStore } from "@/lib/edit-store";
 import { usePortal } from "@/lib/portal-context";
 
@@ -132,9 +132,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
       : brands;
 
     for (const brand of brandsToIndex) {
-      const brandCategories = editMode
-        ? getCategories(brand.id)
-        : categories.filter((c) => c.brandId === brand.id && !c.subBrandId);
+      const brandCategories = getCategories(brand.id);
 
       for (const cat of brandCategories) {
         if (!showInternal && cat.visibility === "internal") continue;
@@ -168,9 +166,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
             });
           }
         } else {
-          const catAssets = editMode
-            ? getAssets(cat.id)
-            : assets.filter((a) => a.categoryId === cat.id);
+          const catAssets = getAssets(cat.id);
           const visibleAssets = catAssets.filter(
             (a) => showInternal || a.visibility !== "internal"
           );
