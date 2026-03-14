@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Home, Pencil, Check, Link2, LogOut } from "lucide-react";
+import { Home, Pencil, Check, Link2, LogOut, User, Shield, Users, ChevronDown } from "lucide-react";
 import { useEditStore } from "@/lib/edit-store";
 import { usePortal } from "@/lib/portal-context";
 import { useAuth } from "@/lib/auth-context";
@@ -14,10 +14,12 @@ import { brands } from "@/data/mock-data";
 export default function Navbar() {
   const { editMode, toggleEditMode } = useEditStore();
   const { canEdit, mode, portalPath } = usePortal();
-  const { signOut } = useAuth();
+  const { signOut, user, isOwner } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
   const [copied, setCopied] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
+  const accountRef = useRef<HTMLDivElement>(null);
 
   const homeHref = portalPath("/");
   const isPublic = mode === "public";
@@ -41,7 +43,19 @@ export default function Navbar() {
     setTimeout(() => setCopied(false), 2000);
   }, [currentBrandSlug]);
 
+  useEffect(() => {
+    if (!accountOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (accountRef.current && !accountRef.current.contains(e.target as Node)) {
+        setAccountOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [accountOpen]);
+
   const handleSignOut = useCallback(async () => {
+    setAccountOpen(false);
     await signOut();
     router.push("/login");
   }, [signOut, router]);
@@ -121,13 +135,74 @@ export default function Navbar() {
         )}
 
         {!isPublic && (
-          <button
-            onClick={handleSignOut}
-            className="inline-flex items-center justify-center w-9 h-9 rounded-lg border bg-white/[0.04] border-white/[0.06] hover:bg-white/[0.08] text-[#555] hover:text-[#ececec] transition-all duration-200"
-            title="Sign out"
-          >
-            <LogOut size={14} />
-          </button>
+          <div className="relative" ref={accountRef}>
+            <button
+              onClick={() => setAccountOpen((v) => !v)}
+              className={`inline-flex items-center gap-1.5 px-2.5 py-2 rounded-lg border transition-all duration-200 ${
+                accountOpen
+                  ? "bg-white/[0.08] border-white/[0.12] text-[#ececec]"
+                  : "bg-white/[0.04] border-white/[0.06] hover:bg-white/[0.08] text-[#555] hover:text-[#ececec]"
+              }`}
+              title="Account"
+            >
+              <User size={14} />
+              <ChevronDown size={10} className={`transition-transform duration-200 ${accountOpen ? "rotate-180" : ""}`} />
+            </button>
+
+            {accountOpen && (
+              <div className="absolute right-0 top-full mt-2 w-64 bg-[#161616]/95 backdrop-blur-xl border border-white/[0.06] rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.5)] overflow-hidden z-50 [animation:fade-up_0.15s_ease-out_forwards]">
+                {/* User info */}
+                <div className="px-4 pt-4 pb-3 border-b border-white/[0.04]">
+                  <p className="text-sm font-semibold text-[#ececec] truncate">{user?.email ?? "User"}</p>
+                  <p className="text-[11px] text-[#484848] mt-0.5">
+                    {isOwner ? "Owner" : "Team member"}
+                  </p>
+                </div>
+
+                {/* Portal switching */}
+                <div className="px-2 py-2 border-b border-white/[0.04]">
+                  <p className="px-2 pb-1.5 text-[10px] font-bold text-[#444] uppercase tracking-[0.15em]">Portal</p>
+                  {isOwner && (
+                    <button
+                      onClick={() => { setAccountOpen(false); router.push("/owner"); }}
+                      className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-colors duration-150 ${
+                        mode === "owner"
+                          ? "bg-[#f77614]/10 text-[#f8a260] font-semibold"
+                          : "text-[#888] hover:bg-white/[0.04] hover:text-[#ececec]"
+                      }`}
+                    >
+                      <Shield size={13} />
+                      Owner
+                      {mode === "owner" && <span className="ml-auto text-[10px] text-[#f77614]">Active</span>}
+                    </button>
+                  )}
+                  <button
+                    onClick={() => { setAccountOpen(false); router.push("/internal"); }}
+                    className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-colors duration-150 ${
+                      mode === "internal"
+                        ? "bg-[#f77614]/10 text-[#f8a260] font-semibold"
+                        : "text-[#888] hover:bg-white/[0.04] hover:text-[#ececec]"
+                    }`}
+                  >
+                    <Users size={13} />
+                    Internal
+                    {mode === "internal" && <span className="ml-auto text-[10px] text-[#f77614]">Active</span>}
+                  </button>
+                </div>
+
+                {/* Sign out */}
+                <div className="px-2 py-2">
+                  <button
+                    onClick={handleSignOut}
+                    className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm text-[#888] hover:bg-white/[0.04] hover:text-red-400 transition-colors duration-150"
+                  >
+                    <LogOut size={13} />
+                    Sign out
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         )}
       </div>
     </header>

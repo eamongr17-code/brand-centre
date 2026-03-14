@@ -23,14 +23,13 @@ export default function LoginPage() {
     e.preventDefault();
     setError(null);
     setSubmitting(true);
-    const { error } = await signIn(email, password);
+    const { error, session } = await signIn(email, password);
     if (error) {
       setError("Invalid email or password.");
       setSubmitting(false);
     } else {
-      setTimeout(() => {
-        router.replace(isOwner ? "/owner" : "/internal");
-      }, 100);
+      const role = session?.user?.user_metadata?.role;
+      router.replace(role === "owner" ? "/owner" : "/internal");
     }
   }
 

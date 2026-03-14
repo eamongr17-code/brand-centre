@@ -10,7 +10,7 @@ interface AuthContextValue {
   isAuthenticated: boolean;
   isOwner: boolean;
   loading: boolean;
-  signIn: (email: string, password: string) => Promise<{ error: string | null }>;
+  signIn: (email: string, password: string) => Promise<{ error: string | null; session: Session | null }>;
   signOut: () => Promise<void>;
 }
 
@@ -20,7 +20,7 @@ const AuthContext = createContext<AuthContextValue>({
   isAuthenticated: false,
   isOwner: false,
   loading: true,
-  signIn: async () => ({ error: null }),
+  signIn: async () => ({ error: null, session: null }),
   signOut: async () => {},
 });
 
@@ -46,8 +46,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   async function signIn(email: string, password: string) {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    return { error: error?.message ?? null };
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    return { error: error?.message ?? null, session: data?.session ?? null };
   }
 
   async function signOut() {
