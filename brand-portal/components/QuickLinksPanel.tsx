@@ -32,15 +32,15 @@ export default function QuickLinksPanel({ brandId }: { brandId: string }) {
   const cancelEdit = () => setEditingId(null);
 
   return (
-    <aside className="w-full lg:w-56 shrink-0 lg:self-start lg:border-l lg:border-[#2d2d2d] lg:pl-8">
+    <aside className="w-full lg:w-56 shrink-0 lg:self-start lg:border-l lg:border-white/[0.04] lg:pl-8">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-[#888]">
+        <h3 className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#555]">
           Quick Links
         </h3>
         {canEditLinks && (
           <button
             onClick={() => addQuickLink(brandId)}
-            className="text-[#666] hover:text-[#aaa] transition-colors"
+            className="text-[#484848] hover:text-[#888] transition-colors"
             title="Add link"
           >
             <Plus size={14} />
@@ -49,35 +49,35 @@ export default function QuickLinksPanel({ brandId }: { brandId: string }) {
       </div>
 
       {links.length === 0 && !canEditLinks && (
-        <p className="text-xs text-[#666]">No quick links yet.</p>
+        <p className="text-xs text-[#484848]">No quick links yet.</p>
       )}
 
       <ul className="space-y-1">
         {links.map((link) =>
           canEditLinks && editingId === link.id ? (
-            <li key={link.id} className="space-y-1 bg-[#242424] border border-[#333] rounded p-2">
+            <li key={link.id} className="space-y-1 bg-white/[0.02] border border-white/[0.06] rounded-lg p-2">
               <input
                 value={draftLabel}
                 onChange={(e) => setDraftLabel(e.target.value)}
-                className="w-full bg-[#2d2d2d] border border-[#444] rounded px-2 py-1 text-xs text-[#e8e8e8] placeholder-[#666]"
+                className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-2 py-1 text-xs text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
                 placeholder="Label"
               />
               <input
                 value={draftUrl}
                 onChange={(e) => setDraftUrl(e.target.value)}
-                className="w-full bg-[#2d2d2d] border border-[#444] rounded px-2 py-1 text-xs font-mono text-[#e8e8e8] placeholder-[#666]"
+                className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-2 py-1 text-xs font-mono text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
                 placeholder="https://"
               />
               <div className="flex gap-1 pt-0.5">
                 <button
                   onClick={saveEdit}
-                  className="inline-flex items-center gap-1 text-xs bg-white text-black px-2 py-1 rounded font-medium"
+                  className="inline-flex items-center gap-1 text-xs bg-white text-black px-2 py-1 rounded-lg font-semibold"
                 >
                   <Check size={10} /> Save
                 </button>
                 <button
                   onClick={cancelEdit}
-                  className="inline-flex items-center gap-1 text-xs border border-[#444] text-[#e8e8e8] px-2 py-1 rounded"
+                  className="inline-flex items-center gap-1 text-xs border border-white/[0.08] text-[#ececec] px-2 py-1 rounded-lg"
                 >
                   <X size={10} /> Cancel
                 </button>
@@ -89,23 +89,23 @@ export default function QuickLinksPanel({ brandId }: { brandId: string }) {
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-sm text-[#a0a0a0] hover:text-[#e8e8e8] flex-1 min-w-0 transition-colors"
+                className="flex items-center gap-1.5 text-sm text-[#787878] hover:text-[#ececec] flex-1 min-w-0 transition-colors duration-200"
               >
-                <ExternalLink size={12} className="shrink-0 text-[#666]" />
+                <ExternalLink size={12} className="shrink-0 text-[#484848]" />
                 <span className="truncate">{link.label}</span>
               </a>
               {canEditLinks && (
                 <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
                   <button
                     onClick={() => startEdit(link.id, link.label, link.url)}
-                    className="p-1 rounded hover:bg-[#2d2d2d] text-[#888]"
+                    className="p-1 rounded-lg hover:bg-white/[0.04] text-[#686868]"
                     title="Edit"
                   >
                     <Pencil size={11} />
                   </button>
                   <button
                     onClick={() => deleteQuickLink(link.id)}
-                    className="p-1 rounded hover:bg-[#3a1a1a] text-red-400"
+                    className="p-1 rounded-lg hover:bg-red-500/20 text-red-400"
                     title="Delete"
                   >
                     <Trash2 size={11} />

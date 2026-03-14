@@ -42,12 +42,11 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
   const brand = getBrandBySlug(brandSlug);
   const category = mounted && brand ? getCategoryBySlug(brand.id, categorySlug) : undefined;
 
-  // Wait for client mount before reading localStorage-backed data
   if (!mounted || !brand) {
     return (
       <main>
         <div className="max-w-6xl mx-auto px-8 py-12">
-          <div className="h-8 w-48 bg-[#2d2d2d] rounded animate-pulse mb-8" />
+          <div className="h-8 w-48 bg-white/[0.04] rounded-lg animate-pulse mb-8" />
         </div>
       </main>
     );
@@ -64,7 +63,7 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
           ]}
         />
         <div className="max-w-6xl mx-auto px-8 py-12">
-          <p className="text-[#888]">Category not found.</p>
+          <p className="text-[#686868]">Category not found.</p>
         </div>
       </main>
     );
@@ -124,12 +123,12 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
           { label: category.name },
         ]}
       />
-      <div className="max-w-6xl mx-auto px-8 py-12">
-        <div className="flex items-start justify-between mb-6 gap-4">
+      <div className="max-w-6xl mx-auto px-8 py-12 [animation:fade-in_0.3s_ease-out_forwards]">
+        <div className="flex items-start justify-between mb-8 gap-4">
           <div className="flex-1 min-w-0">
-            <h1 className="text-xl font-bold text-[#e8e8e8]">{category.name}</h1>
+            <h1 className="text-xl font-bold text-[#ececec]">{category.name}</h1>
             {!isColours && category.actionType !== "view" && (
-              <p className="text-sm text-[#888] mt-1">{liveCount} assets</p>
+              <p className="text-sm text-[#686868] mt-1">{liveCount} assets</p>
             )}
           </div>
           <div className="flex items-center gap-2 shrink-0">
@@ -137,17 +136,17 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
             <div className="relative" ref={embedRef}>
               <button
                 onClick={() => setEmbedOpen((v) => !v)}
-                className="inline-flex items-center gap-1.5 text-xs font-medium border border-[#333] text-[#888] hover:text-[#e8e8e8] hover:border-[#555] px-3 py-2 rounded transition-colors"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold border border-white/[0.06] text-[#686868] hover:text-[#ececec] hover:border-white/[0.12] px-3 py-2 rounded-lg transition-all duration-200"
                 title="Get embed code"
               >
                 <Code2 size={13} />
                 Embed
               </button>
               {embedOpen && (
-                <div className="absolute right-0 top-full mt-2 w-80 bg-[#1e1e1e] border border-[#333] rounded-lg shadow-2xl p-4 z-50">
-                  <p className="text-xs font-medium text-[#e8e8e8] mb-2">Embed this category</p>
-                  <p className="text-[11px] text-[#666] mb-3">Paste into Notion, Confluence, or any tool that supports iframes.</p>
-                  <code className="block text-[10px] bg-[#111] border border-[#2a2a2a] rounded px-3 py-2.5 text-[#888] break-all leading-relaxed select-all">
+                <div className="absolute right-0 top-full mt-2 w-80 bg-[#161616]/95 backdrop-blur-xl border border-white/[0.06] rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.5)] p-4 z-50 [animation:fade-up_0.15s_ease-out_forwards]">
+                  <p className="text-xs font-semibold text-[#ececec] mb-2">Embed this category</p>
+                  <p className="text-[11px] text-[#555] mb-3">Paste into Notion, Confluence, or any tool that supports iframes.</p>
+                  <code className="block text-[10px] bg-white/[0.02] border border-white/[0.04] rounded-lg px-3 py-2.5 text-[#686868] break-all leading-relaxed select-all font-mono">
                     {`<iframe src="${typeof window !== "undefined" ? window.location.origin : ""}/embed/${brandSlug}/${categorySlug}" width="100%" height="600" frameborder="0" style="border-radius:8px"></iframe>`}
                   </code>
                   <button
@@ -158,7 +157,7 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
                         setTimeout(() => setEmbedCopied(false), 2000);
                       });
                     }}
-                    className="mt-3 w-full inline-flex items-center justify-center gap-1.5 text-xs font-medium bg-white text-black px-3 py-1.5 rounded hover:opacity-80 transition-opacity"
+                    className="mt-3 w-full inline-flex items-center justify-center gap-1.5 text-xs font-semibold bg-white text-black px-3 py-1.5 rounded-lg hover:bg-white/90 transition-colors"
                   >
                     {embedCopied ? <><Check size={11} /> Copied</> : "Copy code"}
                   </button>
@@ -172,7 +171,7 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
                     href={category.downloadAllUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-sm font-medium bg-white text-black px-4 py-2 rounded hover:opacity-80 active:scale-95 transition-all duration-150"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold bg-white text-black px-4 py-2 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200"
                     title="View"
                   >
                     <Eye size={14} />
@@ -183,7 +182,7 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
                   category.downloadAllUrl && category.downloadAllUrl !== "#" ? (
                     <a
                       href={category.downloadAllUrl}
-                      className="inline-flex items-center gap-1.5 text-sm font-medium bg-white text-black px-4 py-2 rounded hover:opacity-80 active:scale-95 transition-all duration-150"
+                      className="inline-flex items-center gap-1.5 text-sm font-semibold bg-white text-black px-4 py-2 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200"
                       title="Download All"
                     >
                       <Download size={14} />
@@ -193,11 +192,11 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
                     <button
                       onClick={handleDownloadAll}
                       disabled={zipping}
-                      className="inline-flex items-center gap-1.5 text-sm font-medium bg-white text-black px-4 py-2 rounded hover:opacity-80 active:scale-95 transition-all duration-150 disabled:opacity-60"
+                      className="inline-flex items-center gap-1.5 text-sm font-semibold bg-white text-black px-4 py-2 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200 disabled:opacity-60"
                       title="Download all assets as ZIP"
                     >
                       {zipping ? <Loader size={14} className="animate-spin" /> : <Download size={14} />}
-                      {zipping ? "Zipping…" : "Download all"}
+                      {zipping ? "Zipping..." : "Download all"}
                     </button>
                   )
                 ))
@@ -209,13 +208,13 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
           category.downloadAllUrl && category.downloadAllUrl !== "#" && (
             <div className="mt-4">
               {category.description && (
-                <p className="text-sm text-[#a0a0a0] mb-6">{category.description}</p>
+                <p className="text-sm text-[#787878] mb-6 leading-relaxed">{category.description}</p>
               )}
               <a
                 href={category.downloadAllUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-medium bg-white text-black px-5 py-2.5 rounded hover:opacity-80 active:scale-95 transition-all duration-150"
+                className="inline-flex items-center gap-2 text-sm font-semibold bg-white text-black px-5 py-2.5 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200"
               >
                 <Eye size={15} />
                 Open document

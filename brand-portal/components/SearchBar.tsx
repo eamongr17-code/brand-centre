@@ -62,13 +62,11 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // In public portal, always lock to the scoped brand
   const lockedBrandId = useMemo(
     () => (brandScope ? brands.find((b) => b.slug === brandScope)?.id ?? null : null),
     [brandScope]
   );
 
-  // Derive brand from current path and sync the filter (only for non-scoped portals)
   const pathBrandId = useMemo(() => {
     if (lockedBrandId) return lockedBrandId;
     const segments = pathname.split("/").filter(Boolean);
@@ -83,13 +81,11 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
     setSelectedBrandId(pathBrandId);
   }, [pathBrandId]);
 
-  // Brands available for filter chips — restricted to scoped brand in public portals
   const availableBrands = useMemo(
     () => (lockedBrandId ? brands.filter((b) => b.id === lockedBrandId) : brands),
     [lockedBrandId]
   );
 
-  // Auto-detect brand name typed anywhere in query and convert to tag
   useEffect(() => {
     if (!query || lockedBrandId) return;
     const words = query.trim().split(/\s+/);
@@ -99,7 +95,6 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
       if (nameParts.length === 1) {
         return words.some((w) => w.toLowerCase() === nameParts[0]);
       }
-      // Multi-word brand name — check for consecutive match
       for (let i = 0; i <= words.length - nameParts.length; i++) {
         if (nameParts.every((part, j) => words[i + j].toLowerCase() === part)) return true;
       }
@@ -124,7 +119,6 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
     }
   }, [query, availableBrands, lockedBrandId, selectedBrandId]);
 
-  // Build search index: in edit mode use live data, otherwise use static data
   const searchIndex = useMemo<SearchItem[]>(() => {
     const items: SearchItem[] = [];
     const brandsToIndex = lockedBrandId
@@ -209,14 +203,13 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
 
   const results = useMemo<{ categories: CategoryResult[]; assets: AssetResult[]; colours: ColourResult[] }>(() => {
     const q = query.trim().toLowerCase();
-    // When brand is selected and query is empty, show all categories for that brand
     const showAll = !q && !!selectedBrandId;
 
     if (!q && !showAll) return { categories: [], assets: [], colours: [] };
 
     const filtered = searchIndex.filter((item) => {
       if (selectedBrandId && item.brandId !== selectedBrandId) return false;
-      if (!q) return item.type === "category"; // show categories when brand selected, no query
+      if (!q) return item.type === "category";
       const haystack = [
         item.name,
         item.type === "colour" ? item.hex : "",
@@ -237,7 +230,6 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
   }, [query, selectedBrandId, searchIndex]);
 
   const hasResults = results.categories.length > 0 || results.assets.length > 0 || results.colours.length > 0;
-  // Show panel when: has query, brand selected, or on a brand page (so removing the pill keeps the dropdown open)
   const showPanel = open && (query.trim().length > 0 || !!selectedBrandId || !!pathBrandId);
 
   const navigate = useCallback(
@@ -256,14 +248,12 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
     setTimeout(() => setCopiedColourId(null), 1500);
   }, []);
 
-  // Closing the search always resets the brand filter back to the page's context
   const closeSearch = useCallback(() => {
     setOpen(false);
     setQuery("");
     setSelectedBrandId(pathBrandId);
   }, [pathBrandId]);
 
-  // Close on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
@@ -279,7 +269,6 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
       closeSearch();
       inputRef.current?.blur();
     }
-    // Backspace on empty query removes brand tag (temporarily, resets on close)
     if (e.key === "Backspace" && !query && selectedBrandId && !lockedBrandId) {
       setSelectedBrandId(null);
     }
@@ -289,26 +278,24 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
 
   const placeholder = placeholderOverride ?? (
     mode === "public" && brandScope
-      ? `Search ${brandScope.charAt(0).toUpperCase() + brandScope.slice(1)}…`
-      : "Search assets, categories…"
+      ? `Search ${brandScope.charAt(0).toUpperCase() + brandScope.slice(1)}...`
+      : "Search assets, categories..."
   );
 
   return (
     <div ref={containerRef} className={`relative w-full ${large ? "max-w-none" : "max-w-lg"}`}>
-      {/* Input with optional brand pill */}
       <div
-        className={`flex items-center gap-2 bg-[#2d2d2d] border border-[#444] focus-within:border-[#666] transition-colors ${
-          large ? "rounded-xl px-4 py-3.5" : "rounded-lg px-3 py-2"
+        className={`flex items-center gap-2 bg-white/[0.04] border border-white/[0.06] focus-within:border-white/[0.12] focus-within:bg-white/[0.06] transition-all duration-200 ${
+          large ? "rounded-2xl px-5 py-4" : "rounded-xl px-3.5 py-2.5"
         }`}
       >
         <Search
           size={large ? 16 : 14}
-          className="shrink-0 text-[#555] pointer-events-none"
+          className="shrink-0 text-[#484848] pointer-events-none"
         />
 
-        {/* Brand tag pill — only visible while search is open so the user can remove the filter */}
         {selectedBrand && !lockedBrandId && open && (
-          <span className="inline-flex items-center gap-1 shrink-0 bg-[#f77614] text-white rounded-full px-2 py-0.5 text-xs font-medium">
+          <span className="inline-flex items-center gap-1 shrink-0 bg-[#f77614] text-white rounded-full px-2.5 py-0.5 text-xs font-semibold">
             {selectedBrand.name}
             <button
               onClick={() => { setSelectedBrandId(null); inputRef.current?.focus(); }}
@@ -326,8 +313,8 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
           onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
           onFocus={() => { if (!open) setSelectedBrandId(pathBrandId); setOpen(true); }}
           onKeyDown={handleKeyDown}
-          placeholder={selectedBrand ? `Search in ${selectedBrand.name}…` : placeholder}
-          className={`flex-1 bg-transparent text-[#e8e8e8] placeholder-[#555] focus:outline-none ${
+          placeholder={selectedBrand ? `Search in ${selectedBrand.name}...` : placeholder}
+          className={`flex-1 bg-transparent text-[#ececec] placeholder-[#3a3a3a] focus:outline-none ${
             large ? "text-base" : "text-sm"
           }`}
         />
@@ -335,7 +322,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
         {(query || (selectedBrand && !lockedBrandId && open)) && (
           <button
             onClick={() => { setQuery(""); if (!lockedBrandId) setSelectedBrandId(null); inputRef.current?.focus(); }}
-            className="shrink-0 text-[#555] hover:text-[#aaa] transition-colors"
+            className="shrink-0 text-[#484848] hover:text-[#888] transition-colors"
           >
             <X size={13} />
           </button>
@@ -344,16 +331,15 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
 
       {/* Dropdown */}
       {showPanel && (
-        <div className="absolute top-full left-0 right-0 mt-1.5 bg-[#1e1e1e] border border-[#333] rounded-xl shadow-2xl z-50 overflow-hidden">
-          {/* Brand filters — hidden when locked to one brand or a brand pill is active */}
+        <div className="absolute top-full left-0 right-0 mt-2 bg-[#161616]/95 backdrop-blur-xl border border-white/[0.06] rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.5)] z-50 overflow-hidden [animation:fade-up_0.15s_ease-out_forwards]">
           {!lockedBrandId && !selectedBrandId && (
-            <div className="flex gap-1.5 px-3 pt-3 pb-2 border-b border-[#2a2a2a] flex-wrap">
+            <div className="flex gap-1.5 px-3.5 pt-3.5 pb-2.5 border-b border-white/[0.04] flex-wrap">
               <button
                 onClick={() => setSelectedBrandId(null)}
-                className={`text-xs px-2.5 py-1 rounded-full font-medium transition-colors ${
+                className={`text-xs px-3 py-1 rounded-full font-semibold transition-all duration-200 ${
                   !selectedBrandId
-                    ? "bg-[#f77614] text-white"
-                    : "bg-[#2d2d2d] text-[#a0a0a0] hover:bg-[#333]"
+                    ? "bg-[#f77614] text-white shadow-[0_0_12px_rgba(247,118,20,0.3)]"
+                    : "bg-white/[0.04] text-[#888] hover:bg-white/[0.08]"
                 }`}
               >
                 All
@@ -362,7 +348,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
                 <button
                   key={b.id}
                   onClick={() => { setSelectedBrandId(b.id); setQuery(""); inputRef.current?.focus(); }}
-                  className="text-xs px-2.5 py-1 rounded-full font-medium transition-colors bg-[#2d2d2d] text-[#a0a0a0] hover:bg-[#333]"
+                  className="text-xs px-3 py-1 rounded-full font-semibold transition-all duration-200 bg-white/[0.04] text-[#888] hover:bg-white/[0.08]"
                 >
                   {b.name}
                 </button>
@@ -370,9 +356,9 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
             </div>
           )}
 
-          <div className="max-h-[min(240px,35vh)] overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-[#1a1a1a] [&::-webkit-scrollbar-thumb]:bg-[#3a3a3a] [&::-webkit-scrollbar-thumb]:rounded-full">
+          <div className="max-h-[min(280px,40vh)] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-[#2a2a2a] [&::-webkit-scrollbar-thumb]:rounded-full">
             {!hasResults && (
-              <div className="px-4 py-6 text-center text-sm text-[#555]">
+              <div className="px-4 py-8 text-center text-sm text-[#444]">
                 {query ? `No results for "${query}"` : "No categories found"}
               </div>
             )}
@@ -380,8 +366,8 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
             {/* Categories */}
             {results.categories.length > 0 && (
               <div>
-                <div className="px-3 pt-3 pb-1.5">
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-[#555]">
+                <div className="px-4 pt-3.5 pb-1.5">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#444]">
                     Categories
                   </span>
                 </div>
@@ -389,24 +375,24 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
                   <div
                     key={item.id}
                     onClick={() => navigate(`/${item.brandSlug}/${item.categorySlug}`)}
-                    className="flex items-center gap-3 px-3 py-2.5 hover:bg-[#262626] transition-colors cursor-pointer"
+                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/[0.04] transition-colors duration-150 cursor-pointer"
                   >
-                    <div className="shrink-0 w-7 h-7 rounded-md bg-[#2d2d2d] flex items-center justify-center">
+                    <div className="shrink-0 w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
                       {item.categoryType === "colours"
-                        ? <Palette size={14} className="text-[#888]" />
-                        : <FolderOpen size={14} className="text-[#888]" />}
+                        ? <Palette size={14} className="text-[#686868]" />
+                        : <FolderOpen size={14} className="text-[#686868]" />}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-[#e8e8e8] truncate">
+                        <span className="text-sm font-semibold text-[#ececec] truncate">
                           {item.name}
                         </span>
-                        <span className="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-[#2d2d2d] text-[#666] font-medium">
+                        <span className="shrink-0 text-[10px] px-1.5 py-0.5 rounded-md bg-white/[0.04] text-[#555] font-semibold">
                           {item.categoryType === "colours" ? "Palette" : "Category"}
                         </span>
                       </div>
                       <div className="flex items-center gap-1.5 mt-0.5">
-                        <span className="text-xs text-[#666] truncate">
+                        <span className="text-xs text-[#555] truncate">
                           {item.brandName}{item.categoryType !== "colours" ? ` · ${item.assetCount} assets` : ""}
                         </span>
                       </div>
@@ -419,8 +405,8 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
             {/* Colours */}
             {results.colours.length > 0 && (
               <div>
-                <div className="px-3 pt-3 pb-1.5">
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-[#555]">
+                <div className="px-4 pt-3.5 pb-1.5">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#444]">
                     Colours
                   </span>
                 </div>
@@ -428,26 +414,26 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
                   <div
                     key={item.id}
                     onClick={() => navigate(`/${item.brandSlug}/${item.categorySlug}`)}
-                    className="flex items-center gap-3 px-3 py-2 hover:bg-[#262626] transition-colors cursor-pointer"
+                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/[0.04] transition-colors duration-150 cursor-pointer"
                   >
                     <div
-                      className="shrink-0 w-7 h-7 rounded-md border border-[#444]"
+                      className="shrink-0 w-8 h-8 rounded-lg border border-white/[0.06]"
                       style={{ backgroundColor: item.hex }}
                     />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="text-sm text-[#d0d0d0] truncate">{item.name}</span>
-                        <span className="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-[#2d2d2d] text-[#666] font-medium">
+                        <span className="shrink-0 text-[10px] px-1.5 py-0.5 rounded-md bg-white/[0.04] text-[#555] font-semibold">
                           Colour
                         </span>
                       </div>
-                      <span className="text-xs text-[#555]">
+                      <span className="text-xs text-[#484848]">
                         {item.brandName} · <span className="font-mono">{item.hex}</span>
                       </span>
                     </div>
                     <button
                       onClick={(e) => copyColourHex(item.id, item.hex, e)}
-                      className="shrink-0 p-1.5 rounded hover:bg-[#3a3a3a] text-[#555] hover:text-[#e8e8e8] transition-colors"
+                      className="shrink-0 p-1.5 rounded-lg hover:bg-white/[0.06] text-[#484848] hover:text-[#ececec] transition-all duration-200"
                       title="Copy hex"
                     >
                       {copiedColourId === item.id ? (
@@ -464,8 +450,8 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
             {/* Assets */}
             {results.assets.length > 0 && (
               <div>
-                <div className="px-3 pt-3 pb-1.5">
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-[#555]">
+                <div className="px-4 pt-3.5 pb-1.5">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#444]">
                     Assets
                   </span>
                 </div>
@@ -473,19 +459,19 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
                   <div
                     key={item.id}
                     onClick={() => navigate(`/${item.brandSlug}/${item.categorySlug}`)}
-                    className="flex items-center gap-3 px-3 py-2 hover:bg-[#262626] transition-colors cursor-pointer"
+                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/[0.04] transition-colors duration-150 cursor-pointer"
                   >
-                    <div className="shrink-0 w-7 h-7 rounded-md bg-[#2d2d2d] flex items-center justify-center">
-                      <FileText size={13} className="text-[#666]" />
+                    <div className="shrink-0 w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
+                      <FileText size={13} className="text-[#555]" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="text-sm text-[#d0d0d0] truncate">{item.name}</span>
-                        <span className="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-[#2d2d2d] text-[#666] font-medium">
+                        <span className="shrink-0 text-[10px] px-1.5 py-0.5 rounded-md bg-white/[0.04] text-[#555] font-semibold">
                           Asset
                         </span>
                       </div>
-                      <span className="text-xs text-[#555] truncate block">
+                      <span className="text-xs text-[#484848] truncate block">
                         {item.categoryName} / {item.brandName}
                         {item.fileType ? ` · ${item.fileType}` : ""}
                       </span>
@@ -495,7 +481,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
                       target={item.actionType === "view" ? "_blank" : undefined}
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="shrink-0 p-1.5 rounded hover:bg-[#3a3a3a] text-[#555] hover:text-[#e8e8e8] transition-colors"
+                      className="shrink-0 p-1.5 rounded-lg hover:bg-white/[0.06] text-[#484848] hover:text-[#ececec] transition-all duration-200"
                       title={item.actionType === "view" ? "View" : "Download"}
                     >
                       {item.actionType === "view" ? (
@@ -511,8 +497,8 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
           </div>
 
           {hasResults && (
-            <div className="px-3 py-2 border-t border-[#2a2a2a] text-[10px] text-[#444] text-right">
-              Press <kbd className="bg-[#2d2d2d] border border-[#3a3a3a] rounded px-1 py-0.5 font-mono">Esc</kbd> to close
+            <div className="px-4 py-2.5 border-t border-white/[0.04] text-[10px] text-[#333] text-right">
+              Press <kbd className="bg-white/[0.04] border border-white/[0.06] rounded px-1.5 py-0.5 font-mono text-[#555]">Esc</kbd> to close
             </div>
           )}
         </div>

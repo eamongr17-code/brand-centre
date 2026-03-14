@@ -36,26 +36,26 @@ function ImageBanner({
   const canEditBanner = editMode && canEdit;
 
   return (
-    <div className="w-full relative border-b border-[#2d2d2d]">
+    <div className="w-full relative border-b border-white/[0.04]">
       <FadeImg src={imageUrl || publicPath("/placeholder-banner.png")} fallbackSrc={publicPath("/placeholder-banner.png")} alt="" className="w-full block" />
       {!imageUrl && canEditBanner && !editingUrl && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-white/40 text-sm">{emptyLabel}</span>
+          <span className="text-white/30 text-sm">{emptyLabel}</span>
         </div>
       )}
 
       {canEditBanner && !editingUrl && (
         <button
           onClick={startEdit}
-          className="absolute top-3 right-3 bg-[#2d2d2d] border border-[#444] rounded p-1.5 hover:bg-[#333]"
+          className="absolute top-3 right-3 bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-2 hover:bg-white/[0.08] transition-colors"
           title="Set banner image"
         >
-          <Pencil size={14} className="text-[#e8e8e8]" />
+          <Pencil size={14} className="text-[#ececec]" />
         </button>
       )}
 
       {canEditBanner && editingUrl && (
-        <div className="absolute inset-x-0 bottom-0 bg-[#1a1a1a] border-t border-[#333] px-4 py-3">
+        <div className="absolute inset-x-0 bottom-0 bg-[#111111]/95 backdrop-blur-xl border-t border-white/[0.06] px-4 py-3">
           <div className="flex gap-2 items-center">
             <div className="flex-1 min-w-0">
               <ImageUploader
@@ -66,13 +66,13 @@ function ImageBanner({
             </div>
             <button
               onClick={save}
-              className="shrink-0 inline-flex items-center gap-1 text-xs bg-white text-black px-3 py-1.5 rounded font-medium"
+              className="shrink-0 inline-flex items-center gap-1 text-xs bg-white text-black px-3 py-1.5 rounded-lg font-semibold hover:bg-white/90 transition-colors"
             >
               <Check size={11} /> Save
             </button>
             <button
               onClick={cancel}
-              className="shrink-0 inline-flex items-center gap-1 text-xs border border-[#444] text-[#e8e8e8] px-3 py-1.5 rounded"
+              className="shrink-0 inline-flex items-center gap-1 text-xs border border-white/[0.08] text-[#ececec] px-3 py-1.5 rounded-lg hover:bg-white/[0.04] transition-colors"
             >
               <X size={11} /> Cancel
             </button>
@@ -108,8 +108,8 @@ export default function HeroHeader({ variant, brand, category }: HeroHeaderProps
 
   if (variant === "category" && category) {
     return (
-      <div className="w-full bg-[#242424] border-b border-[#333] py-10 px-8">
-        <h1 className="text-2xl font-bold text-[#e8e8e8]">{category.name}</h1>
+      <div className="w-full bg-[#161616] border-b border-white/[0.04] py-10 px-8">
+        <h1 className="text-2xl font-bold text-[#ececec]">{category.name}</h1>
       </div>
     );
   }

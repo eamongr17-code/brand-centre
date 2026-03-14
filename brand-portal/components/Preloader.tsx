@@ -7,11 +7,10 @@ export default function Preloader() {
   const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
-    // Wait for initial content to render, then fade out
     const timer = setTimeout(() => {
       setFadeOut(true);
-      setTimeout(() => setVisible(false), 500);
-    }, 600);
+      setTimeout(() => setVisible(false), 600);
+    }, 700);
     return () => clearTimeout(timer);
   }, []);
 
@@ -19,18 +18,19 @@ export default function Preloader() {
 
   return (
     <div
-      className={`fixed inset-0 z-[9999] bg-[#1a1a1a] flex items-center justify-center transition-opacity duration-500 ${
-        fadeOut ? "opacity-0 pointer-events-none" : "opacity-100"
+      className={`fixed inset-0 z-[9999] bg-[#111111] flex items-center justify-center transition-all duration-600 ${
+        fadeOut ? "opacity-0 scale-105 pointer-events-none" : "opacity-100 scale-100"
       }`}
     >
-      <div className="flex flex-col items-center gap-6">
+      <div className="flex flex-col items-center gap-8">
         <img
           src="/atlas-wordmark.svg"
           alt="Atlas"
-          className="h-6 w-auto opacity-80 animate-pulse"
+          className="h-7 w-auto opacity-90"
+          style={{ animation: "glow-pulse 2s ease-in-out infinite" }}
         />
-        <div className="w-12 h-[2px] bg-[#333] rounded-full overflow-hidden">
-          <div className="h-full bg-[#f77614]/60 rounded-full animate-[loading-bar_1s_ease-in-out_infinite]" />
+        <div className="w-16 h-[1.5px] bg-[#1e1e1e] rounded-full overflow-hidden">
+          <div className="h-full bg-gradient-to-r from-[#f77614]/40 via-[#f77614] to-[#f77614]/40 rounded-full animate-[loading-bar_1.2s_ease-in-out_infinite]" />
         </div>
       </div>
     </div>

@@ -7,16 +7,16 @@ interface Crumb {
 
 export default function Breadcrumb({ crumbs }: { crumbs: Crumb[] }) {
   return (
-    <nav className="px-8 py-4 text-sm text-[#888] flex gap-2 items-center">
+    <nav className="px-8 py-4 text-sm text-[#686868] flex gap-2 items-center [animation:fade-in_0.3s_ease-out_forwards]">
       {crumbs.map((crumb, i) => (
         <span key={i} className="flex items-center gap-2">
-          {i > 0 && <span>/</span>}
+          {i > 0 && <span className="text-[#333]">/</span>}
           {crumb.href ? (
-            <Link href={crumb.href} className="hover:text-[#e8e8e8] transition-colors">
+            <Link href={crumb.href} className="hover:text-[#ececec] transition-colors duration-200">
               {crumb.label}
             </Link>
           ) : (
-            <span className="text-[#e8e8e8] font-medium">{crumb.label}</span>
+            <span className="text-[#ececec] font-semibold">{crumb.label}</span>
           )}
         </span>
       ))}

@@ -71,7 +71,6 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
   const [downloadAllUrl, setDownloadAllUrl] = useState(category.downloadAllUrl);
   const [actionType, setActionType] = useState<"download" | "view">(category.actionType ?? "download");
 
-  // Re-sync local state when prop changes
   useEffect(() => {
     if (!editing) {
       setName(category.name);
@@ -98,25 +97,24 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
 
   if (editing) {
     return (
-      <div className="border border-[#f77614] rounded-lg bg-[#242424] flex flex-col overflow-hidden [animation:fade-up_0.3s_ease-out_forwards]">
-        <div className="bg-[#2d2d2d] h-36 shrink-0 overflow-hidden">
+      <div className="border border-[#f77614] rounded-xl bg-[#161616] flex flex-col overflow-hidden [animation:fade-up_0.3s_ease-out_forwards]">
+        <div className="bg-white/[0.02] h-36 shrink-0 overflow-hidden">
           <FadeImg src={previewImage || publicPath("/placeholder-asset.png")} fallbackSrc={publicPath("/placeholder-asset.png")} alt="" className="h-full w-full object-cover" />
         </div>
         <div className="p-4 space-y-2 flex-1">
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full bg-[#2d2d2d] border border-[#444] rounded px-2 py-1 text-sm font-semibold text-[#e8e8e8] placeholder-[#666]"
+            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm font-semibold text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
             placeholder="Category name"
           />
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full bg-[#2d2d2d] border border-[#444] rounded px-2 py-1 text-xs resize-none text-[#e8e8e8] placeholder-[#666]"
+            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs resize-none text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
             rows={2}
             placeholder="Description"
           />
-          {/* Preview image for all category types */}
           <ImageUploader
             value={previewImage}
             onChange={setPreviewImage}
@@ -125,18 +123,18 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
           {/* Action type toggle & URL — only for non-colour categories */}
           {!isColours && (
             <>
-              <div className="flex gap-1">
+              <div className="flex gap-1 p-1 bg-white/[0.02] rounded-lg text-xs">
                 <button
                   type="button"
                   onClick={() => setActionType("download")}
-                  className={`flex-1 inline-flex items-center justify-center gap-1 text-[10px] px-2 py-1 rounded border ${actionType === "download" ? "bg-white text-black border-white font-semibold" : "border-[#444] text-[#888] hover:text-[#e8e8e8]"}`}
+                  className={`flex-1 inline-flex items-center justify-center gap-1 py-1.5 rounded-md transition-all duration-200 ${actionType === "download" ? "bg-white/[0.08] text-[#ececec] font-semibold" : "text-[#555] hover:text-[#888]"}`}
                 >
                   <Download size={10} /> Download
                 </button>
                 <button
                   type="button"
                   onClick={() => setActionType("view")}
-                  className={`flex-1 inline-flex items-center justify-center gap-1 text-[10px] px-2 py-1 rounded border ${actionType === "view" ? "bg-white text-black border-white font-semibold" : "border-[#444] text-[#888] hover:text-[#e8e8e8]"}`}
+                  className={`flex-1 inline-flex items-center justify-center gap-1 py-1.5 rounded-md transition-all duration-200 ${actionType === "view" ? "bg-white/[0.08] text-[#ececec] font-semibold" : "text-[#555] hover:text-[#888]"}`}
                 >
                   <Eye size={10} /> View
                 </button>
@@ -152,13 +150,13 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
           <div className="flex gap-2 pt-1">
             <button
               onClick={save}
-              className="inline-flex items-center gap-1 text-xs bg-white text-black px-3 py-1.5 rounded font-medium"
+              className="inline-flex items-center gap-1 text-xs bg-white text-black px-3 py-1.5 rounded-lg font-semibold hover:bg-white/90 transition-colors"
             >
               <Check size={11} /> Save
             </button>
             <button
               onClick={cancel}
-              className="inline-flex items-center gap-1 text-xs border border-[#444] text-[#e8e8e8] px-3 py-1.5 rounded"
+              className="inline-flex items-center gap-1 text-xs border border-white/[0.08] text-[#ececec] px-3 py-1.5 rounded-lg hover:bg-white/[0.04] transition-colors"
             >
               <X size={11} /> Cancel
             </button>
@@ -170,24 +168,24 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
 
   return (
     <>
-      <div className="border border-[#333] rounded-lg bg-[#242424] hover:border-[#444] transition-colors relative group flex flex-col [animation:fade-up_0.3s_ease-out_forwards]">
-        {/* Preview image — shown for all category types */}
-        <div className="bg-[#2d2d2d] h-36 shrink-0 rounded-t-lg overflow-hidden">
-          <FadeImg src={category.previewImage || publicPath("/placeholder-asset.png")} fallbackSrc={publicPath("/placeholder-asset.png")} alt={category.name} className="h-full w-full object-cover" />
+      <div className="glass-card rounded-xl relative group flex flex-col [animation:fade-up_0.3s_ease-out_forwards]">
+        {/* Preview image */}
+        <div className="bg-white/[0.02] h-36 shrink-0 rounded-t-xl overflow-hidden">
+          <FadeImg src={category.previewImage || publicPath("/placeholder-asset.png")} fallbackSrc={publicPath("/placeholder-asset.png")} alt={category.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
         </div>
 
         {editMode && (
           <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
             <button
               onClick={() => setEditing(true)}
-              className="bg-[#1a1a1a] border border-[#444] rounded p-1 hover:bg-[#2d2d2d]"
+              className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-white/[0.08] transition-colors"
               title="Edit"
             >
-              <Pencil size={12} className="text-[#e8e8e8]" />
+              <Pencil size={12} className="text-[#ececec]" />
             </button>
             <button
               onClick={() => deleteCategory(category.id)}
-              className="bg-[#1a1a1a] border border-[#444] rounded p-1 hover:bg-[#3a1a1a] text-red-400"
+              className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-red-500/20 text-red-400 transition-colors"
               title="Delete"
             >
               <Trash2 size={12} />
@@ -197,13 +195,13 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
 
         <div className="p-4 flex flex-col flex-1 gap-2">
           <div>
-            <h3 className="font-semibold text-[#e8e8e8]">{name}</h3>
+            <h3 className="font-semibold text-[#ececec]">{name}</h3>
             {!isColours && (
-              <p className="text-xs text-[#888] mt-0.5">{liveAssetCount} assets</p>
+              <p className="text-xs text-[#555] mt-0.5">{liveAssetCount} assets</p>
             )}
           </div>
           {description && (
-            <p className="text-sm text-[#a0a0a0] flex-1">{description}</p>
+            <p className="text-sm text-[#787878] flex-1 leading-relaxed">{description}</p>
           )}
           <div className="flex gap-2 mt-auto pt-2">
             {category.actionType === "view" ? (
@@ -212,7 +210,7 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
                   href={category.downloadAllUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 text-xs font-medium bg-white text-black px-3 py-1.5 rounded hover:opacity-80 active:scale-95 transition-all duration-150"
+                  className="flex-1 inline-flex items-center justify-center gap-1.5 text-xs font-semibold bg-white text-black px-3 py-1.5 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200"
                   title="View"
                 >
                   <Eye size={12} />
@@ -223,7 +221,7 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
               <>
                 <Link
                   href={portalPath(`/${brandSlug}/${category.slug}`)}
-                  className="flex-1 inline-flex items-center justify-center text-xs font-medium bg-[#2d2d2d] border border-[#444] text-[#e8e8e8] px-3 py-1.5 rounded hover:bg-[#333] transition-colors whitespace-nowrap"
+                  className="flex-1 inline-flex items-center justify-center text-xs font-semibold bg-white/[0.04] border border-white/[0.06] text-[#ececec] px-3 py-1.5 rounded-lg hover:bg-white/[0.08] hover:border-white/[0.1] transition-all duration-200 whitespace-nowrap"
                 >
                   {isColours ? "Browse palette" : "Browse assets"}
                 </Link>
@@ -231,7 +229,7 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
                   category.downloadAllUrl && category.downloadAllUrl !== "#" ? (
                     <a
                       href={category.downloadAllUrl}
-                      className="inline-flex items-center justify-center text-xs font-medium bg-white text-black px-3 py-1.5 rounded hover:opacity-80 active:scale-95 transition-all duration-150"
+                      className="inline-flex items-center justify-center text-xs font-semibold bg-white text-black px-3 py-1.5 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200"
                       title="Download All"
                     >
                       <Download size={12} />
@@ -240,7 +238,7 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
                     <button
                       onClick={handleDownloadAll}
                       disabled={zipping}
-                      className="inline-flex items-center justify-center text-xs font-medium bg-white text-black px-3 py-1.5 rounded hover:opacity-80 active:scale-95 transition-all duration-150 disabled:opacity-60"
+                      className="inline-flex items-center justify-center text-xs font-semibold bg-white text-black px-3 py-1.5 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200 disabled:opacity-60"
                       title="Download all assets as ZIP"
                     >
                       {zipping ? <Loader size={12} className="animate-spin" /> : <Download size={12} />}

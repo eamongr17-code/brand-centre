@@ -16,7 +16,7 @@ export default async function BrandPage({ params }: { params: Promise<{ brand: s
   return (
     <main>
       <HeroHeader variant="brand" brand={brand} />
-      <div className="max-w-6xl mx-auto px-8 py-12 flex flex-col lg:flex-row gap-12">
+      <div className="max-w-6xl mx-auto px-8 py-12 flex flex-col lg:flex-row gap-12 [animation:fade-in_0.3s_ease-out_forwards]">
 
         {/* Main content */}
         <div className="flex-1 min-w-0">

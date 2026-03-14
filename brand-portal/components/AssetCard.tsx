@@ -40,7 +40,6 @@ export default function AssetCard({ asset }: { asset: Asset }) {
     return () => document.removeEventListener("mousedown", handler);
   }, [rulesOpen]);
 
-  // Re-sync local state when prop changes (e.g. after store update)
   useEffect(() => {
     if (!editing) {
       setName(asset.name);
@@ -88,28 +87,28 @@ export default function AssetCard({ asset }: { asset: Asset }) {
 
   if (editing) {
     return (
-      <div className="border border-[#f77614] rounded-lg bg-[#242424] flex flex-col overflow-hidden [animation:fade-up_0.3s_ease-out_forwards]">
-        <div className="bg-[#2d2d2d] h-36 shrink-0 rounded-t-lg overflow-hidden">
+      <div className="border border-[#f77614] rounded-xl bg-[#161616] flex flex-col overflow-hidden [animation:fade-up_0.3s_ease-out_forwards]">
+        <div className="bg-white/[0.02] h-36 shrink-0 rounded-t-xl overflow-hidden">
           <FadeImg src={previewImage || publicPath("/placeholder-asset.png")} fallbackSrc={publicPath("/placeholder-asset.png")} alt="" className="h-full w-full object-cover" />
         </div>
         <div className="p-4 space-y-2 flex-1">
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full bg-[#2d2d2d] border border-[#444] rounded px-2 py-1 text-sm font-semibold text-[#e8e8e8] placeholder-[#666]"
+            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm font-semibold text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
             placeholder="Asset name"
           />
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full bg-[#2d2d2d] border border-[#444] rounded px-2 py-1 text-xs resize-none text-[#e8e8e8] placeholder-[#666]"
+            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs resize-none text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
             rows={2}
             placeholder="Description"
           />
           <input
             value={fileType}
             onChange={(e) => setFileType(e.target.value)}
-            className="w-full bg-[#2d2d2d] border border-[#444] rounded px-2 py-1 text-xs text-[#e8e8e8] placeholder-[#666]"
+            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
             placeholder="File type (e.g. SVG + PNG)"
           />
           <div className="space-y-1.5">
@@ -123,8 +122,8 @@ export default function AssetCard({ asset }: { asset: Asset }) {
                     if (i === rulesLines.length - 1 && e.target.value) next.push("");
                     setRulesLines(next);
                   }}
-                  className="flex-1 bg-[#2d2d2d] border border-[#444] rounded px-2 py-1 text-xs text-[#e8e8e8] placeholder-[#666]"
-                  placeholder={i === rulesLines.length - 1 ? (i === 0 ? "e.g. Use on dark backgrounds only" : "Add another rule…") : ""}
+                  className="flex-1 bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
+                  placeholder={i === rulesLines.length - 1 ? (i === 0 ? "e.g. Use on dark backgrounds only" : "Add another rule...") : ""}
                 />
                 {rule !== "" && (
                   <button
@@ -134,7 +133,7 @@ export default function AssetCard({ asset }: { asset: Asset }) {
                       const withTrailing = next[next.length - 1] !== "" ? [...next, ""] : next;
                       setRulesLines(withTrailing.length ? withTrailing : [""]);
                     }}
-                    className="text-[#555] hover:text-red-400 transition-colors"
+                    className="text-[#444] hover:text-red-400 transition-colors"
                   >
                     <X size={11} />
                   </button>
@@ -155,14 +154,14 @@ export default function AssetCard({ asset }: { asset: Asset }) {
           />
 
           {/* Action type toggle */}
-          <div className="flex gap-1 p-1 bg-[#1a1a1a] rounded text-xs">
+          <div className="flex gap-1 p-1 bg-white/[0.02] rounded-lg text-xs">
             <button
               type="button"
               onClick={() => setActionType("download")}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded transition-colors ${
+              className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md transition-all duration-200 ${
                 actionType === "download"
-                  ? "bg-[#3a3a3a] text-[#e8e8e8]"
-                  : "text-[#666] hover:text-[#888]"
+                  ? "bg-white/[0.08] text-[#ececec] font-semibold"
+                  : "text-[#555] hover:text-[#888]"
               }`}
             >
               <Download size={11} />
@@ -171,10 +170,10 @@ export default function AssetCard({ asset }: { asset: Asset }) {
             <button
               type="button"
               onClick={() => setActionType("view")}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded transition-colors ${
+              className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md transition-all duration-200 ${
                 actionType === "view"
-                  ? "bg-[#3a3a3a] text-[#e8e8e8]"
-                  : "text-[#666] hover:text-[#888]"
+                  ? "bg-white/[0.08] text-[#ececec] font-semibold"
+                  : "text-[#555] hover:text-[#888]"
               }`}
             >
               <Eye size={11} />
@@ -182,16 +181,16 @@ export default function AssetCard({ asset }: { asset: Asset }) {
             </button>
           </div>
 
-          {/* Visibility toggle — owner only */}
+          {/* Visibility toggle */}
           {canEdit && (
-            <div className="flex gap-1 p-1 bg-[#1a1a1a] rounded text-xs">
+            <div className="flex gap-1 p-1 bg-white/[0.02] rounded-lg text-xs">
               <button
                 type="button"
                 onClick={() => setVisibility("public")}
-                className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded transition-colors ${
+                className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md transition-all duration-200 ${
                   visibility === "public"
-                    ? "bg-[#3a3a3a] text-[#e8e8e8]"
-                    : "text-[#666] hover:text-[#888]"
+                    ? "bg-white/[0.08] text-[#ececec] font-semibold"
+                    : "text-[#555] hover:text-[#888]"
                 }`}
               >
                 Public
@@ -199,10 +198,10 @@ export default function AssetCard({ asset }: { asset: Asset }) {
               <button
                 type="button"
                 onClick={() => setVisibility("internal")}
-                className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded transition-colors ${
+                className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md transition-all duration-200 ${
                   visibility === "internal"
-                    ? "bg-blue-900/60 text-blue-300"
-                    : "text-[#666] hover:text-[#888]"
+                    ? "bg-blue-900/60 text-blue-300 font-semibold"
+                    : "text-[#555] hover:text-[#888]"
                 }`}
               >
                 <Lock size={10} />
@@ -214,13 +213,13 @@ export default function AssetCard({ asset }: { asset: Asset }) {
           <div className="flex gap-2 pt-1">
             <button
               onClick={save}
-              className="inline-flex items-center gap-1 text-xs bg-white text-black px-3 py-1.5 rounded font-medium"
+              className="inline-flex items-center gap-1 text-xs bg-white text-black px-3 py-1.5 rounded-lg font-semibold hover:bg-white/90 transition-colors"
             >
               <Check size={11} /> Save
             </button>
             <button
               onClick={cancel}
-              className="inline-flex items-center gap-1 text-xs border border-[#444] text-[#e8e8e8] px-3 py-1.5 rounded"
+              className="inline-flex items-center gap-1 text-xs border border-white/[0.08] text-[#ececec] px-3 py-1.5 rounded-lg hover:bg-white/[0.04] transition-colors"
             >
               <X size={11} /> Cancel
             </button>
@@ -231,15 +230,15 @@ export default function AssetCard({ asset }: { asset: Asset }) {
   }
 
   return (
-    <div className="border border-[#333] rounded-lg bg-[#242424] hover:border-[#444] transition-colors relative group flex flex-col [animation:fade-up_0.3s_ease-out_forwards]">
-      <div className="bg-[#2d2d2d] h-36 shrink-0 rounded-t-lg overflow-hidden">
-        <FadeImg src={asset.previewImage || publicPath("/placeholder-asset.png")} fallbackSrc={publicPath("/placeholder-asset.png")} alt={asset.name} className="h-full w-full object-cover" />
+    <div className="glass-card rounded-xl relative group flex flex-col [animation:fade-up_0.3s_ease-out_forwards]">
+      <div className="bg-white/[0.02] h-36 shrink-0 rounded-t-xl overflow-hidden">
+        <FadeImg src={asset.previewImage || publicPath("/placeholder-asset.png")} fallbackSrc={publicPath("/placeholder-asset.png")} alt={asset.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
       </div>
 
-      {/* Internal badge — visible in owner/internal portals */}
+      {/* Internal badge */}
       {isInternal && showInternal && (
         <div className="absolute top-2 left-2">
-          <span className="inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded bg-blue-900/70 text-blue-300 border border-blue-800/50">
+          <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-md bg-blue-900/70 text-blue-300 border border-blue-800/50 backdrop-blur-sm">
             <Lock size={9} />
             Internal
           </span>
@@ -250,14 +249,14 @@ export default function AssetCard({ asset }: { asset: Asset }) {
         <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             onClick={() => setEditing(true)}
-            className="bg-[#1a1a1a] border border-[#444] rounded p-1 hover:bg-[#2d2d2d]"
+            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-white/[0.08] transition-colors"
             title="Edit"
           >
-            <Pencil size={12} className="text-[#e8e8e8]" />
+            <Pencil size={12} className="text-[#ececec]" />
           </button>
           <button
             onClick={() => deleteAsset(asset.id)}
-            className="bg-[#1a1a1a] border border-[#444] rounded p-1 hover:bg-[#3a1a1a] text-red-400"
+            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-red-500/20 text-red-400 transition-colors"
             title="Delete"
           >
             <Trash2 size={12} />
@@ -265,24 +264,24 @@ export default function AssetCard({ asset }: { asset: Asset }) {
         </div>
       )}
       <div className="p-4 flex flex-col flex-1 gap-2">
-        <h3 className="font-semibold text-sm text-[#e8e8e8]">{name}</h3>
-        <p className="text-xs text-[#a0a0a0] flex-1">{description}</p>
+        <h3 className="font-semibold text-sm text-[#ececec]">{name}</h3>
+        <p className="text-xs text-[#787878] flex-1 leading-relaxed">{description}</p>
         {asset.rules && asset.rules.length > 0 && (
           <div className="relative" ref={rulesRef}>
             <button
               onClick={() => setRulesOpen((v) => !v)}
-              className="inline-flex items-center gap-1 text-[11px] text-[#555] hover:text-[#888] transition-colors"
+              className="inline-flex items-center gap-1 text-[11px] text-[#484848] hover:text-[#888] transition-colors"
             >
               <HelpCircle size={11} />
               Usage rules
             </button>
             {rulesOpen && (
-              <div className="absolute bottom-full left-0 mb-2 w-56 bg-[#1e1e1e] border border-[#333] rounded-lg shadow-2xl p-3 z-50">
-                <p className="text-[10px] font-semibold text-[#555] uppercase tracking-widest mb-2">Usage rules</p>
+              <div className="absolute bottom-full left-0 mb-2 w-56 bg-[#161616]/95 backdrop-blur-xl border border-white/[0.06] rounded-xl shadow-[0_12px_40px_rgba(0,0,0,0.5)] p-3 z-50">
+                <p className="text-[10px] font-bold text-[#444] uppercase tracking-[0.15em] mb-2">Usage rules</p>
                 <ul className="space-y-1.5">
                   {asset.rules.map((rule, i) => (
-                    <li key={i} className="flex gap-1.5 text-[11px] text-[#888] leading-snug">
-                      <span className="shrink-0 text-[#555]">—</span>
+                    <li key={i} className="flex gap-1.5 text-[11px] text-[#787878] leading-snug">
+                      <span className="shrink-0 text-[#444]">—</span>
                       <span>{rule}</span>
                     </li>
                   ))}
@@ -292,7 +291,7 @@ export default function AssetCard({ asset }: { asset: Asset }) {
           </div>
         )}
         <div className="mt-auto flex items-center justify-between gap-2">
-          <span className="text-xs text-[#666]">
+          <span className="text-xs text-[#555]">
             {fileType}{fileSize ? ` · ${fileSize}` : ""}
           </span>
           {isView ? (
@@ -300,7 +299,7 @@ export default function AssetCard({ asset }: { asset: Asset }) {
               href={asset.downloadUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-medium bg-white text-black px-3 py-1.5 rounded hover:opacity-80 active:scale-95 transition-all duration-150"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white text-black px-3 py-1.5 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200"
               title="View"
             >
               <Eye size={12} />
@@ -323,7 +322,7 @@ export default function AssetCard({ asset }: { asset: Asset }) {
                   window.open(asset.downloadUrl, "_blank");
                 }
               }}
-              className="inline-flex items-center gap-1.5 text-xs font-medium bg-white text-black px-3 py-1.5 rounded hover:opacity-80 active:scale-95 transition-all duration-150"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white text-black px-3 py-1.5 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200"
               title="Download"
             >
               <Download size={12} />

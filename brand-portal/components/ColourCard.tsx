@@ -33,9 +33,9 @@ function ColourDetailModal({
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
-      <div className="relative z-10 bg-[#1e1e1e] border border-[#333] rounded-xl shadow-2xl w-full max-w-sm mx-4 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center [animation:fade-in_0.15s_ease-out_forwards]">
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative z-10 bg-[#161616] border border-white/[0.06] rounded-2xl shadow-[0_24px_64px_rgba(0,0,0,0.6)] w-full max-w-sm mx-4 overflow-hidden [animation:fade-up_0.2s_ease-out_forwards]">
         {/* Large swatch */}
         <div className="h-32 flex items-end p-4" style={{ backgroundColor: colour.hex }}>
           <span className="text-sm font-semibold" style={{ color: contrastColor }}>
@@ -43,10 +43,10 @@ function ColourDetailModal({
           </span>
         </div>
 
-        <div className="p-4">
+        <div className="p-5">
           <div className="flex items-center justify-between mb-4">
-            <span className="font-mono text-sm text-[#888]">{colour.hex}</span>
-            <button onClick={onClose} className="text-[#666] hover:text-[#aaa] transition-colors">
+            <span className="font-mono text-sm text-[#686868]">{colour.hex}</span>
+            <button onClick={onClose} className="text-[#555] hover:text-[#999] transition-colors">
               <X size={16} />
             </button>
           </div>
@@ -55,13 +55,13 @@ function ColourDetailModal({
             {values.map(({ label, value }) => (
               <div
                 key={label}
-                className="flex items-center gap-3 bg-[#2d2d2d] rounded px-3 py-2"
+                className="flex items-center gap-3 bg-white/[0.03] border border-white/[0.04] rounded-lg px-3 py-2.5"
               >
-                <span className="text-xs font-semibold text-[#666] w-10 shrink-0">{label}</span>
-                <span className="flex-1 text-sm font-mono text-[#e8e8e8] truncate">{value}</span>
+                <span className="text-xs font-bold text-[#484848] w-10 shrink-0">{label}</span>
+                <span className="flex-1 text-sm font-mono text-[#ececec] truncate">{value}</span>
                 <button
                   onClick={() => copy(label, value)}
-                  className="shrink-0 text-[#666] hover:text-[#aaa] transition-colors"
+                  className="shrink-0 text-[#484848] hover:text-[#999] transition-colors"
                   title={`Copy ${label}`}
                 >
                   {copiedKey === label ? (
@@ -88,7 +88,6 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
   const [hex, setHex] = useState(colour.hex);
   const contrastColor = getContrastColor(colour.hex);
 
-  // Re-sync local state when prop changes
   useEffect(() => {
     if (!editing) {
       setName(colour.name);
@@ -116,31 +115,31 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
   if (editing) {
     const previewHex = hex.match(/^#[0-9A-Fa-f]{3,6}$/) ? hex : colour.hex;
     return (
-      <div className="border border-[#f77614] rounded-lg overflow-hidden bg-[#242424]">
+      <div className="border border-[#f77614] rounded-xl overflow-hidden bg-[#161616]">
         <div className="h-20 transition-colors" style={{ backgroundColor: previewHex }} />
         <div className="p-4 space-y-2">
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full bg-[#2d2d2d] border border-[#444] rounded px-2 py-1 text-sm text-[#e8e8e8] placeholder-[#666]"
+            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
             placeholder="Colour name"
           />
           <input
             value={hex}
             onChange={(e) => setHex(e.target.value)}
-            className="w-full bg-[#2d2d2d] border border-[#444] rounded px-2 py-1 text-xs font-mono text-[#e8e8e8] placeholder-[#666]"
+            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs font-mono text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
             placeholder="#000000"
           />
           <div className="flex gap-2">
             <button
               onClick={save}
-              className="inline-flex items-center gap-1 text-xs bg-white text-black px-3 py-1.5 rounded font-medium"
+              className="inline-flex items-center gap-1 text-xs bg-white text-black px-3 py-1.5 rounded-lg font-semibold hover:bg-white/90 transition-colors"
             >
               <Check size={11} /> Save
             </button>
             <button
               onClick={cancel}
-              className="inline-flex items-center gap-1 text-xs border border-[#444] text-[#e8e8e8] px-3 py-1.5 rounded"
+              className="inline-flex items-center gap-1 text-xs border border-white/[0.08] text-[#ececec] px-3 py-1.5 rounded-lg hover:bg-white/[0.04] transition-colors"
             >
               <X size={11} /> Cancel
             </button>
@@ -152,17 +151,17 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
 
   return (
     <>
-      <div className="border border-[#333] rounded-lg overflow-hidden bg-[#242424] hover:border-[#444] transition-colors relative group">
-        {/* Swatch — click to copy hex */}
+      <div className="glass-card rounded-xl overflow-hidden relative group">
+        {/* Swatch */}
         <button
           onClick={copyHex}
-          className="w-full h-28 relative flex items-end p-3 transition-opacity hover:opacity-90"
+          className="w-full h-28 relative flex items-end p-3 transition-all duration-300 hover:brightness-110"
           style={{ backgroundColor: colour.hex }}
           title={`Click to copy ${colour.hex}`}
         >
           {copied && (
             <span
-              className="absolute inset-0 flex items-center justify-center text-sm font-medium"
+              className="absolute inset-0 flex items-center justify-center text-sm font-semibold [animation:fade-in_0.15s_ease-out_forwards]"
               style={{ color: contrastColor }}
             >
               Copied!
@@ -174,14 +173,14 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
           <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
             <button
               onClick={() => setEditing(true)}
-              className="bg-[#1a1a1a] border border-[#444] rounded p-1 hover:bg-[#2d2d2d]"
+              className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-white/[0.08] transition-colors"
               title="Edit"
             >
-              <Pencil size={12} className="text-[#e8e8e8]" />
+              <Pencil size={12} className="text-[#ececec]" />
             </button>
             <button
               onClick={() => deleteColour(colour.id)}
-              className="bg-[#1a1a1a] border border-[#444] rounded p-1 hover:bg-[#3a1a1a] text-red-400"
+              className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-red-500/20 text-red-400 transition-colors"
               title="Delete"
             >
               <Trash2 size={12} />
@@ -191,17 +190,17 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
 
         <div className="p-4 flex items-center justify-between gap-2">
           <div className="min-w-0">
-            <p className="text-sm font-semibold text-[#e8e8e8] truncate">{colour.name}</p>
+            <p className="text-sm font-semibold text-[#ececec] truncate">{colour.name}</p>
             <button
               onClick={copyHex}
-              className="text-xs font-mono text-[#666] hover:text-[#aaa] transition-colors"
+              className="text-xs font-mono text-[#555] hover:text-[#999] transition-colors"
             >
               {colour.hex}
             </button>
           </div>
           <button
             onClick={() => setShowDetails(true)}
-            className="shrink-0 text-[#666] hover:text-[#aaa] transition-colors"
+            className="shrink-0 text-[#484848] hover:text-[#999] transition-colors"
             title="View colour details"
           >
             <Eye size={14} />

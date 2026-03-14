@@ -22,7 +22,6 @@ export default function Navbar() {
   const homeHref = portalPath("/");
   const isPublic = mode === "public";
 
-  // Detect the brand slug from the current path
   const currentBrandSlug = useMemo(() => {
     const segments = pathname.split("/").filter(Boolean);
     const slug =
@@ -32,10 +31,7 @@ export default function Navbar() {
     return brands.find((b) => b.slug === slug)?.slug ?? null;
   }, [pathname]);
 
-  // True when on the portal home (no brand in path)
   const isHomePage = !isPublic && !currentBrandSlug;
-
-  // Internal users see a "Copy public link" button when on a brand page
   const showCopyLink = mode === "internal" && !!currentBrandSlug;
 
   const copyPublicLink = useCallback(() => {
@@ -52,45 +48,40 @@ export default function Navbar() {
 
   return (
     <header
-      className={`${isHomePage ? "" : "border-b"} px-6 py-3 flex items-center gap-4 transition-colors ${
+      className={`${isHomePage ? "" : "border-b"} px-6 py-3 flex items-center gap-4 transition-colors sticky top-0 z-40 ${
         editMode
-          ? "bg-[#1a0c00] border-[#5a2800]"
-          : "bg-[#1a1a1a] border-[#2d2d2d]"
+          ? "bg-[#1a0c00]/95 border-[#5a2800] backdrop-blur-xl"
+          : "glass-nav border-[#1e1e1e]"
       }`}
     >
-      {/* Logo — hidden on home page (it shows large in the page body there) */}
       {!isHomePage && (
-        <Link href={homeHref} className="shrink-0 hover:opacity-80 transition-opacity">
+        <Link href={homeHref} className="shrink-0 hover:opacity-70 transition-opacity">
           <img src={publicPath("/atlas-wordmark.svg")} alt="Atlas" className="h-5 w-auto" />
         </Link>
       )}
 
-      {/* Centre — hidden on home page; home button + search on inner pages */}
       <div className="flex-1 flex justify-center items-center gap-2">
         {!isHomePage && !isPublic && (
           <Link
             href={homeHref}
-            className={`shrink-0 inline-flex items-center justify-center w-[38px] h-[38px] rounded-lg border text-[#e8e8e8] transition-colors ${
+            className={`shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-lg border text-[#ececec] transition-all duration-200 ${
               editMode
                 ? "bg-[#2d1500] border-[#5a2800] hover:bg-[#3a1c00]"
-                : "bg-[#2d2d2d] border-[#444] hover:bg-[#333]"
+                : "bg-white/[0.04] border-white/[0.06] hover:bg-white/[0.08] hover:border-white/[0.1]"
             }`}
             title="Home"
           >
             <Home size={14} />
           </Link>
         )}
-        {/* Search bar: hidden on home page (it lives in the page body there) */}
         {!isHomePage && <SearchBar />}
       </div>
 
-      {/* Right actions */}
       <div className="shrink-0 flex items-center gap-2">
-        {/* Copy public link — internal portal, brand pages only */}
         {showCopyLink && (
           <button
             onClick={copyPublicLink}
-            className="inline-flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border bg-[#2d2d2d] border-[#444] hover:bg-[#333] transition-colors"
+            className="inline-flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border bg-white/[0.04] border-white/[0.06] hover:bg-white/[0.08] hover:border-white/[0.1] transition-all duration-200"
           >
             {copied ? (
               <>
@@ -99,21 +90,20 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <Link2 size={14} className="text-[#e8e8e8]" />
-                <span className="text-[#e8e8e8]">Public link</span>
+                <Link2 size={14} className="text-[#ececec]" />
+                <span className="text-[#ececec]">Public link</span>
               </>
             )}
           </button>
         )}
 
-        {/* Edit button — owner only */}
         {canEdit && (
           <button
             onClick={toggleEditMode}
-            className={`inline-flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border transition-colors ${
+            className={`inline-flex items-center gap-2 text-sm font-semibold px-3.5 py-2 rounded-lg border transition-all duration-200 ${
               editMode
-                ? "bg-[#f77614] text-white border-[#f77614] hover:bg-[#e06810]"
-                : "bg-[#2d2d2d] text-[#e8e8e8] border-[#444] hover:bg-[#333]"
+                ? "bg-[#f77614] text-white border-[#f77614] hover:bg-[#e06810] shadow-[0_0_20px_rgba(247,118,20,0.25)]"
+                : "bg-white/[0.04] text-[#ececec] border-white/[0.06] hover:bg-white/[0.08] hover:border-white/[0.1]"
             }`}
           >
             {editMode ? (
@@ -130,11 +120,10 @@ export default function Navbar() {
           </button>
         )}
 
-        {/* Sign out — internal and owner portals */}
         {!isPublic && (
           <button
             onClick={handleSignOut}
-            className="inline-flex items-center justify-center w-[38px] h-[38px] rounded-lg border bg-[#2d2d2d] border-[#444] hover:bg-[#333] text-[#666] hover:text-[#e8e8e8] transition-colors"
+            className="inline-flex items-center justify-center w-9 h-9 rounded-lg border bg-white/[0.04] border-white/[0.06] hover:bg-white/[0.08] text-[#555] hover:text-[#ececec] transition-all duration-200"
             title="Sign out"
           >
             <LogOut size={14} />
