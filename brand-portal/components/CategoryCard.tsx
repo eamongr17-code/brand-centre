@@ -21,7 +21,7 @@ interface CategoryCardProps {
 }
 
 export default function CategoryCard({ category, brandSlug, onDragStart, onDragOver, onDragEnd }: CategoryCardProps) {
-  const { editMode, updateCategory, deleteCategory, getAssets } = useEditStore();
+  const { editMode, updateCategory, deleteCategory, getAssets, getColours } = useEditStore();
   const { portalPath, showInternal } = usePortal();
   const isColours = category.categoryType === "colours";
   const allAssets = getAssets(category.id);
@@ -210,9 +210,13 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
       <div className="p-4 flex flex-col flex-1 gap-2">
         <div>
           <h3 className="font-semibold text-[#ececec]">{name}</h3>
-          {!isColours && (
-            <p className="text-xs text-[#555] mt-0.5">{liveAssetCount} assets</p>
-          )}
+          <p className="text-xs text-[#555] mt-0.5">
+            {category.actionType === "view"
+              ? "External asset"
+              : isColours
+                ? `${getColours(category.id).length} colours`
+                : `${liveAssetCount} assets`}
+          </p>
           {category.lastEditedAt && (
             <p className="text-[10px] text-[#444] mt-0.5">Updated {timeAgo(category.lastEditedAt)}</p>
           )}
