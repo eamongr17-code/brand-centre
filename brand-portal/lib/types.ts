@@ -41,6 +41,7 @@ export interface Category {
   categoryType?: "assets" | "colours";
   actionType?: "download" | "view";
   visibility?: "public" | "internal";
+  lastEditedAt?: string;
 }
 
 export interface BrandSection {
@@ -82,4 +83,6 @@ export interface Asset {
   actionType?: "download" | "view";
   visibility?: "public" | "internal";
   rules?: string[];
+  lastEditedAt?: string;
+  tags?: string[];
 }

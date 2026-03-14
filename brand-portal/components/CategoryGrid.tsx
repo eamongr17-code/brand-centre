@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useCallback } from "react";
 import { Palette, Plus } from "lucide-react";
 import CategoryCard from "@/components/CategoryCard";
 import { useEditStore } from "@/lib/edit-store";
@@ -12,17 +13,54 @@ interface CategoryGridProps {
 }
 
 export default function CategoryGrid({ brandSlug, brandId, subBrandId }: CategoryGridProps) {
-  const { editMode, getCategories, addCategory } = useEditStore();
+  const { editMode, getCategories, addCategory, reorderCategories } = useEditStore();
   const { canEdit, showInternal } = usePortal();
   const allCategories = getCategories(brandId, subBrandId);
   const categories = showInternal
     ? allCategories
     : allCategories.filter((c) => c.visibility !== "internal");
 
+  const [dragId, setDragId] = useState<string | null>(null);
+  const [hoverId, setHoverId] = useState<string | null>(null);
+
+  const handleDragStart = useCallback((e: React.DragEvent, id: string) => {
+    setDragId(id);
+    e.dataTransfer.effectAllowed = "move";
+  }, []);
+
+  const handleDragOver = useCallback((e: React.DragEvent, id: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    setHoverId(id);
+  }, []);
+
+  const handleDragEnd = useCallback(() => {
+    if (dragId && hoverId && dragId !== hoverId) {
+      const ids = categories.map((c) => c.id);
+      const fromIdx = ids.indexOf(dragId);
+      const toIdx = ids.indexOf(hoverId);
+      if (fromIdx !== -1 && toIdx !== -1) {
+        ids.splice(fromIdx, 1);
+        ids.splice(toIdx, 0, dragId);
+        reorderCategories(brandId, subBrandId, ids);
+      }
+    }
+    setDragId(null);
+    setHoverId(null);
+  }, [dragId, hoverId, categories, brandId, subBrandId, reorderCategories]);
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 stagger-children">
       {categories.map((cat) => (
-        <CategoryCard key={cat.id} category={cat} brandSlug={brandSlug} />
+        <div key={cat.id} className={`${hoverId === cat.id && dragId ? "ring-2 ring-blue-500/50 rounded-xl" : ""}`}>
+          <CategoryCard
+            category={cat}
+            brandSlug={brandSlug}
+            onDragStart={editMode ? handleDragStart : undefined}
+            onDragOver={editMode ? handleDragOver : undefined}
+            onDragEnd={editMode ? handleDragEnd : undefined}
+          />
+        </div>
       ))}
       {editMode && canEdit && (
         <>

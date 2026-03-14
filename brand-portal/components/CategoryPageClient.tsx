@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Download, Eye, Code2, Check, Loader } from "lucide-react";
+import { Download, Eye, Code2, Check, Loader, Link2 } from "lucide-react";
 import { zipSync } from "fflate";
 import Breadcrumb from "@/components/Breadcrumb";
 import AssetGrid from "@/components/AssetGrid";
 import ColourGrid from "@/components/ColourGrid";
+import BulkUploader from "@/components/BulkUploader";
 import { useEditStore } from "@/lib/edit-store";
 import { usePortal } from "@/lib/portal-context";
 import { getBrandBySlug } from "@/data/mock-data";
@@ -23,6 +24,7 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
   const [embedOpen, setEmbedOpen] = useState(false);
   const [embedCopied, setEmbedCopied] = useState(false);
   const [zipping, setZipping] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
   const embedRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     setMounted(true);
@@ -132,6 +134,20 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
             )}
           </div>
           <div className="flex items-center gap-2 shrink-0">
+            {/* Copy link button */}
+            <button
+              onClick={() => {
+                const url = `${window.location.origin}${portalPath(`/${brandSlug}/${categorySlug}`)}`;
+                navigator.clipboard.writeText(url).catch(() => {});
+                setLinkCopied(true);
+                setTimeout(() => setLinkCopied(false), 1500);
+              }}
+              className="inline-flex items-center gap-1.5 text-xs font-semibold border border-white/[0.06] text-[#686868] hover:text-[#ececec] hover:border-white/[0.12] px-3 py-2 rounded-lg transition-all duration-200"
+              title={linkCopied ? "Copied!" : "Copy link"}
+            >
+              {linkCopied ? <Check size={13} className="text-green-400" /> : <Link2 size={13} />}
+              {linkCopied ? "Copied" : "Copy link"}
+            </button>
             {/* Embed button */}
             <div className="relative" ref={embedRef}>
               <button
@@ -204,6 +220,10 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
           </div>
         </div>
 
+        {editMode && !isColours && category.actionType !== "view" && (
+          <BulkUploader categoryId={category.id} />
+        )}
+
         {category.actionType === "view" ? (
           category.downloadAllUrl && category.downloadAllUrl !== "#" && (
             <div className="mt-4">
@@ -223,7 +243,7 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
           )
         ) : isColours
           ? <ColourGrid categoryId={category.id} />
-          : <AssetGrid categoryId={category.id} />}
+          : <AssetGrid categoryId={category.id} brandSlug={brandSlug} categorySlug={categorySlug} />}
       </div>
     </main>
   );

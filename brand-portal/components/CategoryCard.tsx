@@ -2,21 +2,25 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Download, Eye, Pencil, Trash2, Check, X, Loader } from "lucide-react";
+import { Download, Eye, Pencil, Trash2, Check, X, Loader, GripVertical } from "lucide-react";
 import { zipSync } from "fflate";
 import { useEditStore } from "@/lib/edit-store";
 import { usePortal } from "@/lib/portal-context";
 import ImageUploader from "@/components/ImageUploader";
 import FadeImg from "@/components/FadeImg";
 import { publicPath } from "@/lib/public-path";
+import { timeAgo } from "@/lib/utils";
 import type { Category } from "@/lib/types";
 
 interface CategoryCardProps {
   category: Category;
   brandSlug: string;
+  onDragStart?: (e: React.DragEvent, id: string) => void;
+  onDragOver?: (e: React.DragEvent, id: string) => void;
+  onDragEnd?: (e: React.DragEvent) => void;
 }
 
-export default function CategoryCard({ category, brandSlug }: CategoryCardProps) {
+export default function CategoryCard({ category, brandSlug, onDragStart, onDragOver, onDragEnd }: CategoryCardProps) {
   const { editMode, updateCategory, deleteCategory, getAssets } = useEditStore();
   const { portalPath, showInternal } = usePortal();
   const isColours = category.categoryType === "colours";
@@ -166,91 +170,111 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
     );
   }
 
-  return (
-    <>
-      <div className="glass-card rounded-xl relative group flex flex-col [animation:fade-up_0.3s_ease-out_forwards]">
-        {/* Preview image */}
-        <div className="bg-white/[0.02] h-36 shrink-0 rounded-t-xl overflow-hidden">
-          <FadeImg src={category.previewImage || publicPath("/placeholder-asset.png")} fallbackSrc={publicPath("/placeholder-asset.png")} alt={category.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+  const cardContent = (
+    <div
+      className="glass-card rounded-xl relative group flex flex-col [animation:fade-up_0.3s_ease-out_forwards] h-full"
+      draggable={editMode && !!onDragStart}
+      onDragStart={onDragStart ? (e) => onDragStart(e, category.id) : undefined}
+      onDragOver={onDragOver ? (e) => onDragOver(e, category.id) : undefined}
+      onDragEnd={onDragEnd}
+    >
+      {editMode && onDragStart && (
+        <div className="absolute top-2 left-2 z-10 cursor-grab active:cursor-grabbing text-[#484848] hover:text-[#888] transition-colors">
+          <GripVertical size={14} />
         </div>
-
-        {editMode && (
-          <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button
-              onClick={() => setEditing(true)}
-              className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-white/[0.08] transition-colors"
-              title="Edit"
-            >
-              <Pencil size={12} className="text-[#ececec]" />
-            </button>
-            <button
-              onClick={() => deleteCategory(category.id)}
-              className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-red-500/20 text-red-400 transition-colors"
-              title="Delete"
-            >
-              <Trash2 size={12} />
-            </button>
-          </div>
-        )}
-
-        <div className="p-4 flex flex-col flex-1 gap-2">
-          <div>
-            <h3 className="font-semibold text-[#ececec]">{name}</h3>
-            {!isColours && (
-              <p className="text-xs text-[#555] mt-0.5">{liveAssetCount} assets</p>
-            )}
-          </div>
-          {description && (
-            <p className="text-sm text-[#787878] flex-1 leading-relaxed">{description}</p>
-          )}
-          <div className="flex gap-2 mt-auto pt-2">
-            {category.actionType === "view" ? (
-              category.downloadAllUrl && category.downloadAllUrl !== "#" && (
-                <a
-                  href={category.downloadAllUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 text-xs font-semibold bg-white text-black px-3 py-1.5 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200"
-                  title="View"
-                >
-                  <Eye size={12} />
-                  View
-                </a>
-              )
-            ) : (
-              <>
-                <Link
-                  href={portalPath(`/${brandSlug}/${category.slug}`)}
-                  className="flex-1 inline-flex items-center justify-center text-xs font-semibold bg-white/[0.04] border border-white/[0.06] text-[#ececec] px-3 py-1.5 rounded-lg hover:bg-white/[0.08] hover:border-white/[0.1] transition-all duration-200 whitespace-nowrap"
-                >
-                  {isColours ? "Browse palette" : "Browse assets"}
-                </Link>
-                {!isColours && visibleAssets.length > 0 && (
-                  category.downloadAllUrl && category.downloadAllUrl !== "#" ? (
-                    <a
-                      href={category.downloadAllUrl}
-                      className="inline-flex items-center justify-center text-xs font-semibold bg-white text-black px-3 py-1.5 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200"
-                      title="Download All"
-                    >
-                      <Download size={12} />
-                    </a>
-                  ) : (
-                    <button
-                      onClick={handleDownloadAll}
-                      disabled={zipping}
-                      className="inline-flex items-center justify-center text-xs font-semibold bg-white text-black px-3 py-1.5 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200 disabled:opacity-60"
-                      title="Download all assets as ZIP"
-                    >
-                      {zipping ? <Loader size={12} className="animate-spin" /> : <Download size={12} />}
-                    </button>
-                  )
-                )}
-              </>
-            )}
-          </div>
-        </div>
+      )}
+      {/* Preview image */}
+      <div className="bg-white/[0.02] h-36 shrink-0 rounded-t-xl overflow-hidden">
+        <FadeImg src={category.previewImage || publicPath("/placeholder-asset.png")} fallbackSrc={publicPath("/placeholder-asset.png")} alt={category.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
       </div>
 
-    </>
+      {editMode && (
+        <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <button
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setEditing(true); }}
+            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-white/[0.08] transition-colors"
+            title="Edit"
+          >
+            <Pencil size={12} className="text-[#ececec]" />
+          </button>
+          <button
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); deleteCategory(category.id); }}
+            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-red-500/20 text-red-400 transition-colors"
+            title="Delete"
+          >
+            <Trash2 size={12} />
+          </button>
+        </div>
+      )}
+
+      <div className="p-4 flex flex-col flex-1 gap-2">
+        <div>
+          <h3 className="font-semibold text-[#ececec]">{name}</h3>
+          {!isColours && (
+            <p className="text-xs text-[#555] mt-0.5">{liveAssetCount} assets</p>
+          )}
+          {category.lastEditedAt && (
+            <p className="text-[10px] text-[#444] mt-0.5">Updated {timeAgo(category.lastEditedAt)}</p>
+          )}
+        </div>
+        {description && (
+          <p className="text-sm text-[#787878] flex-1 leading-relaxed">{description}</p>
+        )}
+        <div className="flex gap-2 mt-auto pt-2" onClick={(e) => e.preventDefault()}>
+          {category.actionType === "view" ? (
+            category.downloadAllUrl && category.downloadAllUrl !== "#" && (
+              <a
+                href={category.downloadAllUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="flex-1 inline-flex items-center justify-center gap-1.5 text-xs font-semibold bg-white text-black px-3 py-1.5 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200"
+                title="View"
+              >
+                <Eye size={12} />
+                View
+              </a>
+            )
+          ) : (
+            <>
+              <Link
+                href={portalPath(`/${brandSlug}/${category.slug}`)}
+                onClick={(e) => e.stopPropagation()}
+                className="flex-1 inline-flex items-center justify-center text-xs font-semibold bg-white/[0.04] border border-white/[0.06] text-[#ececec] px-3 py-1.5 rounded-lg hover:bg-white/[0.08] hover:border-white/[0.1] transition-all duration-200 whitespace-nowrap"
+              >
+                {isColours ? "Browse palette" : "Browse assets"}
+              </Link>
+              {!isColours && visibleAssets.length > 0 && (
+                category.downloadAllUrl && category.downloadAllUrl !== "#" ? (
+                  <a
+                    href={category.downloadAllUrl}
+                    onClick={(e) => e.stopPropagation()}
+                    className="inline-flex items-center justify-center text-xs font-semibold bg-white text-black px-3 py-1.5 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200"
+                    title="Download All"
+                  >
+                    <Download size={12} />
+                  </a>
+                ) : (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); e.preventDefault(); handleDownloadAll(); }}
+                    disabled={zipping}
+                    className="inline-flex items-center justify-center text-xs font-semibold bg-white text-black px-3 py-1.5 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200 disabled:opacity-60"
+                    title="Download all assets as ZIP"
+                  >
+                    {zipping ? <Loader size={12} className="animate-spin" /> : <Download size={12} />}
+                  </button>
+                )
+              )}
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <Link href={portalPath(`/${brandSlug}/${category.slug}`)} className="block">
+      {cardContent}
+    </Link>
   );
 }

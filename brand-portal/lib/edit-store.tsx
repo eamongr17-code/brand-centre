@@ -43,13 +43,16 @@ interface EditStoreContextType {
   getCategories: (brandId: string, subBrandId?: string) => Category[];
   getCategoryBySlug: (brandId: string, slug: string) => Category | undefined;
   addCategory: (brandId: string, subBrandId?: string, categoryType?: "assets" | "colours") => void;
-  updateCategory: (id: string, changes: Partial<Pick<Category, "name" | "description" | "previewImage" | "downloadAllUrl" | "actionType">>) => void;
+  updateCategory: (id: string, changes: Partial<Pick<Category, "name" | "description" | "previewImage" | "downloadAllUrl" | "actionType" | "lastEditedAt">>) => void;
   deleteCategory: (id: string) => void;
   // Assets
   getAssets: (categoryId: string) => Asset[];
   addAsset: (categoryId: string) => string;
-  updateAsset: (id: string, changes: Partial<Pick<Asset, "name" | "description" | "fileType" | "fileSize" | "downloadUrl" | "previewImage" | "actionType" | "visibility" | "rules">>) => void;
+  addAssetBulk: (categoryId: string, assets: Omit<Asset, "id" | "categoryId">[]) => void;
+  updateAsset: (id: string, changes: Partial<Pick<Asset, "name" | "description" | "fileType" | "fileSize" | "downloadUrl" | "previewImage" | "actionType" | "visibility" | "rules" | "lastEditedAt" | "tags">>) => void;
   deleteAsset: (id: string) => void;
+  reorderAssets: (categoryId: string, orderedIds: string[]) => void;
+  reorderCategories: (brandId: string, subBrandId: string | undefined, orderedIds: string[]) => void;
   // Colours
   getColours: (categoryId: string) => BrandColour[];
   addColour: (categoryId: string) => void;
@@ -430,6 +433,7 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
         assetCount: 0,
         sortOrder: 999,
         categoryType,
+        lastEditedAt: new Date().toISOString(),
       };
       persist((prev) => ({
         ...prev,
@@ -440,13 +444,14 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
   );
 
   const updateCategory = useCallback(
-    (id: string, changes: Partial<Pick<Category, "name" | "description" | "previewImage" | "downloadAllUrl" | "actionType">>) => {
+    (id: string, changes: Partial<Pick<Category, "name" | "description" | "previewImage" | "downloadAllUrl" | "actionType" | "lastEditedAt">>) => {
+      const stamped = { ...changes, lastEditedAt: new Date().toISOString() };
       persist((prev) => {
         if (prev.customCategories.some((c) => c.id === id)) {
           return {
             ...prev,
             customCategories: prev.customCategories.map((c) =>
-              c.id === id ? { ...c, ...changes } : c
+              c.id === id ? { ...c, ...stamped } : c
             ),
           };
         }
@@ -454,7 +459,7 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
           ...prev,
           categoryOverrides: {
             ...prev.categoryOverrides,
-            [id]: { ...(prev.categoryOverrides[id] ?? {}), ...changes },
+            [id]: { ...(prev.categoryOverrides[id] ?? {}), ...stamped },
           },
         };
       });
@@ -510,6 +515,8 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
         previewImage: "",
         featured: false,
         sortOrder: 999,
+        lastEditedAt: new Date().toISOString(),
+        tags: [],
       };
       persist((prev) => ({ ...prev, customAssets: [...prev.customAssets, newAsset] }));
       return id;
@@ -518,13 +525,14 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
   );
 
   const updateAsset = useCallback(
-    (id: string, changes: Partial<Pick<Asset, "name" | "description" | "fileType" | "fileSize" | "downloadUrl" | "previewImage" | "actionType" | "visibility" | "rules">>) => {
+    (id: string, changes: Partial<Pick<Asset, "name" | "description" | "fileType" | "fileSize" | "downloadUrl" | "previewImage" | "actionType" | "visibility" | "rules" | "lastEditedAt" | "tags">>) => {
+      const stamped = { ...changes, lastEditedAt: new Date().toISOString() };
       persist((prev) => {
         if (prev.customAssets.some((a) => a.id === id)) {
           return {
             ...prev,
             customAssets: prev.customAssets.map((a) =>
-              a.id === id ? { ...a, ...changes } : a
+              a.id === id ? { ...a, ...stamped } : a
             ),
           };
         }
@@ -532,7 +540,7 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
           ...prev,
           assetOverrides: {
             ...prev.assetOverrides,
-            [id]: { ...(prev.assetOverrides[id] ?? {}), ...changes },
+            [id]: { ...(prev.assetOverrides[id] ?? {}), ...stamped },
           },
         };
       });
@@ -547,6 +555,61 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
           return { ...prev, customAssets: prev.customAssets.filter((a) => a.id !== id) };
         }
         return { ...prev, deletedAssetIds: [...prev.deletedAssetIds, id] };
+      });
+    },
+    [persist]
+  );
+
+  const addAssetBulk = useCallback(
+    (categoryId: string, assets: Omit<Asset, "id" | "categoryId">[]) => {
+      persist((prev) => ({
+        ...prev,
+        customAssets: [
+          ...prev.customAssets,
+          ...assets.map((a, i) => ({
+            ...a,
+            id: `custom-${genId()}${i}`,
+            categoryId,
+          })),
+        ],
+      }));
+    },
+    [persist]
+  );
+
+  const reorderAssets = useCallback(
+    (categoryId: string, orderedIds: string[]) => {
+      persist((prev) => {
+        const nextOverrides = { ...prev.assetOverrides };
+        const nextCustom = [...prev.customAssets];
+        orderedIds.forEach((id, index) => {
+          const customIdx = nextCustom.findIndex((a) => a.id === id);
+          if (customIdx !== -1) {
+            nextCustom[customIdx] = { ...nextCustom[customIdx], sortOrder: index };
+          } else {
+            nextOverrides[id] = { ...(nextOverrides[id] ?? {}), sortOrder: index };
+          }
+        });
+        return { ...prev, assetOverrides: nextOverrides, customAssets: nextCustom };
+      });
+    },
+    [persist]
+  );
+
+  const reorderCategories = useCallback(
+    (brandId: string, subBrandId: string | undefined, orderedIds: string[]) => {
+      persist((prev) => {
+        const nextOverrides = { ...prev.categoryOverrides };
+        const nextCustom = [...prev.customCategories];
+        orderedIds.forEach((id, index) => {
+          const customIdx = nextCustom.findIndex((c) => c.id === id);
+          if (customIdx !== -1) {
+            nextCustom[customIdx] = { ...nextCustom[customIdx], sortOrder: index };
+          } else {
+            nextOverrides[id] = { ...(nextOverrides[id] ?? {}), sortOrder: index };
+          }
+        });
+        return { ...prev, categoryOverrides: nextOverrides, customCategories: nextCustom };
       });
     },
     [persist]
@@ -708,8 +771,11 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
         deleteCategory,
         getAssets,
         addAsset,
+        addAssetBulk,
         updateAsset,
         deleteAsset,
+        reorderAssets,
+        reorderCategories,
         getColours,
         addColour,
         updateColour,

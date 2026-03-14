@@ -66,9 +66,7 @@ a, button, [role="button"], summary, label[for], select {
 
 /* Glass navbar */
 .glass-nav {
-  background: rgba(17, 17, 17, 0.8);
-  backdrop-filter: blur(20px) saturate(1.4);
-  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  background: rgba(17, 17, 17, 1);
 }
 
 /* Stagger children animations */

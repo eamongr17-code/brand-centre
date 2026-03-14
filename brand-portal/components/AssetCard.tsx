@@ -1,17 +1,27 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Download, Eye, Pencil, Trash2, Check, X, Lock, HelpCircle } from "lucide-react";
+import { Download, Eye, Pencil, Trash2, Check, X, Lock, HelpCircle, Share2, GripVertical } from "lucide-react";
 import { useEditStore } from "@/lib/edit-store";
 import { usePortal } from "@/lib/portal-context";
 import ImageUploader from "@/components/ImageUploader";
 import FadeImg from "@/components/FadeImg";
 import { publicPath } from "@/lib/public-path";
+import { timeAgo } from "@/lib/utils";
 import type { Asset } from "@/lib/types";
 
-export default function AssetCard({ asset }: { asset: Asset }) {
+interface AssetCardProps {
+  asset: Asset;
+  brandSlug?: string;
+  categorySlug?: string;
+  onDragStart?: (e: React.DragEvent, id: string) => void;
+  onDragOver?: (e: React.DragEvent, id: string) => void;
+  onDragEnd?: (e: React.DragEvent) => void;
+}
+
+export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart, onDragOver, onDragEnd }: AssetCardProps) {
   const { editMode, updateAsset, deleteAsset } = useEditStore();
-  const { canEdit, showInternal } = usePortal();
+  const { canEdit, showInternal, portalPath } = usePortal();
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(asset.name);
   const [description, setDescription] = useState(asset.description);
@@ -26,7 +36,9 @@ export default function AssetCard({ asset }: { asset: Asset }) {
     asset.visibility ?? "public"
   );
   const [rulesLines, setRulesLines] = useState<string[]>([...(asset.rules ?? []), ""]);
+  const [tagsInput, setTagsInput] = useState((asset.tags ?? []).join(", "));
   const [rulesOpen, setRulesOpen] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
   const rulesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -51,6 +63,7 @@ export default function AssetCard({ asset }: { asset: Asset }) {
       setActionType(asset.actionType ?? "download");
       setVisibility(asset.visibility ?? "public");
       setRulesLines([...(asset.rules ?? []), ""]);
+      setTagsInput((asset.tags ?? []).join(", "));
     }
   }, [asset, editing]);
 
@@ -65,6 +78,7 @@ export default function AssetCard({ asset }: { asset: Asset }) {
       actionType,
       visibility,
       rules: rulesLines.filter(Boolean),
+      tags: tagsInput.split(",").map((t) => t.trim()).filter(Boolean),
     });
     setEditing(false);
   };
@@ -79,6 +93,7 @@ export default function AssetCard({ asset }: { asset: Asset }) {
     setActionType(asset.actionType ?? "download");
     setVisibility(asset.visibility ?? "public");
     setRulesLines([...(asset.rules ?? []), ""]);
+    setTagsInput((asset.tags ?? []).join(", "));
     setEditing(false);
   };
 
@@ -141,6 +156,12 @@ export default function AssetCard({ asset }: { asset: Asset }) {
               </div>
             ))}
           </div>
+          <input
+            value={tagsInput}
+            onChange={(e) => setTagsInput(e.target.value)}
+            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
+            placeholder="Tags (comma-separated)"
+          />
           <ImageUploader
             value={previewImage}
             onChange={setPreviewImage}
@@ -229,8 +250,27 @@ export default function AssetCard({ asset }: { asset: Asset }) {
     );
   }
 
+  const handleShare = () => {
+    if (!brandSlug || !categorySlug) return;
+    const url = `${window.location.origin}${portalPath(`/${brandSlug}/${categorySlug}/${asset.id}`)}`;
+    navigator.clipboard.writeText(url).catch(() => {});
+    setShareCopied(true);
+    setTimeout(() => setShareCopied(false), 1500);
+  };
+
   return (
-    <div className="glass-card rounded-xl relative group flex flex-col [animation:fade-up_0.3s_ease-out_forwards]">
+    <div
+      className="glass-card rounded-xl relative group flex flex-col [animation:fade-up_0.3s_ease-out_forwards]"
+      draggable={editMode && !!onDragStart}
+      onDragStart={onDragStart ? (e) => onDragStart(e, asset.id) : undefined}
+      onDragOver={onDragOver ? (e) => onDragOver(e, asset.id) : undefined}
+      onDragEnd={onDragEnd}
+    >
+      {editMode && onDragStart && (
+        <div className="absolute top-2 left-2 z-10 cursor-grab active:cursor-grabbing text-[#484848] hover:text-[#888] transition-colors">
+          <GripVertical size={14} />
+        </div>
+      )}
       <div className="bg-white/[0.02] h-36 shrink-0 rounded-t-xl overflow-hidden">
         <FadeImg src={asset.previewImage || publicPath("/placeholder-asset.png")} fallbackSrc={publicPath("/placeholder-asset.png")} alt={asset.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
       </div>
@@ -266,6 +306,15 @@ export default function AssetCard({ asset }: { asset: Asset }) {
       <div className="p-4 flex flex-col flex-1 gap-2">
         <h3 className="font-semibold text-sm text-[#ececec]">{name}</h3>
         <p className="text-xs text-[#787878] flex-1 leading-relaxed">{description}</p>
+        {asset.tags && asset.tags.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {asset.tags.map((tag, i) => (
+              <span key={i} className="text-[10px] px-1.5 py-0.5 rounded-md bg-white/[0.04] text-[#686868] font-medium">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
         {asset.rules && asset.rules.length > 0 && (
           <div className="relative" ref={rulesRef}>
             <button
@@ -291,43 +340,59 @@ export default function AssetCard({ asset }: { asset: Asset }) {
           </div>
         )}
         <div className="mt-auto flex items-center justify-between gap-2">
-          <span className="text-xs text-[#555]">
-            {fileType}{fileSize ? ` · ${fileSize}` : ""}
-          </span>
-          {isView ? (
-            <a
-              href={asset.downloadUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white text-black px-3 py-1.5 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200"
-              title="View"
-            >
-              <Eye size={12} />
-            </a>
-          ) : (
-            <button
-              onClick={async () => {
-                try {
-                  const res = await fetch(asset.downloadUrl);
-                  const blob = await res.blob();
-                  const url = URL.createObjectURL(blob);
-                  const a = document.createElement("a");
-                  a.href = url;
-                  a.download = asset.name || "download";
-                  document.body.appendChild(a);
-                  a.click();
-                  a.remove();
-                  URL.revokeObjectURL(url);
-                } catch {
-                  window.open(asset.downloadUrl, "_blank");
-                }
-              }}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white text-black px-3 py-1.5 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200"
-              title="Download"
-            >
-              <Download size={12} />
-            </button>
-          )}
+          <div className="flex flex-col">
+            <span className="text-xs text-[#555]">
+              {fileType}{fileSize ? ` · ${fileSize}` : ""}
+            </span>
+            {asset.lastEditedAt && (
+              <span className="text-[10px] text-[#444]">{timeAgo(asset.lastEditedAt)}</span>
+            )}
+          </div>
+          <div className="flex items-center gap-1">
+            {brandSlug && categorySlug && (
+              <button
+                onClick={handleShare}
+                className="inline-flex items-center gap-1 text-xs p-1.5 rounded-lg text-[#484848] hover:text-[#ececec] hover:bg-white/[0.04] transition-all duration-200"
+                title={shareCopied ? "Copied!" : "Copy link"}
+              >
+                {shareCopied ? <Check size={12} className="text-green-400" /> : <Share2 size={12} />}
+              </button>
+            )}
+            {isView ? (
+              <a
+                href={asset.downloadUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white text-black px-3 py-1.5 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200"
+                title="View"
+              >
+                <Eye size={12} />
+              </a>
+            ) : (
+              <button
+                onClick={async () => {
+                  try {
+                    const res = await fetch(asset.downloadUrl);
+                    const blob = await res.blob();
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = asset.name || "download";
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    URL.revokeObjectURL(url);
+                  } catch {
+                    window.open(asset.downloadUrl, "_blank");
+                  }
+                }}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white text-black px-3 py-1.5 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200"
+                title="Download"
+              >
+                <Download size={12} />
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

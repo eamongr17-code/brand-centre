@@ -34,6 +34,7 @@ interface AssetResult {
   categoryName: string;
   downloadUrl: string;
   actionType: "download" | "view";
+  tags?: string[];
 }
 
 interface ColourResult {
@@ -192,14 +193,14 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
               categoryName: cat.name,
               downloadUrl: asset.downloadUrl,
               actionType: asset.actionType ?? "download",
+              tags: asset.tags,
             });
           }
         }
       }
     }
     return items;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editMode, showInternal, lockedBrandId]);
+  }, [editMode, showInternal, lockedBrandId, getCategories, getAssets, getColours]);
 
   const results = useMemo<{ categories: CategoryResult[]; assets: AssetResult[]; colours: ColourResult[] }>(() => {
     const q = query.trim().toLowerCase();
@@ -216,6 +217,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
         item.brandName,
         item.type === "asset" ? item.fileType : "",
         item.type === "asset" ? item.categoryName : "",
+        item.type === "asset" && item.tags ? item.tags.join(" ") : "",
       ]
         .join(" ")
         .toLowerCase();
