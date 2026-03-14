@@ -15,7 +15,7 @@ export default function ImageUploader({
   value,
   onChange,
   placeholder = "Image URL (https://...)",
-  accept = "image/*",
+  accept = "image/*,video/*,audio/*,.pdf,.eps,.ai,.psd,.svg,.mp4,.mov,.mp3,.wav,.aac,.webm,.gif,.webp,.avif,.tiff,.bmp,.indd",
 }: ImageUploaderProps) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);

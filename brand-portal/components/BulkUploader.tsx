@@ -7,8 +7,20 @@ import { supabase } from "@/lib/supabase";
 import { generateThumbnail } from "@/lib/thumbnails";
 
 const ACCEPTED_EXTENSIONS = new Set([
-  "png", "jpg", "jpeg", "svg", "webp", "gif",
-  "pdf", "ai", "eps", "psd", "mp4", "mov",
+  // Images
+  "png", "jpg", "jpeg", "svg", "webp", "gif", "avif", "tiff", "tif", "bmp", "ico",
+  // Vector / Design
+  "ai", "eps", "psd", "indd", "sketch", "fig", "xd",
+  // Documents
+  "pdf",
+  // Video
+  "mp4", "mov", "webm", "avi", "mkv",
+  // Audio
+  "mp3", "wav", "aac", "ogg", "flac", "m4a",
+  // Fonts
+  "otf", "ttf", "woff", "woff2",
+  // Archives
+  "zip", "rar",
 ]);
 
 function formatBytes(bytes: number): string {
@@ -224,7 +236,7 @@ export default function BulkUploader({ categoryId }: BulkUploaderProps) {
         ref={fileInputRef}
         type="file"
         multiple
-        accept=".png,.jpg,.jpeg,.svg,.webp,.gif,.pdf,.ai,.eps,.psd,.mp4,.mov"
+        accept="image/*,video/*,audio/*,.pdf,.eps,.ai,.psd,.indd,.svg,.mp4,.mov,.mp3,.wav,.aac,.webm,.otf,.ttf,.woff,.woff2,.zip,.rar,.sketch,.fig,.xd"
         className="hidden"
         onChange={handleFileInput}
       />

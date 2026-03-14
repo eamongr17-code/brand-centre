@@ -3,15 +3,15 @@ const MAX_SIZE = 400;
 export async function generateThumbnail(file: File): Promise<Blob | null> {
   const ext = file.name.split(".").pop()?.toLowerCase() ?? "";
 
-  if (["png", "jpg", "jpeg", "gif", "webp", "svg"].includes(ext)) {
+  if (["png", "jpg", "jpeg", "gif", "webp", "svg", "avif", "bmp", "ico", "tiff", "tif"].includes(ext)) {
     return imageToThumbnail(file);
   }
 
-  if (["mp4", "mov"].includes(ext)) {
+  if (["mp4", "mov", "webm", "avi", "mkv"].includes(ext)) {
     return videoToThumbnail(file);
   }
 
-  // No thumbnail for pdf, ai, eps, psd
+  // No thumbnail for audio, fonts, documents, design files, archives
   return null;
 }
 
