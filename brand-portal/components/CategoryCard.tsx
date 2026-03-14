@@ -273,7 +273,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
   );
 
   return (
-    <Link href={portalPath(`/${brandSlug}/${category.slug}`)} className="block">
+    <Link href={portalPath(`/${brandSlug}/${category.slug}`)} className="block h-full">
       {cardContent}
     </Link>
   );
