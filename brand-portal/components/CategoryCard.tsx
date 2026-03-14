@@ -206,25 +206,28 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
             <p className="text-sm text-[#a0a0a0] flex-1">{description}</p>
           )}
           <div className="flex gap-2 mt-auto pt-2">
-            <Link
-              href={portalPath(`/${brandSlug}/${category.slug}`)}
-              className="flex-1 inline-flex items-center justify-center text-xs font-medium bg-[#2d2d2d] border border-[#444] text-[#e8e8e8] px-3 py-1.5 rounded hover:bg-[#333] transition-colors whitespace-nowrap"
-            >
-              {isColours ? "Browse palette" : "Browse assets"}
-            </Link>
-            {!isColours && (category.actionType === "view"
-              ? (category.downloadAllUrl && category.downloadAllUrl !== "#" && (
-                  <a
-                    href={category.downloadAllUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center text-xs font-medium bg-white text-black px-3 py-1.5 rounded hover:opacity-80 active:scale-95 transition-all duration-150"
-                    title="View"
-                  >
-                    <Eye size={12} />
-                  </a>
-                ))
-              : (visibleAssets.length > 0 && (
+            {category.actionType === "view" ? (
+              category.downloadAllUrl && category.downloadAllUrl !== "#" && (
+                <a
+                  href={category.downloadAllUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 inline-flex items-center justify-center gap-1.5 text-xs font-medium bg-white text-black px-3 py-1.5 rounded hover:opacity-80 active:scale-95 transition-all duration-150"
+                  title="View"
+                >
+                  <Eye size={12} />
+                  View
+                </a>
+              )
+            ) : (
+              <>
+                <Link
+                  href={portalPath(`/${brandSlug}/${category.slug}`)}
+                  className="flex-1 inline-flex items-center justify-center text-xs font-medium bg-[#2d2d2d] border border-[#444] text-[#e8e8e8] px-3 py-1.5 rounded hover:bg-[#333] transition-colors whitespace-nowrap"
+                >
+                  {isColours ? "Browse palette" : "Browse assets"}
+                </Link>
+                {!isColours && visibleAssets.length > 0 && (
                   category.downloadAllUrl && category.downloadAllUrl !== "#" ? (
                     <a
                       href={category.downloadAllUrl}
@@ -243,7 +246,8 @@ export default function CategoryCard({ category, brandSlug }: CategoryCardProps)
                       {zipping ? <Loader size={12} className="animate-spin" /> : <Download size={12} />}
                     </button>
                   )
-                ))
+                )}
+              </>
             )}
           </div>
         </div>

@@ -128,7 +128,7 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
         <div className="flex items-start justify-between mb-6 gap-4">
           <div className="flex-1 min-w-0">
             <h1 className="text-xl font-bold text-[#e8e8e8]">{category.name}</h1>
-            {!isColours && (
+            {!isColours && category.actionType !== "view" && (
               <p className="text-sm text-[#888] mt-1">{liveCount} assets</p>
             )}
           </div>
@@ -205,7 +205,24 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
           </div>
         </div>
 
-        {isColours
+        {category.actionType === "view" ? (
+          category.downloadAllUrl && category.downloadAllUrl !== "#" && (
+            <div className="mt-4">
+              {category.description && (
+                <p className="text-sm text-[#a0a0a0] mb-6">{category.description}</p>
+              )}
+              <a
+                href={category.downloadAllUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-sm font-medium bg-white text-black px-5 py-2.5 rounded hover:opacity-80 active:scale-95 transition-all duration-150"
+              >
+                <Eye size={15} />
+                Open document
+              </a>
+            </div>
+          )
+        ) : isColours
           ? <ColourGrid categoryId={category.id} />
           : <AssetGrid categoryId={category.id} />}
       </div>
