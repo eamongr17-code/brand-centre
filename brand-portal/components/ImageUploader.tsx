@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { Upload, Loader } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { getMimeType } from "@/lib/utils";
 
 interface ImageUploaderProps {
   value: string;
@@ -29,7 +30,7 @@ export default function ImageUploader({
       const key = `${Date.now()}-${safeName}`;
       const { error: uploadError } = await supabase.storage
         .from("assets")
-        .upload(key, file, { contentType: file.type || "application/octet-stream" });
+        .upload(key, file, { contentType: getMimeType(file) });
       if (uploadError) throw uploadError;
       const { data } = supabase.storage.from("assets").getPublicUrl(key);
       onChange(data.publicUrl);

@@ -5,6 +5,7 @@ import { Upload, Loader, FolderUp } from "lucide-react";
 import { useEditStore } from "@/lib/edit-store";
 import { supabase } from "@/lib/supabase";
 import { generateThumbnail } from "@/lib/thumbnails";
+import { getMimeType } from "@/lib/utils";
 
 const ACCEPTED_EXTENSIONS = new Set([
   // Images
@@ -76,7 +77,7 @@ export default function BulkUploader({ categoryId }: BulkUploaderProps) {
         // Upload file
         const { error: uploadError } = await supabase.storage
           .from("assets")
-          .upload(key, file, { contentType: file.type || "application/octet-stream" });
+          .upload(key, file, { contentType: getMimeType(file) });
         if (uploadError) throw uploadError;
 
         const { data: urlData } = supabase.storage.from("assets").getPublicUrl(key);
