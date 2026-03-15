@@ -186,9 +186,9 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
           </div>
         )}
 
-        {/* Tab — sits at bottom of image, overlapping into panel */}
-        <div className="absolute bottom-0 left-0 z-10 flex">
-          <div className="relative bg-[#1a1a1a] rounded-t-2xl pl-5 pr-7 pt-3 pb-1">
+        {/* Tab + divider — sits at bottom of image, wraps around tab */}
+        <div className="absolute bottom-0 left-0 right-0 z-10 flex items-end">
+          <div className="relative bg-[#1a1a1a] border-t border-r border-white/[0.07] rounded-t-2xl pl-5 pr-7 pt-3 pb-1">
             <p className="font-bold text-[#f0f0f0] text-[15px] leading-tight">{name}</p>
             <p className="text-[10px] text-[#888] mt-0.5">
               {category.actionType === "view"
@@ -199,14 +199,18 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
             </p>
             {/* Concave corner — connects tab to panel */}
             <div className="absolute -right-[12px] bottom-0 w-[12px] h-[12px] overflow-hidden">
-              <div className="absolute bottom-0 left-0 w-6 h-6 rounded-full shadow-[0_0_0_20px_#1a1a1a]" />
+              <div className="absolute bottom-0 left-0 w-6 h-6 rounded-full shadow-[0_0_0_1px_rgba(255,255,255,0.07),0_0_0_20px_#1a1a1a]" />
             </div>
           </div>
+          {/* Spacer for concave corner */}
+          <div className="w-3 shrink-0" />
+          {/* Divider line continues to right edge */}
+          <div className="flex-1 h-px bg-white/[0.07]" />
         </div>
       </div>
 
       {/* Panel body — flows below image */}
-      <div className="bg-[#1a1a1a] border-t border-white/[0.07] flex flex-col px-5 pb-4 pt-4 min-h-0">
+      <div className="bg-[#1a1a1a] flex flex-col px-5 pb-4 pt-4 min-h-0">
         {description && (
           <p className="text-sm text-[#8a8a8a] leading-relaxed line-clamp-1">{description}</p>
         )}
