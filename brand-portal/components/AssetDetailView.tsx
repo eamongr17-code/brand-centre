@@ -171,9 +171,9 @@ export default function AssetDetailView({ brandSlug, categorySlug, assetId }: As
                   href={asset.downloadUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 inline-flex items-center justify-center gap-2 text-sm font-semibold bg-white text-black px-4 py-2.5 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200"
+                  className="flex-1 inline-flex items-center justify-center gap-2 text-sm font-semibold bg-white text-black px-3 py-2 rounded-xl hover:bg-white/90 active:scale-95 transition-all duration-200"
                 >
-                  <Eye size={15} />
+                  <Eye size={14} />
                   View
                 </a>
               ) : (
@@ -194,18 +194,18 @@ export default function AssetDetailView({ brandSlug, categorySlug, assetId }: As
                       window.open(asset.downloadUrl, "_blank");
                     }
                   }}
-                  className="flex-1 inline-flex items-center justify-center gap-2 text-sm font-semibold bg-white text-black px-4 py-2.5 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200"
+                  className="flex-1 inline-flex items-center justify-center gap-2 text-sm font-semibold bg-white text-black px-3 py-2 rounded-xl hover:bg-white/90 active:scale-95 transition-all duration-200"
                 >
-                  <Download size={15} />
+                  <Download size={14} />
                   Download
                 </button>
               )}
               <button
                 onClick={handleShare}
-                className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold border border-white/[0.07] text-[#686868] hover:text-[#f0f0f0] hover:border-white/[0.12] px-4 py-2.5 rounded-lg transition-all duration-200"
+                className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold border border-white/[0.07] text-[#686868] hover:text-[#f0f0f0] hover:border-white/[0.12] px-3 py-2 rounded-xl transition-all duration-200"
                 title={shareCopied ? "Copied!" : "Copy link"}
               >
-                {shareCopied ? <Check size={15} className="text-green-400" /> : <Share2 size={15} />}
+                {shareCopied ? <Check size={14} className="text-green-400" /> : <Share2 size={14} />}
               </button>
             </div>
           </div>

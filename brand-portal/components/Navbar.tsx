@@ -71,7 +71,7 @@ export default function Navbar() {
         {!isHomePage && !isPublic && (
           <Link
             href={homeHref}
-            className={`shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-lg border text-[#f0f0f0] transition-all duration-200 ${
+            className={`shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-xl border text-[#f0f0f0] transition-all duration-200 ${
               editMode
                 ? "bg-[#2d1500] border-[#5a2800] hover:bg-[#3a1c00]"
                 : "bg-white/[0.04] border-white/[0.07] hover:bg-white/[0.08] hover:border-white/[0.1]"
@@ -88,7 +88,7 @@ export default function Navbar() {
         {showCopyLink && (
           <button
             onClick={copyPublicLink}
-            className="inline-flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border bg-white/[0.04] border-white/[0.07] hover:bg-white/[0.08] hover:border-white/[0.1] transition-all duration-200"
+            className="inline-flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-xl border bg-white/[0.04] border-white/[0.07] hover:bg-white/[0.08] hover:border-white/[0.1] transition-all duration-200"
           >
             {copied ? (
               <>

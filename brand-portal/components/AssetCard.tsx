@@ -317,32 +317,32 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
           infoOpen ? "h-[calc(100%-48px)]" : "h-[88px]"
         }`}
       >
-        {/* Info section — visible when expanded */}
-        <div className={`flex flex-col gap-3 transition-opacity duration-200 ${
-          infoOpen ? "flex-1 overflow-y-auto px-5 pt-2 pb-2 opacity-100 delay-200" : "h-0 overflow-hidden opacity-0 pointer-events-none"
-        }`}>
-          <div className="flex items-end justify-end">
-            <button onClick={() => setInfoOpen(false)} className="shrink-0 text-[#555] hover:text-[#999] transition-colors">
-              <X size={14} />
-            </button>
-          </div>
-          {description && <p className="text-xs text-[#8a8a8a] leading-relaxed">{description}</p>}
-          {asset.tags && asset.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1">
-              {asset.tags.map((tag, i) => (
-                <span key={i} className="text-[10px] px-2 py-0.5 rounded-lg bg-white/[0.04] text-[#686868] font-medium">{tag}</span>
-              ))}
+        {/* Info section — container never changes size, parent clips when collapsed */}
+        <div className="flex-1 min-h-0 overflow-hidden">
+          {infoOpen && (
+            <div className="relative h-full overflow-y-auto px-5 pt-4 pb-3 flex flex-col gap-3 [animation:fade-in_0.2s_ease-out_0.15s_both]">
+              <button onClick={() => setInfoOpen(false)} className="absolute top-4 right-5 shrink-0 text-[#555] hover:text-[#999] transition-colors">
+                <X size={14} />
+              </button>
+              {description && <p className="text-xs text-[#8a8a8a] leading-relaxed pr-6">{description}</p>}
+              {asset.tags && asset.tags.length > 0 && (
+                <div className="flex flex-wrap gap-1">
+                  {asset.tags.map((tag, i) => (
+                    <span key={i} className="text-[10px] px-2 py-0.5 rounded-lg bg-white/[0.04] text-[#686868] font-medium">{tag}</span>
+                  ))}
+                </div>
+              )}
+              {asset.rules && asset.rules.length > 0 && (
+                <ul className="space-y-1.5">
+                  {asset.rules.map((rule, i) => (
+                    <li key={i} className="flex gap-1.5 text-[11px] text-[#8a8a8a] leading-snug">
+                      <span className="shrink-0 text-[#444]">—</span>
+                      <span>{rule}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
-          )}
-          {asset.rules && asset.rules.length > 0 && (
-            <ul className="space-y-1.5">
-              {asset.rules.map((rule, i) => (
-                <li key={i} className="flex gap-1.5 text-[11px] text-[#8a8a8a] leading-snug">
-                  <span className="shrink-0 text-[#444]">—</span>
-                  <span>{rule}</span>
-                </li>
-              ))}
-            </ul>
           )}
         </div>
 
@@ -361,31 +361,31 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
               {/* Info button */}
               <button
                 onClick={() => setInfoOpen(v => !v)}
-                className={`w-8 h-8 inline-flex items-center justify-center rounded-xl border transition-colors ${
+                className={`w-9 h-9 inline-flex items-center justify-center rounded-xl border transition-colors ${
                   infoOpen ? "border-white/20 text-[#f0f0f0]" : "border-white/[0.1] text-[#555] hover:text-[#f0f0f0] hover:border-white/20"
                 }`}
               >
-                <Info size={13} />
+                <Info size={14} />
               </button>
               {/* Share button */}
               {brandSlug && categorySlug && (
                 <button
                   onClick={handleShare}
-                  className="w-8 h-8 inline-flex items-center justify-center rounded-xl border border-white/[0.1] text-[#555] hover:text-[#f0f0f0] hover:border-white/20 transition-colors"
+                  className="w-9 h-9 inline-flex items-center justify-center rounded-xl border border-white/[0.1] text-[#555] hover:text-[#f0f0f0] hover:border-white/20 transition-colors"
                 >
-                  {shareCopied ? <Check size={13} className="text-green-400" /> : <Share2 size={13} />}
+                  {shareCopied ? <Check size={14} className="text-green-400" /> : <Share2 size={14} />}
                 </button>
               )}
               {/* Download/View button */}
               {isView ? (
                 <a href={asset.downloadUrl} target="_blank" rel="noopener noreferrer"
-                  className="w-10 h-10 inline-flex items-center justify-center bg-white text-[#111] rounded-xl hover:bg-white/90 active:scale-95 transition-all">
-                  <Eye size={16} />
+                  className="w-9 h-9 inline-flex items-center justify-center bg-white text-[#111] rounded-xl hover:bg-white/90 active:scale-95 transition-all">
+                  <Eye size={14} />
                 </a>
               ) : (
                 <button onClick={handleDownload}
-                  className="w-10 h-10 inline-flex items-center justify-center bg-white text-[#111] rounded-xl hover:bg-white/90 active:scale-95 transition-all">
-                  <Download size={16} />
+                  className="w-9 h-9 inline-flex items-center justify-center bg-white text-[#111] rounded-xl hover:bg-white/90 active:scale-95 transition-all">
+                  <Download size={14} />
                 </button>
               )}
             </div>

@@ -224,7 +224,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="flex-1 h-10 inline-flex items-center justify-center gap-1.5 text-sm font-semibold rounded-xl bg-white/[0.06] border border-white/[0.08] text-[#f0f0f0] hover:bg-white/[0.1] transition-all duration-200"
+                className="flex-1 h-9 inline-flex items-center justify-center gap-1.5 text-sm font-semibold rounded-xl bg-white/[0.06] border border-white/[0.08] text-[#f0f0f0] hover:bg-white/[0.1] transition-all duration-200"
                 title="View"
               >
                 <Eye size={14} />
@@ -236,7 +236,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
               <Link
                 href={portalPath(`/${brandSlug}/${category.slug}`)}
                 onClick={(e) => e.stopPropagation()}
-                className="flex-1 h-10 inline-flex items-center justify-center text-sm font-semibold rounded-xl bg-white/[0.06] border border-white/[0.08] text-[#f0f0f0] hover:bg-white/[0.1] transition-all duration-200"
+                className="flex-1 h-9 inline-flex items-center justify-center text-sm font-semibold rounded-xl bg-white/[0.06] border border-white/[0.08] text-[#f0f0f0] hover:bg-white/[0.1] transition-all duration-200"
               >
                 {isColours ? "Browse palette" : "Browse assets"}
               </Link>
@@ -245,7 +245,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
                   <a
                     href={category.downloadAllUrl}
                     onClick={(e) => e.stopPropagation()}
-                    className="flex-shrink-0 w-10 h-10 inline-flex items-center justify-center rounded-xl bg-white hover:bg-white/90 active:scale-95 transition-all duration-200"
+                    className="flex-shrink-0 w-9 h-9 inline-flex items-center justify-center rounded-xl bg-white hover:bg-white/90 active:scale-95 transition-all duration-200"
                     title="Download All"
                   >
                     <Download size={14} className="text-[#111]" />
@@ -254,7 +254,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
                   <button
                     onClick={(e) => { e.stopPropagation(); e.preventDefault(); handleDownloadAll(); }}
                     disabled={zipping}
-                    className="flex-shrink-0 w-10 h-10 inline-flex items-center justify-center rounded-xl bg-white hover:bg-white/90 active:scale-95 transition-all duration-200 disabled:opacity-60"
+                    className="flex-shrink-0 w-9 h-9 inline-flex items-center justify-center rounded-xl bg-white hover:bg-white/90 active:scale-95 transition-all duration-200 disabled:opacity-60"
                     title="Download all assets as ZIP"
                   >
                     {zipping ? <Loader size={14} className="animate-spin text-[#111]" /> : <Download size={14} className="text-[#111]" />}

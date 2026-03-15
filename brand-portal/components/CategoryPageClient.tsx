@@ -115,20 +115,20 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
                 setLinkCopied(true);
                 setTimeout(() => setLinkCopied(false), 1500);
               }}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold border border-white/[0.07] text-[#686868] hover:text-[#f0f0f0] hover:border-white/[0.12] px-3 py-2 rounded-lg transition-all duration-200"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold border border-white/[0.07] text-[#686868] hover:text-[#f0f0f0] hover:border-white/[0.12] px-3 py-2 rounded-xl transition-all duration-200"
               title={linkCopied ? "Copied!" : "Copy link"}
             >
-              {linkCopied ? <Check size={13} className="text-green-400" /> : <Link2 size={13} />}
+              {linkCopied ? <Check size={14} className="text-green-400" /> : <Link2 size={14} />}
               {linkCopied ? "Copied" : "Copy link"}
             </button>
             {/* Embed button */}
             <div className="relative" ref={embedRef}>
               <button
                 onClick={() => setEmbedOpen((v) => !v)}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold border border-white/[0.07] text-[#686868] hover:text-[#f0f0f0] hover:border-white/[0.12] px-3 py-2 rounded-lg transition-all duration-200"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold border border-white/[0.07] text-[#686868] hover:text-[#f0f0f0] hover:border-white/[0.12] px-3 py-2 rounded-xl transition-all duration-200"
                 title="Get embed code"
               >
-                <Code2 size={13} />
+                <Code2 size={14} />
                 Embed
               </button>
               {embedOpen && (
@@ -160,7 +160,7 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
                     href={category.downloadAllUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-sm font-semibold bg-white text-black px-4 py-2 rounded-xl hover:bg-white/90 active:scale-95 transition-all duration-200"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold bg-white text-black px-3 py-2 rounded-xl hover:bg-white/90 active:scale-95 transition-all duration-200"
                     title="View"
                   >
                     <Eye size={14} />
@@ -171,7 +171,7 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
                   category.downloadAllUrl && category.downloadAllUrl !== "#" ? (
                     <a
                       href={category.downloadAllUrl}
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold bg-white text-black px-4 py-2 rounded-xl hover:bg-white/90 active:scale-95 transition-all duration-200"
+                      className="inline-flex items-center gap-1.5 text-sm font-semibold bg-white text-black px-3 py-2 rounded-xl hover:bg-white/90 active:scale-95 transition-all duration-200"
                       title="Download All"
                     >
                       <Download size={14} />
@@ -181,7 +181,7 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
                     <button
                       onClick={handleDownloadAll}
                       disabled={zipping}
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold bg-white text-black px-4 py-2 rounded-xl hover:bg-white/90 active:scale-95 transition-all duration-200 disabled:opacity-60"
+                      className="inline-flex items-center gap-1.5 text-sm font-semibold bg-white text-black px-3 py-2 rounded-xl hover:bg-white/90 active:scale-95 transition-all duration-200 disabled:opacity-60"
                       title="Download all assets as ZIP"
                     >
                       {zipping ? <Loader size={14} className="animate-spin" /> : <Download size={14} />}
@@ -219,9 +219,9 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
                 href={category.downloadAllUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-semibold bg-white text-black px-4 py-2 rounded-xl hover:bg-white/90 active:scale-95 transition-all duration-200"
+                className="inline-flex items-center gap-2 text-sm font-semibold bg-white text-black px-3 py-2 rounded-xl hover:bg-white/90 active:scale-95 transition-all duration-200"
               >
-                <Eye size={15} />
+                <Eye size={14} />
                 Open document
               </a>
             </div>
