@@ -221,7 +221,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
         {/* Tab row — fixed height matching the slope SVG */}
         <div className="flex flex-shrink-0" style={{ height: '50px' }}>
           {/* Tab — width adapts to content */}
-          <div className="bg-[#161616] rounded-tl-[20px] h-full flex flex-col justify-end pl-6 pr-4 pb-1.5 max-w-[60%]">
+          <div className="bg-[#161616] rounded-tl-[20px] h-full flex flex-col justify-end pl-6 pr-4 pb-1 max-w-[60%]">
             <p className="font-bold text-[#ececec] text-[15px] leading-tight truncate">{name}</p>
             <p className="text-[10px] text-[#888] mt-0.5">
               {category.actionType === "view"
@@ -238,7 +238,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
         </div>
 
         {/* Panel body */}
-        <div className="bg-[#161616] rounded-tr-[20px] flex-1 flex flex-col px-5 pb-4 pt-1.5 min-h-0 -mt-px">
+        <div className="bg-[#161616] rounded-tr-[20px] flex-1 flex flex-col px-5 pb-4 pt-3 min-h-0 -mt-px">
           {description && (
             <p className="text-sm text-[#787878] leading-relaxed line-clamp-2">{description}</p>
           )}
