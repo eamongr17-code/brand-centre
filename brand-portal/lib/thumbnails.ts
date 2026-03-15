@@ -1,4 +1,6 @@
-const MAX_SIZE = 400;
+const MAX_WIDTH = 640;
+const MAX_HEIGHT = 360; // 16:9
+const ASPECT = 16 / 9;
 
 export async function generateThumbnail(file: File): Promise<Blob | null> {
   const ext = file.name.split(".").pop()?.toLowerCase() ?? "";
@@ -15,20 +17,35 @@ export async function generateThumbnail(file: File): Promise<Blob | null> {
   return null;
 }
 
+function cropTo16x9(ctx: CanvasRenderingContext2D, source: CanvasImageSource, srcW: number, srcH: number) {
+  const srcAspect = srcW / srcH;
+  let sx = 0, sy = 0, sw = srcW, sh = srcH;
+  if (srcAspect > ASPECT) {
+    // Source is wider — crop sides
+    sw = srcH * ASPECT;
+    sx = (srcW - sw) / 2;
+  } else {
+    // Source is taller — crop top/bottom
+    sh = srcW / ASPECT;
+    sy = (srcH - sh) / 2;
+  }
+  ctx.drawImage(source, sx, sy, sw, sh, 0, 0, MAX_WIDTH, MAX_HEIGHT);
+}
+
 function imageToThumbnail(file: File): Promise<Blob | null> {
   return new Promise((resolve) => {
     const img = new Image();
     img.onload = () => {
       const canvas = document.createElement("canvas");
-      const scale = Math.min(MAX_SIZE / img.width, MAX_SIZE / img.height, 1);
-      canvas.width = img.width * scale;
-      canvas.height = img.height * scale;
+      canvas.width = MAX_WIDTH;
+      canvas.height = MAX_HEIGHT;
       const ctx = canvas.getContext("2d");
       if (!ctx) { resolve(null); return; }
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      cropTo16x9(ctx, img, img.width, img.height);
       canvas.toBlob((blob) => resolve(blob), "image/webp", 0.8);
+      URL.revokeObjectURL(img.src);
     };
-    img.onerror = () => resolve(null);
+    img.onerror = () => { resolve(null); URL.revokeObjectURL(img.src); };
     img.src = URL.createObjectURL(file);
   });
 }
@@ -46,12 +63,11 @@ function videoToThumbnail(file: File): Promise<Blob | null> {
 
     video.onseeked = () => {
       const canvas = document.createElement("canvas");
-      const scale = Math.min(MAX_SIZE / video.videoWidth, MAX_SIZE / video.videoHeight, 1);
-      canvas.width = video.videoWidth * scale;
-      canvas.height = video.videoHeight * scale;
+      canvas.width = MAX_WIDTH;
+      canvas.height = MAX_HEIGHT;
       const ctx = canvas.getContext("2d");
       if (!ctx) { resolve(null); return; }
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      cropTo16x9(ctx, video, video.videoWidth, video.videoHeight);
       canvas.toBlob((blob) => resolve(blob), "image/webp", 0.8);
       URL.revokeObjectURL(video.src);
     };
