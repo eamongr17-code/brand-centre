@@ -2,6 +2,10 @@ export interface BrandColour {
   id: string;
   name: string;
   hex: string;
+  /** Manual overrides – when set these are displayed instead of auto-computed values */
+  rgbOverride?: string;
+  hslOverride?: string;
+  cmykOverride?: string;
 }
 
 export interface BrandColourEntry extends BrandColour {

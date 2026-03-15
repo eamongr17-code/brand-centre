@@ -14,11 +14,17 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(colour.name);
   const [hex, setHex] = useState(colour.hex);
+  const [rgbOverride, setRgbOverride] = useState(colour.rgbOverride ?? "");
+  const [hslOverride, setHslOverride] = useState(colour.hslOverride ?? "");
+  const [cmykOverride, setCmykOverride] = useState(colour.cmykOverride ?? "");
 
   useEffect(() => {
     if (!editing) {
       setName(colour.name);
       setHex(colour.hex);
+      setRgbOverride(colour.rgbOverride ?? "");
+      setHslOverride(colour.hslOverride ?? "");
+      setCmykOverride(colour.cmykOverride ?? "");
     }
   }, [colour, editing]);
 
@@ -35,13 +41,22 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
   };
 
   const save = () => {
-    updateColour(colour.id, { name, hex });
+    updateColour(colour.id, {
+      name,
+      hex,
+      rgbOverride: rgbOverride.trim() || undefined,
+      hslOverride: hslOverride.trim() || undefined,
+      cmykOverride: cmykOverride.trim() || undefined,
+    });
     setEditing(false);
   };
 
   const cancel = () => {
     setName(colour.name);
     setHex(colour.hex);
+    setRgbOverride(colour.rgbOverride ?? "");
+    setHslOverride(colour.hslOverride ?? "");
+    setCmykOverride(colour.cmykOverride ?? "");
     setEditing(false);
   };
 
@@ -63,6 +78,29 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
             className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs font-mono text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
             placeholder="#000000"
           />
+          <div className="grid grid-cols-[32px_1fr] gap-x-2 gap-y-1.5 items-center">
+            <span className="text-[10px] font-bold text-[#484848]">RGB</span>
+            <input
+              value={rgbOverride}
+              onChange={(e) => setRgbOverride(e.target.value)}
+              className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs font-mono text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
+              placeholder={`rgb(${hexToRgb(hex.match(/^#[0-9A-Fa-f]{3,6}$/) ? hex : "#000000").r}, ${hexToRgb(hex.match(/^#[0-9A-Fa-f]{3,6}$/) ? hex : "#000000").g}, ${hexToRgb(hex.match(/^#[0-9A-Fa-f]{3,6}$/) ? hex : "#000000").b})`}
+            />
+            <span className="text-[10px] font-bold text-[#484848]">HSL</span>
+            <input
+              value={hslOverride}
+              onChange={(e) => setHslOverride(e.target.value)}
+              className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs font-mono text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
+              placeholder={(() => { const h = hexToHsl(hex.match(/^#[0-9A-Fa-f]{3,6}$/) ? hex : "#000000"); return `hsl(${h.h}°, ${h.s}%, ${h.l}%)`; })()}
+            />
+            <span className="text-[10px] font-bold text-[#484848]">CMYK</span>
+            <input
+              value={cmykOverride}
+              onChange={(e) => setCmykOverride(e.target.value)}
+              className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs font-mono text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
+              placeholder={(() => { const c = hexToCmyk(hex.match(/^#[0-9A-Fa-f]{3,6}$/) ? hex : "#000000"); return `C:${c.c} M:${c.m} Y:${c.y} K:${c.k}`; })()}
+            />
+          </div>
           <div className="flex gap-2">
             <button
               onClick={save}
@@ -87,9 +125,9 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
   const cmyk = hexToCmyk(colour.hex);
   const values = [
     { label: "HEX", value: colour.hex },
-    { label: "RGB", value: `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})` },
-    { label: "HSL", value: `hsl(${hsl.h}°, ${hsl.s}%, ${hsl.l}%)` },
-    { label: "CMYK", value: `C:${cmyk.c} M:${cmyk.m} Y:${cmyk.y} K:${cmyk.k}` },
+    { label: "RGB", value: colour.rgbOverride || `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})` },
+    { label: "HSL", value: colour.hslOverride || `hsl(${hsl.h}°, ${hsl.s}%, ${hsl.l}%)` },
+    { label: "CMYK", value: colour.cmykOverride || `C:${cmyk.c} M:${cmyk.m} Y:${cmyk.y} K:${cmyk.k}` },
   ];
 
   return (

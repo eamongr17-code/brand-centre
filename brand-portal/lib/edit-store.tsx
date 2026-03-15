@@ -56,7 +56,7 @@ interface EditStoreContextType {
   // Colours
   getColours: (categoryId: string) => BrandColour[];
   addColour: (categoryId: string) => void;
-  updateColour: (id: string, changes: Partial<Pick<BrandColour, "name" | "hex">>) => void;
+  updateColour: (id: string, changes: Partial<Pick<BrandColour, "name" | "hex" | "rgbOverride" | "hslOverride" | "cmykOverride">>) => void;
   deleteColour: (id: string) => void;
   // Footer links
   getFooterLinks: () => FooterLink[];
@@ -648,7 +648,7 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
   );
 
   const updateColour = useCallback(
-    (id: string, changes: Partial<Pick<BrandColour, "name" | "hex">>) => {
+    (id: string, changes: Partial<Pick<BrandColour, "name" | "hex" | "rgbOverride" | "hslOverride" | "cmykOverride">>) => {
       persist((prev) => {
         if (prev.customColours.some((c) => c.id === id)) {
           return {
