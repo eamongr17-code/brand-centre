@@ -233,7 +233,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
         </div>
 
         {/* Panel body */}
-        <div className="bg-[#161616] flex-1 flex flex-col px-5 pb-5 pt-2 min-h-0">
+        <div className="bg-[#161616] rounded-tr-2xl flex-1 flex flex-col px-5 pb-5 pt-4 min-h-0">
           {description && (
             <p className="text-sm text-[#787878] leading-relaxed line-clamp-2">{description}</p>
           )}
