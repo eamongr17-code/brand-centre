@@ -120,7 +120,7 @@ function FooterText({
       {canEdit && (
         <button
           onClick={() => { setDraft(text); setEditing(true); }}
-          className="opacity-0 group-hover/footertext:opacity-100 transition-opacity text-[#505050] hover:text-[#888]"
+          className="opacity-0 group-hover/footertext:opacity-100 transition-opacity duration-200 text-[#505050] hover:text-[#888]"
           title="Edit footer text"
         >
           <Pencil size={10} />
@@ -187,7 +187,7 @@ function FooterLinkItem({
         {label}
       </a>
       {isEditing && (
-        <span className="opacity-0 group-hover/link:opacity-100 transition-opacity inline-flex items-center gap-0.5">
+        <span className="opacity-0 group-hover/link:opacity-100 transition-opacity duration-200 inline-flex items-center gap-0.5">
           <button
             onClick={() => { setEditLabel(label); setEditHref(href); setEditing(true); }}
             className="text-[#505050] hover:text-[#888] transition-colors"

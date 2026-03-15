@@ -293,17 +293,17 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
 
       {/* Edit/delete buttons — top-right */}
       {editMode && (
-        <div className="absolute top-3 right-3 z-10 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="absolute top-3 right-3 z-10 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <button
             onClick={() => { setInfoOpen(false); setEditing(true); }}
-            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-xl p-1.5 hover:bg-white/[0.08] transition-colors"
+            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-xl p-1.5 hover:bg-white/[0.08] transition-colors duration-200"
             title="Edit"
           >
             <Pencil size={12} className="text-[#f0f0f0]" />
           </button>
           <button
             onClick={() => deleteAsset(asset.id)}
-            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-xl p-1.5 hover:bg-red-500/20 text-red-400 transition-colors"
+            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-xl p-1.5 hover:bg-red-500/20 text-red-400 transition-colors duration-200"
             title="Delete"
           >
             <Trash2 size={12} />
@@ -358,7 +358,7 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
               {/* Info button */}
               <button
                 onClick={() => setInfoOpen(v => !v)}
-                className={`w-9 h-9 inline-flex items-center justify-center rounded-xl border transition-colors ${
+                className={`w-9 h-9 inline-flex items-center justify-center rounded-xl border transition-all duration-200 active:scale-95 ${
                   infoOpen ? "border-white/20 text-[#f0f0f0]" : "border-white/[0.1] text-[#555] hover:text-[#f0f0f0] hover:border-white/20"
                 }`}
               >
@@ -368,7 +368,7 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
               {brandSlug && categorySlug && (
                 <button
                   onClick={handleShare}
-                  className="w-9 h-9 inline-flex items-center justify-center rounded-xl border border-white/[0.1] text-[#555] hover:text-[#f0f0f0] hover:border-white/20 transition-colors"
+                  className="w-9 h-9 inline-flex items-center justify-center rounded-xl border border-white/[0.1] text-[#555] hover:text-[#f0f0f0] hover:border-white/20 transition-all duration-200 active:scale-95"
                 >
                   {shareCopied ? <Check size={14} className="text-green-400" /> : <Share2 size={14} />}
                 </button>

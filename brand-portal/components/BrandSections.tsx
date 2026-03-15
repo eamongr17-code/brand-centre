@@ -67,7 +67,7 @@ function SectionHeader({ name, canDelete, onRename, onDelete }: SectionHeaderPro
     <div className="flex items-center gap-3 mb-6 group/header">
       <h2 className="text-xl font-bold text-[#f0f0f0]">{name}</h2>
       {editMode && canEdit && (
-        <div className="flex items-center gap-1.5 opacity-0 group-hover/header:opacity-100 transition-opacity">
+        <div className="flex items-center gap-1.5 opacity-0 group-hover/header:opacity-100 transition-opacity duration-200">
           <button
             onClick={() => setEditing(true)}
             className="bg-white/[0.04] border border-white/[0.07] rounded-lg p-1 hover:bg-white/[0.08] text-[#686868] hover:text-[#f0f0f0] transition-colors"

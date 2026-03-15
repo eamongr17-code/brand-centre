@@ -144,125 +144,112 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
 
   const cardContent = (
     <div
-      className="rounded-2xl relative group flex flex-col [animation:fade-up_0.3s_ease-out_forwards] h-full overflow-hidden border border-white/[0.07] hover:border-white/[0.1] hover:shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300"
+      className="glass-card rounded-2xl relative overflow-hidden aspect-[16/12] group [animation:fade-up_0.3s_ease-out_forwards]"
       draggable={editMode && !!onDragStart}
       onDragStart={onDragStart ? (e) => onDragStart(e, category.id) : undefined}
       onDragOver={onDragOver ? (e) => onDragOver(e, category.id) : undefined}
       onDragEnd={onDragEnd}
     >
-      {/* Image area — fixed 16:9 */}
-      <div className="relative aspect-video overflow-hidden shrink-0">
+      {/* Layer 1 — Image */}
+      <div className="absolute inset-0 bg-white/[0.02]">
         <FadeImg
           src={category.previewImage || publicPath("/placeholder-asset.png")}
           fallbackSrc={publicPath("/placeholder-asset.png")}
           alt={category.name}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
-
-        {/* Grip handle */}
-        {editMode && onDragStart && (
-          <div className="absolute bottom-3 right-3 z-20 cursor-grab active:cursor-grabbing text-[#555] hover:text-[#888] opacity-0 group-hover:opacity-100 transition-all">
-            <GripVertical size={14} />
-          </div>
-        )}
-
-        {/* Edit mode: edit/delete buttons */}
-        {editMode && (
-          <div className="absolute top-3 right-3 z-20 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button
-              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setEditing(true); }}
-              className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-xl p-1.5 hover:bg-white/[0.08] transition-colors"
-              title="Edit"
-            >
-              <Pencil size={12} className="text-[#f0f0f0]" />
-            </button>
-            <button
-              onClick={(e) => { e.preventDefault(); e.stopPropagation(); deleteCategory(category.id); }}
-              className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-xl p-1.5 hover:bg-red-500/20 text-red-400 transition-colors"
-              title="Delete"
-            >
-              <Trash2 size={12} />
-            </button>
-          </div>
-        )}
-
-        {/* Tab + divider — sits at bottom of image, wraps around tab */}
-        <div className="absolute bottom-0 left-0 right-0 z-10 flex items-end">
-          <div className="relative bg-[#1a1a1a] border-t border-r border-white/[0.07] rounded-t-2xl pl-5 pr-7 pt-2.5 pb-[7px]">
-            <p className="font-bold text-[#f0f0f0] text-[15px] leading-tight">{name}</p>
-            <p className="text-[10px] text-[#888] mt-0.5">
-              {category.actionType === "view"
-                ? "External asset"
-                : isColours
-                  ? `${getColours(category.id).length} colours`
-                  : `${liveAssetCount} assets`}
-            </p>
-            {/* Concave corner — connects tab to panel */}
-            <div className="absolute -right-[12px] bottom-0 w-[12px] h-[12px] overflow-hidden">
-              <div className="absolute bottom-0 left-0 w-6 h-6 rounded-full shadow-[0_0_0_1px_rgba(255,255,255,0.07),0_0_0_20px_#1a1a1a]" />
-            </div>
-          </div>
-          {/* Spacer for concave corner */}
-          <div className="w-3 shrink-0" />
-          {/* Divider line continues to right edge */}
-          <div className="flex-1 h-px bg-white/[0.07]" />
-        </div>
       </div>
 
-      {/* Panel body — flows below image */}
-      <div className="bg-[#1a1a1a] flex flex-col px-5 pb-5 pt-5 min-h-0">
-        {description && (
-          <p className="text-sm text-[#8a8a8a] leading-relaxed line-clamp-1">{description}</p>
-        )}
+      {/* Layer 2 — Edit overlays */}
+      {/* Grip handle — top-left */}
+      {editMode && onDragStart && (
+        <div className="absolute top-3 left-3 z-10 cursor-grab active:cursor-grabbing text-[#555] hover:text-[#888] opacity-0 group-hover:opacity-100 transition-all duration-200">
+          <GripVertical size={14} />
+        </div>
+      )}
 
-        {/* Action buttons */}
-        <div className="flex gap-2.5 mt-auto pt-5" onClick={(e) => e.preventDefault()}>
-          {category.actionType === "view" ? (
-            category.downloadAllUrl && category.downloadAllUrl !== "#" && (
-              <a
-                href={category.downloadAllUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                className="flex-1 h-9 inline-flex items-center justify-center gap-1.5 text-sm font-semibold rounded-xl bg-white/[0.06] border border-white/[0.08] text-[#f0f0f0] hover:bg-white/[0.1] transition-all duration-200"
-                title="View"
-              >
-                <Eye size={14} />
-                View
-              </a>
-            )
-          ) : (
-            <>
-              <Link
-                href={portalPath(`/${brandSlug}/${category.slug}`)}
-                onClick={(e) => e.stopPropagation()}
-                className="flex-1 h-9 inline-flex items-center justify-center text-sm font-semibold rounded-xl bg-white/[0.06] border border-white/[0.08] text-[#f0f0f0] hover:bg-white/[0.1] transition-all duration-200"
-              >
-                {isColours ? "Browse palette" : "Browse assets"}
-              </Link>
-              {!isColours && visibleAssets.length > 0 && (
-                category.downloadAllUrl && category.downloadAllUrl !== "#" ? (
+      {/* Edit/delete buttons — top-right */}
+      {editMode && (
+        <div className="absolute top-3 right-3 z-10 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <button
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setEditing(true); }}
+            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-xl p-1.5 hover:bg-white/[0.08] transition-colors duration-200"
+            title="Edit"
+          >
+            <Pencil size={12} className="text-[#f0f0f0]" />
+          </button>
+          <button
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); deleteCategory(category.id); }}
+            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-xl p-1.5 hover:bg-red-500/20 text-red-400 transition-colors duration-200"
+            title="Delete"
+          >
+            <Trash2 size={12} />
+          </button>
+        </div>
+      )}
+
+      {/* Layer 3 — Dark panel */}
+      <div className="absolute bottom-0 left-0 right-0 bg-[#1a1a1a] border-t border-white/[0.07] rounded-t-xl">
+        <div className="px-5 pt-3 pb-3">
+          <span className="font-semibold text-base text-[#f0f0f0] truncate block">{name}</span>
+          <div className="flex items-end justify-between gap-2 mt-1">
+            <div className="flex flex-col min-w-0 overflow-hidden">
+              <span className="text-xs text-[#636363]">
+                {category.actionType === "view"
+                  ? "External asset"
+                  : isColours
+                    ? `${getColours(category.id).length} colours`
+                    : `${liveAssetCount} assets`}
+              </span>
+            </div>
+            <div className="flex items-center gap-1.5 shrink-0" onClick={(e) => e.preventDefault()}>
+              {category.actionType === "view" ? (
+                category.downloadAllUrl && category.downloadAllUrl !== "#" && (
                   <a
                     href={category.downloadAllUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="flex-shrink-0 w-9 h-9 inline-flex items-center justify-center rounded-xl bg-white hover:bg-white/90 active:scale-95 transition-all duration-200"
-                    title="Download All"
+                    className="w-9 h-9 inline-flex items-center justify-center bg-white text-[#111] rounded-xl hover:bg-white/90 active:scale-95 transition-all duration-200"
+                    title="View"
                   >
-                    <Download size={14} className="text-[#111]" />
+                    <Eye size={14} />
                   </a>
-                ) : (
-                  <button
-                    onClick={(e) => { e.stopPropagation(); e.preventDefault(); handleDownloadAll(); }}
-                    disabled={zipping}
-                    className="flex-shrink-0 w-9 h-9 inline-flex items-center justify-center rounded-xl bg-white hover:bg-white/90 active:scale-95 transition-all duration-200 disabled:opacity-60"
-                    title="Download all assets as ZIP"
-                  >
-                    {zipping ? <Loader size={14} className="animate-spin text-[#111]" /> : <Download size={14} className="text-[#111]" />}
-                  </button>
                 )
+              ) : (
+                <>
+                  <Link
+                    href={portalPath(`/${brandSlug}/${category.slug}`)}
+                    onClick={(e) => e.stopPropagation()}
+                    className="h-9 px-4 inline-flex items-center justify-center text-xs font-semibold rounded-xl bg-white/[0.06] border border-white/[0.08] text-[#f0f0f0] hover:bg-white/[0.1] active:scale-95 transition-all duration-200"
+                  >
+                    {isColours ? "Browse" : "Browse"}
+                  </Link>
+                  {!isColours && visibleAssets.length > 0 && (
+                    category.downloadAllUrl && category.downloadAllUrl !== "#" ? (
+                      <a
+                        href={category.downloadAllUrl}
+                        onClick={(e) => e.stopPropagation()}
+                        className="w-9 h-9 inline-flex items-center justify-center rounded-xl bg-white hover:bg-white/90 active:scale-95 transition-all duration-200"
+                        title="Download All"
+                      >
+                        <Download size={14} className="text-[#111]" />
+                      </a>
+                    ) : (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); e.preventDefault(); handleDownloadAll(); }}
+                        disabled={zipping}
+                        className="w-9 h-9 inline-flex items-center justify-center rounded-xl bg-white hover:bg-white/90 active:scale-95 transition-all duration-200 disabled:opacity-60"
+                        title="Download all assets as ZIP"
+                      >
+                        {zipping ? <Loader size={14} className="animate-spin text-[#111]" /> : <Download size={14} className="text-[#111]" />}
+                      </button>
+                    )
+                  )}
+                </>
               )}
-            </>
-          )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
