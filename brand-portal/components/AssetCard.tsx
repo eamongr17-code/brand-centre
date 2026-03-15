@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { Download, Eye, Pencil, Trash2, Check, X, Lock, HelpCircle, Share2, GripVertical } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Download, Eye, Pencil, Trash2, Check, X, Lock, Info, Share2, GripVertical } from "lucide-react";
 import { useEditStore } from "@/lib/edit-store";
 import { usePortal } from "@/lib/portal-context";
 import ImageUploader from "@/components/ImageUploader";
@@ -23,6 +23,7 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
   const { editMode, updateAsset, deleteAsset } = useEditStore();
   const { canEdit, showInternal, portalPath } = usePortal();
   const [editing, setEditing] = useState(false);
+  const [infoOpen, setInfoOpen] = useState(false);
   const [name, setName] = useState(asset.name);
   const [description, setDescription] = useState(asset.description);
   const [fileType, setFileType] = useState(asset.fileType);
@@ -37,20 +38,7 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
   );
   const [rulesLines, setRulesLines] = useState<string[]>([...(asset.rules ?? []), ""]);
   const [tagsInput, setTagsInput] = useState((asset.tags ?? []).join(", "));
-  const [rulesOpen, setRulesOpen] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
-  const rulesRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!rulesOpen) return;
-    const handler = (e: MouseEvent) => {
-      if (rulesRef.current && !rulesRef.current.contains(e.target as Node)) {
-        setRulesOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [rulesOpen]);
 
   useEffect(() => {
     if (!editing) {
@@ -258,37 +246,56 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
     setTimeout(() => setShareCopied(false), 1500);
   };
 
+  const handleDownload = async () => {
+    try {
+      const res = await fetch(asset.downloadUrl);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = asset.name || "download";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch {
+      window.open(asset.downloadUrl, "_blank");
+    }
+  };
+
   return (
     <div
-      className="glass-card rounded-xl relative group flex flex-col [animation:fade-up_0.3s_ease-out_forwards]"
+      className="glass-card rounded-xl relative overflow-hidden aspect-square group [animation:fade-up_0.3s_ease-out_forwards]"
       draggable={editMode && !!onDragStart}
       onDragStart={onDragStart ? (e) => onDragStart(e, asset.id) : undefined}
       onDragOver={onDragOver ? (e) => onDragOver(e, asset.id) : undefined}
       onDragEnd={onDragEnd}
     >
-      {editMode && onDragStart && (
-        <div className="absolute top-2 left-2 z-10 cursor-grab active:cursor-grabbing text-[#484848] hover:text-[#888] transition-colors">
-          <GripVertical size={14} />
-        </div>
-      )}
-      <div className="bg-white/[0.02] h-36 shrink-0 rounded-t-xl overflow-hidden">
-        <FadeImg src={asset.previewImage || publicPath("/placeholder-asset.png")} fallbackSrc={publicPath("/placeholder-asset.png")} alt={asset.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+      {/* Layer 1 — Image */}
+      <div className="absolute inset-0 bg-white/[0.02]">
+        <FadeImg src={asset.previewImage || publicPath("/placeholder-asset.png")} fallbackSrc={publicPath("/placeholder-asset.png")} alt={asset.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
       </div>
 
-      {/* Internal badge */}
-      {isInternal && showInternal && (
-        <div className="absolute top-2 left-2">
+      {/* Layer 2 — Edit overlays */}
+      {/* Grip OR internal badge — top-left */}
+      <div className="absolute top-2 left-2 z-10">
+        {editMode && onDragStart ? (
+          <div className="cursor-grab active:cursor-grabbing text-[#484848] hover:text-[#888] transition-colors">
+            <GripVertical size={14} />
+          </div>
+        ) : isInternal && showInternal ? (
           <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-md bg-blue-900/70 text-blue-300 border border-blue-800/50 backdrop-blur-sm">
             <Lock size={9} />
             Internal
           </span>
-        </div>
-      )}
+        ) : null}
+      </div>
 
+      {/* Edit/delete buttons — top-right */}
       {editMode && (
-        <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="absolute top-2 right-2 z-10 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
-            onClick={() => setEditing(true)}
+            onClick={() => { setInfoOpen(false); setEditing(true); }}
             className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-white/[0.08] transition-colors"
             title="Edit"
           >
@@ -303,93 +310,81 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
           </button>
         </div>
       )}
-      <div className="p-4 flex flex-col flex-1 gap-2">
-        <h3 className="font-semibold text-sm text-[#ececec]">{name}</h3>
-        <p className="text-xs text-[#787878] flex-1 leading-relaxed">{description}</p>
-        {asset.tags && asset.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1">
-            {asset.tags.map((tag, i) => (
-              <span key={i} className="text-[10px] px-1.5 py-0.5 rounded-md bg-white/[0.04] text-[#686868] font-medium">
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
-        {asset.rules && asset.rules.length > 0 && (
-          <div className="relative" ref={rulesRef}>
-            <button
-              onClick={() => setRulesOpen((v) => !v)}
-              className="inline-flex items-center gap-1 text-[11px] text-[#484848] hover:text-[#888] transition-colors"
-            >
-              <HelpCircle size={11} />
-              Usage rules
+
+      {/* Layer 3 — Dark sliding panel */}
+      <div
+        className={`absolute bottom-0 left-0 right-0 bg-[#161616] flex flex-col overflow-hidden transition-[height] duration-300 ease-out ${
+          infoOpen ? "h-[calc(100%-48px)]" : "h-[80px]"
+        }`}
+      >
+        {/* Info section — visible when expanded */}
+        <div className={`flex-1 overflow-y-auto px-4 pt-4 pb-2 flex flex-col gap-3 transition-opacity duration-150 ${
+          infoOpen ? "opacity-100 delay-150" : "opacity-0 pointer-events-none"
+        }`}>
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="font-semibold text-sm text-[#ececec] flex-1 min-w-0">{name}</h3>
+            <button onClick={() => setInfoOpen(false)} className="shrink-0 text-[#555] hover:text-[#999] transition-colors">
+              <X size={14} />
             </button>
-            {rulesOpen && (
-              <div className="absolute bottom-full left-0 mb-2 w-56 bg-[#161616]/95 backdrop-blur-xl border border-white/[0.06] rounded-xl shadow-[0_12px_40px_rgba(0,0,0,0.5)] p-3 z-50">
-                <p className="text-[10px] font-bold text-[#444] uppercase tracking-[0.15em] mb-2">Usage rules</p>
-                <ul className="space-y-1.5">
-                  {asset.rules.map((rule, i) => (
-                    <li key={i} className="flex gap-1.5 text-[11px] text-[#787878] leading-snug">
-                      <span className="shrink-0 text-[#444]">—</span>
-                      <span>{rule}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
           </div>
-        )}
-        <div className="mt-auto flex items-center justify-between gap-2">
-          <div className="flex flex-col">
-            <span className="text-xs text-[#555]">
-              {fileType}{fileSize ? ` · ${fileSize}` : ""}
-            </span>
-            {asset.lastEditedAt && (
-              <span className="text-[10px] text-[#444]">{timeAgo(asset.lastEditedAt)}</span>
+          {description && <p className="text-xs text-[#787878] leading-relaxed">{description}</p>}
+          {asset.tags && asset.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1">
+              {asset.tags.map((tag, i) => (
+                <span key={i} className="text-[10px] px-1.5 py-0.5 rounded-md bg-white/[0.04] text-[#686868] font-medium">{tag}</span>
+              ))}
+            </div>
+          )}
+          {asset.rules && asset.rules.length > 0 && (
+            <ul className="space-y-1.5">
+              {asset.rules.map((rule, i) => (
+                <li key={i} className="flex gap-1.5 text-[11px] text-[#787878] leading-snug">
+                  <span className="shrink-0 text-[#444]">—</span>
+                  <span>{rule}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* Footer bar — always visible */}
+        <div className="mt-auto px-4 py-3 flex items-end justify-between gap-2 shrink-0">
+          <div className="flex flex-col min-w-0 overflow-hidden">
+            {!infoOpen && (
+              <span className="font-semibold text-sm text-[#ececec] truncate mb-0.5">{name}</span>
             )}
+            <span className="text-xs text-[#555]">{fileType}{fileSize ? ` · ${fileSize}` : ""}</span>
+            {asset.lastEditedAt && <span className="text-[10px] text-[#444]">{timeAgo(asset.lastEditedAt)}</span>}
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5 shrink-0">
+            {/* Info button */}
+            <button
+              onClick={() => setInfoOpen(v => !v)}
+              className={`w-8 h-8 inline-flex items-center justify-center rounded-full border transition-colors ${
+                infoOpen ? "border-white/20 text-[#ececec]" : "border-white/[0.1] text-[#555] hover:text-[#ececec] hover:border-white/20"
+              }`}
+            >
+              <Info size={13} />
+            </button>
+            {/* Share button */}
             {brandSlug && categorySlug && (
               <button
                 onClick={handleShare}
-                className="inline-flex items-center gap-1 text-xs p-1.5 rounded-lg text-[#484848] hover:text-[#ececec] hover:bg-white/[0.04] transition-all duration-200"
-                title={shareCopied ? "Copied!" : "Copy link"}
+                className="w-8 h-8 inline-flex items-center justify-center rounded-full border border-white/[0.1] text-[#555] hover:text-[#ececec] hover:border-white/20 transition-colors"
               >
-                {shareCopied ? <Check size={12} className="text-green-400" /> : <Share2 size={12} />}
+                {shareCopied ? <Check size={13} className="text-green-400" /> : <Share2 size={13} />}
               </button>
             )}
+            {/* Download/View button */}
             {isView ? (
-              <a
-                href={asset.downloadUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white text-black px-3 py-1.5 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200"
-                title="View"
-              >
-                <Eye size={12} />
+              <a href={asset.downloadUrl} target="_blank" rel="noopener noreferrer"
+                className="w-10 h-10 inline-flex items-center justify-center bg-white text-black rounded-xl hover:bg-white/90 active:scale-95 transition-all">
+                <Eye size={16} />
               </a>
             ) : (
-              <button
-                onClick={async () => {
-                  try {
-                    const res = await fetch(asset.downloadUrl);
-                    const blob = await res.blob();
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement("a");
-                    a.href = url;
-                    a.download = asset.name || "download";
-                    document.body.appendChild(a);
-                    a.click();
-                    a.remove();
-                    URL.revokeObjectURL(url);
-                  } catch {
-                    window.open(asset.downloadUrl, "_blank");
-                  }
-                }}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white text-black px-3 py-1.5 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200"
-                title="Download"
-              >
-                <Download size={12} />
+              <button onClick={handleDownload}
+                className="w-10 h-10 inline-flex items-center justify-center bg-white text-black rounded-xl hover:bg-white/90 active:scale-95 transition-all">
+                <Download size={16} />
               </button>
             )}
           </div>

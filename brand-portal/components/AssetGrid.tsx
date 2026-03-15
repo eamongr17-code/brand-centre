@@ -70,7 +70,7 @@ export default function AssetGrid({ categoryId, brandSlug, categorySlug }: Asset
         {editMode && canEdit && (
           <button
             onClick={() => addAsset(categoryId)}
-            className="border-2 border-dashed border-white/[0.06] rounded-xl min-h-[220px] flex flex-col items-center justify-center gap-2 text-[#484848] hover:text-[#888] hover:border-white/[0.12] transition-all duration-200"
+            className="border-2 border-dashed border-white/[0.06] rounded-xl aspect-square flex flex-col items-center justify-center gap-2 text-[#484848] hover:text-[#888] hover:border-white/[0.12] transition-all duration-200"
           >
             <Plus size={22} />
             <span className="text-sm font-medium">Add asset</span>

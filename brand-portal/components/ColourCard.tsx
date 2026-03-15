@@ -1,92 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, Copy, Check, Eye, Pencil, Trash2 } from "lucide-react";
+import { X, Copy, Check, Info, Pencil, Trash2 } from "lucide-react";
 import type { BrandColour } from "@/lib/types";
 import { hexToRgb, hexToHsl, hexToCmyk, getContrastColor } from "@/lib/colour-utils";
 import { useEditStore } from "@/lib/edit-store";
 
-function ColourDetailModal({
-  colour,
-  onClose,
-}: {
-  colour: BrandColour;
-  onClose: () => void;
-}) {
-  const [copiedKey, setCopiedKey] = useState<string | null>(null);
-  const rgb = hexToRgb(colour.hex);
-  const hsl = hexToHsl(colour.hex);
-  const cmyk = hexToCmyk(colour.hex);
-  const contrastColor = getContrastColor(colour.hex);
-
-  const copy = (key: string, value: string) => {
-    navigator.clipboard.writeText(value).catch(() => {});
-    setCopiedKey(key);
-    setTimeout(() => setCopiedKey(null), 1500);
-  };
-
-  const values = [
-    { label: "HEX", value: colour.hex },
-    { label: "RGB", value: `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})` },
-    { label: "HSL", value: `hsl(${hsl.h}°, ${hsl.s}%, ${hsl.l}%)` },
-    { label: "CMYK", value: `C:${cmyk.c} M:${cmyk.m} Y:${cmyk.y} K:${cmyk.k}` },
-  ];
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center [animation:fade-in_0.15s_ease-out_forwards]">
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative z-10 bg-[#161616] border border-white/[0.06] rounded-2xl shadow-[0_24px_64px_rgba(0,0,0,0.6)] w-full max-w-sm mx-4 overflow-hidden [animation:fade-up_0.2s_ease-out_forwards]">
-        {/* Large swatch */}
-        <div className="h-32 flex items-end p-4" style={{ backgroundColor: colour.hex }}>
-          <span className="text-sm font-semibold" style={{ color: contrastColor }}>
-            {colour.name}
-          </span>
-        </div>
-
-        <div className="p-5">
-          <div className="flex items-center justify-between mb-4">
-            <span className="font-mono text-sm text-[#686868]">{colour.hex}</span>
-            <button onClick={onClose} className="text-[#555] hover:text-[#999] transition-colors">
-              <X size={16} />
-            </button>
-          </div>
-
-          <div className="space-y-2">
-            {values.map(({ label, value }) => (
-              <div
-                key={label}
-                className="flex items-center gap-3 bg-white/[0.03] border border-white/[0.04] rounded-lg px-3 py-2.5"
-              >
-                <span className="text-xs font-bold text-[#484848] w-10 shrink-0">{label}</span>
-                <span className="flex-1 text-sm font-mono text-[#ececec] truncate">{value}</span>
-                <button
-                  onClick={() => copy(label, value)}
-                  className="shrink-0 text-[#484848] hover:text-[#999] transition-colors"
-                  title={`Copy ${label}`}
-                >
-                  {copiedKey === label ? (
-                    <Check size={13} className="text-green-400" />
-                  ) : (
-                    <Copy size={13} />
-                  )}
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function ColourCard({ colour }: { colour: BrandColour }) {
   const { editMode, updateColour, deleteColour } = useEditStore();
   const [copied, setCopied] = useState(false);
-  const [showDetails, setShowDetails] = useState(false);
+  const [infoOpen, setInfoOpen] = useState(false);
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(colour.name);
   const [hex, setHex] = useState(colour.hex);
-  const contrastColor = getContrastColor(colour.hex);
 
   useEffect(() => {
     if (!editing) {
@@ -99,6 +26,12 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
     navigator.clipboard.writeText(colour.hex).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
+  };
+
+  const copyValue = (key: string, value: string) => {
+    navigator.clipboard.writeText(value).catch(() => {});
+    setCopiedKey(key);
+    setTimeout(() => setCopiedKey(null), 1500);
   };
 
   const save = () => {
@@ -149,68 +82,124 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
     );
   }
 
+  const rgb = hexToRgb(colour.hex);
+  const hsl = hexToHsl(colour.hex);
+  const cmyk = hexToCmyk(colour.hex);
+  const values = [
+    { label: "HEX", value: colour.hex },
+    { label: "RGB", value: `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})` },
+    { label: "HSL", value: `hsl(${hsl.h}°, ${hsl.s}%, ${hsl.l}%)` },
+    { label: "CMYK", value: `C:${cmyk.c} M:${cmyk.m} Y:${cmyk.y} K:${cmyk.k}` },
+  ];
+
   return (
-    <>
-      <div className="glass-card rounded-xl overflow-hidden relative group">
-        {/* Swatch */}
-        <button
-          onClick={copyHex}
-          className="w-full h-28 relative flex items-end p-3 transition-all duration-300 hover:brightness-110"
-          style={{ backgroundColor: colour.hex }}
-          title={`Click to copy ${colour.hex}`}
-        >
-          {copied && (
-            <span
-              className="absolute inset-0 flex items-center justify-center text-sm font-semibold [animation:fade-in_0.15s_ease-out_forwards]"
-              style={{ color: contrastColor }}
-            >
-              Copied!
-            </span>
-          )}
-        </button>
-
-        {editMode && (
-          <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button
-              onClick={() => setEditing(true)}
-              className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-white/[0.08] transition-colors"
-              title="Edit"
-            >
-              <Pencil size={12} className="text-[#ececec]" />
-            </button>
-            <button
-              onClick={() => deleteColour(colour.id)}
-              className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-red-500/20 text-red-400 transition-colors"
-              title="Delete"
-            >
-              <Trash2 size={12} />
-            </button>
-          </div>
-        )}
-
-        <div className="p-4 flex items-center justify-between gap-2">
-          <div className="min-w-0">
-            <p className="text-sm font-semibold text-[#ececec] truncate">{colour.name}</p>
-            <button
-              onClick={copyHex}
-              className="text-xs font-mono text-[#555] hover:text-[#999] transition-colors"
-            >
-              {colour.hex}
-            </button>
-          </div>
-          <button
-            onClick={() => setShowDetails(true)}
-            className="shrink-0 text-[#484848] hover:text-[#999] transition-colors"
-            title="View colour details"
+    <div className="glass-card rounded-xl relative overflow-hidden aspect-square group">
+      {/* Layer 1 — Swatch */}
+      <button
+        onClick={copyHex}
+        className="absolute inset-0 w-full transition-[filter] duration-300 group-hover:brightness-110"
+        style={{ backgroundColor: colour.hex }}
+        title={`Click to copy ${colour.hex}`}
+      >
+        {copied && (
+          <span
+            className="absolute inset-0 flex items-center justify-center text-sm font-semibold [animation:fade-in_0.15s_ease-out_forwards]"
+            style={{ color: getContrastColor(colour.hex) }}
           >
-            <Eye size={14} />
+            Copied!
+          </span>
+        )}
+      </button>
+
+      {/* Layer 2 — Edit overlays */}
+      {editMode && (
+        <div className="absolute top-2 right-2 z-10 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <button
+            onClick={() => { setInfoOpen(false); setEditing(true); }}
+            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-white/[0.08] transition-colors"
+            title="Edit"
+          >
+            <Pencil size={12} className="text-[#ececec]" />
+          </button>
+          <button
+            onClick={() => deleteColour(colour.id)}
+            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-red-500/20 text-red-400 transition-colors"
+            title="Delete"
+          >
+            <Trash2 size={12} />
           </button>
         </div>
-      </div>
-
-      {showDetails && (
-        <ColourDetailModal colour={colour} onClose={() => setShowDetails(false)} />
       )}
-    </>
+
+      {/* Layer 3 — Dark sliding panel */}
+      <div
+        className={`absolute bottom-0 left-0 right-0 bg-[#161616] flex flex-col overflow-hidden transition-[height] duration-300 ease-out ${
+          infoOpen ? "h-[calc(100%-48px)]" : "h-[72px]"
+        }`}
+      >
+        {/* Info section — visible when expanded */}
+        <div className={`flex-1 overflow-y-auto px-4 pt-4 pb-2 flex flex-col gap-2 transition-opacity duration-150 ${
+          infoOpen ? "opacity-100 delay-150" : "opacity-0 pointer-events-none"
+        }`}>
+          <div className="flex items-start justify-between gap-2 mb-1">
+            <h3 className="font-semibold text-sm text-[#ececec] flex-1 min-w-0">{colour.name}</h3>
+            <button onClick={() => setInfoOpen(false)} className="shrink-0 text-[#555] hover:text-[#999] transition-colors">
+              <X size={14} />
+            </button>
+          </div>
+          <div className="space-y-1.5">
+            {values.map(({ label, value }) => (
+              <div
+                key={label}
+                className="flex items-center gap-2 bg-white/[0.03] border border-white/[0.04] rounded-lg px-2.5 py-2"
+              >
+                <span className="text-[10px] font-bold text-[#484848] w-8 shrink-0">{label}</span>
+                <span className="flex-1 text-xs font-mono text-[#ececec] truncate">{value}</span>
+                <button
+                  onClick={() => copyValue(label, value)}
+                  className="shrink-0 text-[#484848] hover:text-[#999] transition-colors"
+                  title={`Copy ${label}`}
+                >
+                  {copiedKey === label ? (
+                    <Check size={11} className="text-green-400" />
+                  ) : (
+                    <Copy size={11} />
+                  )}
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Footer bar — always visible */}
+        <div className="mt-auto px-4 py-3 flex items-end justify-between gap-2 shrink-0">
+          <div className="flex flex-col min-w-0 overflow-hidden">
+            {!infoOpen && (
+              <span className="font-semibold text-sm text-[#ececec] truncate mb-0.5">{colour.name}</span>
+            )}
+            <span className="text-xs font-mono text-[#555]">{colour.hex}</span>
+          </div>
+          <div className="flex items-center gap-1.5 shrink-0">
+            {/* Info button */}
+            <button
+              onClick={() => setInfoOpen(v => !v)}
+              className={`w-8 h-8 inline-flex items-center justify-center rounded-full border transition-colors ${
+                infoOpen ? "border-white/20 text-[#ececec]" : "border-white/[0.1] text-[#555] hover:text-[#ececec] hover:border-white/20"
+              }`}
+            >
+              <Info size={13} />
+            </button>
+            {/* Copy hex button */}
+            <button
+              onClick={copyHex}
+              className="w-10 h-10 inline-flex items-center justify-center bg-white text-black rounded-xl hover:bg-white/90 active:scale-95 transition-all"
+              title={`Copy ${colour.hex}`}
+            >
+              {copied ? <Check size={16} className="text-green-600" /> : <Copy size={16} />}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

@@ -178,49 +178,66 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
       onDragOver={onDragOver ? (e) => onDragOver(e, category.id) : undefined}
       onDragEnd={onDragEnd}
     >
+      {/* Grip handle — bottom-right */}
       {editMode && onDragStart && (
-        <div className="absolute top-2 left-2 z-10 cursor-grab active:cursor-grabbing text-[#484848] hover:text-[#888] transition-colors">
+        <div className="absolute bottom-2 right-2 z-10 cursor-grab active:cursor-grabbing text-[#484848] hover:text-[#888] opacity-0 group-hover:opacity-100 transition-all">
           <GripVertical size={14} />
         </div>
       )}
-      {/* Preview image */}
-      <div className="bg-white/[0.02] h-36 shrink-0 rounded-t-xl overflow-hidden">
-        <FadeImg src={category.previewImage || publicPath("/placeholder-asset.png")} fallbackSrc={publicPath("/placeholder-asset.png")} alt={category.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+
+      {/* Preview image with folder tab */}
+      <div className="relative h-48 shrink-0">
+        {/* Image clipped to rounded top corners */}
+        <div className="absolute inset-0 rounded-t-xl overflow-hidden bg-white/[0.02]">
+          <FadeImg
+            src={category.previewImage || publicPath("/placeholder-asset.png")}
+            fallbackSrc={publicPath("/placeholder-asset.png")}
+            alt={category.name}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        </div>
+
+        {/* Folder tab overlay — bottom-left of image */}
+        <div className="absolute bottom-0 left-0 z-10 flex items-end">
+          <div className="bg-[#161616] rounded-tr-2xl px-3 py-2 min-w-[120px] max-w-[70%]">
+            <p className="font-semibold text-[#ececec] text-sm leading-tight truncate">{name}</p>
+            <p className="text-xs text-[#555] mt-0.5">
+              {category.actionType === "view"
+                ? "External asset"
+                : isColours
+                  ? `${getColours(category.id).length} colours`
+                  : `${liveAssetCount} assets`}
+            </p>
+          </div>
+          {/* Concave right-edge illusion */}
+          <div
+            className="w-4 h-4 self-end flex-shrink-0"
+            style={{ background: "transparent", borderBottomLeftRadius: "16px", boxShadow: "-8px 8px 0 0 #161616" }}
+          />
+        </div>
+
+        {/* Edit mode: edit/delete buttons */}
+        {editMode && (
+          <div className="absolute top-2 right-2 z-20 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            <button
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setEditing(true); }}
+              className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-white/[0.08] transition-colors"
+              title="Edit"
+            >
+              <Pencil size={12} className="text-[#ececec]" />
+            </button>
+            <button
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); deleteCategory(category.id); }}
+              className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-red-500/20 text-red-400 transition-colors"
+              title="Delete"
+            >
+              <Trash2 size={12} />
+            </button>
+          </div>
+        )}
       </div>
 
-      {editMode && (
-        <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button
-            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setEditing(true); }}
-            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-white/[0.08] transition-colors"
-            title="Edit"
-          >
-            <Pencil size={12} className="text-[#ececec]" />
-          </button>
-          <button
-            onClick={(e) => { e.preventDefault(); e.stopPropagation(); deleteCategory(category.id); }}
-            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-red-500/20 text-red-400 transition-colors"
-            title="Delete"
-          >
-            <Trash2 size={12} />
-          </button>
-        </div>
-      )}
-
       <div className="p-4 flex flex-col flex-1 gap-2">
-        <div>
-          <h3 className="font-semibold text-[#ececec]">{name}</h3>
-          <p className="text-xs text-[#555] mt-0.5">
-            {category.actionType === "view"
-              ? "External asset"
-              : isColours
-                ? `${getColours(category.id).length} colours`
-                : `${liveAssetCount} assets`}
-          </p>
-          {category.lastEditedAt && (
-            <p className="text-[10px] text-[#444] mt-0.5">Updated {timeAgo(category.lastEditedAt)}</p>
-          )}
-        </div>
         {description && (
           <p className="text-sm text-[#787878] flex-1 leading-relaxed">{description}</p>
         )}
