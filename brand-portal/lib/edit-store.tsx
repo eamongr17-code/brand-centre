@@ -136,6 +136,8 @@ const EMPTY: PersistedData = {
   deletedDocPageIds: [],
 };
 
+const IS_DEV = process.env.NEXT_PUBLIC_DEV_MODE === "true";
+
 function genId(): string {
   return Math.random().toString(36).slice(2, 10);
 }
@@ -156,6 +158,14 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<PersistedData>(EMPTY);
 
   useEffect(() => {
+    if (IS_DEV) {
+      // In dev mode, load seed data from mock-data instead of Supabase
+      import("@/data/mock-data").then(({ devSeedData }) => {
+        if (devSeedData) setData({ ...EMPTY, ...devSeedData });
+      });
+      return;
+    }
+
     // Initial load
     supabase
       .from("brand_data")
@@ -188,12 +198,14 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
   const persist = useCallback((updater: (prev: PersistedData) => PersistedData) => {
     setData((prev) => {
       const next = updater(prev);
-      supabase
-        .from("brand_data")
-        .upsert({ id: "global", data: next })
-        .then(({ error }) => {
-          if (error) console.error("Failed to persist:", error.message);
-        });
+      if (!IS_DEV) {
+        supabase
+          .from("brand_data")
+          .upsert({ id: "global", data: next })
+          .then(({ error }) => {
+            if (error) console.error("Failed to persist:", error.message);
+          });
+      }
       return next;
     });
   }, []);

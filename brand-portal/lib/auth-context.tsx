@@ -28,11 +28,15 @@ export function useAuth() {
   return useContext(AuthContext);
 }
 
+const IS_DEV = process.env.NEXT_PUBLIC_DEV_MODE === "true";
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!IS_DEV);
 
   useEffect(() => {
+    if (IS_DEV) return;
+
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
       setLoading(false);
@@ -46,12 +50,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   async function signIn(email: string, password: string) {
+    if (IS_DEV) return { error: null, session: null };
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     return { error: error?.message ?? null, session: data?.session ?? null };
   }
 
   async function signOut() {
+    if (IS_DEV) return;
     await supabase.auth.signOut();
+  }
+
+  if (IS_DEV) {
+    return (
+      <AuthContext.Provider value={{
+        session: null,
+        user: { user_metadata: { role: "owner" } } as unknown as User,
+        isAuthenticated: true,
+        isOwner: true,
+        loading: false,
+        signIn,
+        signOut,
+      }}>
+        {children}
+      </AuthContext.Provider>
+    );
   }
 
   const user = session?.user ?? null;
