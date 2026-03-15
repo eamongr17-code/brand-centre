@@ -223,7 +223,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
       <div className="relative z-10">
         {/* Tab row */}
         <div className="flex items-end">
-          <div className="relative bg-[#161616] rounded-tr-[20px] px-5 py-3 min-w-[120px] max-w-[70%]">
+          <div className="bg-[#161616] rounded-tr-[20px] px-5 py-3 min-w-[120px] max-w-[70%]">
             <p className="font-bold text-[#ececec] text-[15px] leading-tight truncate">{name}</p>
             <p className="text-xs text-[#555] mt-0.5">
               {category.actionType === "view"
@@ -232,21 +232,15 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
                   ? `${getColours(category.id).length} colours`
                   : `${liveAssetCount} assets`}
             </p>
-            {/* Concave corner — top-left of tab */}
-            <div
-              className="absolute -top-[20px] left-0 w-[20px] h-[20px]"
-              style={{ background: "radial-gradient(circle at 100% 100%, transparent 20px, #161616 20px)" }}
-            />
           </div>
-          {/* Concave corner — right of tab */}
-          <div
-            className="w-[20px] h-[20px] flex-shrink-0"
-            style={{ background: "radial-gradient(circle at 0 0, transparent 20px, #161616 20px)" }}
-          />
+          {/* Concave curve — connects tab right edge to panel top */}
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="#161616" className="block flex-shrink-0">
+            <path d="M 0 0 L 0 24 L 24 24 Q 24 0 0 0" />
+          </svg>
         </div>
 
         {/* Panel body */}
-        <div className="bg-[#161616] rounded-tr-[20px] px-5 pb-5 pt-3">
+        <div className="bg-[#161616] px-5 pb-5 pt-3">
           {description && (
             <p className="text-sm text-[#787878] leading-relaxed">{description}</p>
           )}
