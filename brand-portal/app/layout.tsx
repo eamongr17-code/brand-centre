@@ -6,7 +6,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Atlas Brand Centre",
   description: "Brand asset portal for Atlas and its brands.",
-  icons: { icon: "/atlas-wordmark.svg" },
+  icons: { icon: "/favicon.ico" },
 };
 
 export default function RootLayout({
