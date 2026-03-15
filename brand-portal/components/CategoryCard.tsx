@@ -172,7 +172,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
 
   const cardContent = (
     <div
-      className="rounded-[20px] relative group flex flex-col [animation:fade-up_0.3s_ease-out_forwards] h-full overflow-hidden border border-white/[0.06] hover:border-white/[0.1] hover:shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300"
+      className="rounded-2xl relative group flex flex-col [animation:fade-up_0.3s_ease-out_forwards] h-full overflow-hidden border border-white/[0.06] hover:border-white/[0.1] hover:shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300"
       style={{ minHeight: "380px" }}
       draggable={editMode && !!onDragStart}
       onDragStart={onDragStart ? (e) => onDragStart(e, category.id) : undefined}
@@ -191,24 +191,24 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
 
       {/* Grip handle */}
       {editMode && onDragStart && (
-        <div className="absolute bottom-2 right-2 z-20 cursor-grab active:cursor-grabbing text-[#484848] hover:text-[#888] opacity-0 group-hover:opacity-100 transition-all">
+        <div className="absolute bottom-3 right-3 z-20 cursor-grab active:cursor-grabbing text-[#484848] hover:text-[#888] opacity-0 group-hover:opacity-100 transition-all">
           <GripVertical size={14} />
         </div>
       )}
 
       {/* Edit mode: edit/delete buttons */}
       {editMode && (
-        <div className="absolute top-2 right-2 z-20 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="absolute top-3 right-3 z-20 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); setEditing(true); }}
-            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-white/[0.08] transition-colors"
+            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-xl p-1.5 hover:bg-white/[0.08] transition-colors"
             title="Edit"
           >
             <Pencil size={12} className="text-[#ececec]" />
           </button>
           <button
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); deleteCategory(category.id); }}
-            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-red-500/20 text-red-400 transition-colors"
+            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-xl p-1.5 hover:bg-red-500/20 text-red-400 transition-colors"
             title="Delete"
           >
             <Trash2 size={12} />
@@ -216,12 +216,11 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
         </div>
       )}
 
-      {/* Dark content panel with folder tab shape */}
+      {/* Dark content panel */}
       <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col" style={{ height: '48%' }}>
-        {/* Tab row — fixed height matching the slope SVG */}
-        <div className="flex flex-shrink-0" style={{ height: '50px' }}>
-          {/* Tab — width adapts to content */}
-          <div className="bg-[#161616] rounded-tl-[20px] h-full flex flex-col justify-end pl-6 pr-4 pb-1 max-w-[60%]">
+        {/* Tab — clean pill shape */}
+        <div className="flex flex-shrink-0 px-4 pb-2">
+          <div className="bg-[#161616] rounded-xl px-4 py-2 max-w-[70%]">
             <p className="font-bold text-[#ececec] text-[15px] leading-tight truncate">{name}</p>
             <p className="text-[10px] text-[#888] mt-0.5">
               {category.actionType === "view"
@@ -231,20 +230,16 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
                   : `${liveAssetCount} assets`}
             </p>
           </div>
-          {/* Slope — extracted from Figma bezier path, fixed size */}
-          <svg width="60" height="50" viewBox="0 0 52 43" fill="#161616" className="block flex-shrink-0">
-            <path d="M 0 0 C 7.2 0 13.95 3.52 18.06 9.44 L 35.44 34.42 C 39.18 39.8 45.31 43 51.86 43 L 0 43 Z" />
-          </svg>
         </div>
 
         {/* Panel body */}
-        <div className="bg-[#161616] rounded-tr-[20px] flex-1 flex flex-col px-5 pb-4 pt-3 min-h-0 -mt-px">
+        <div className="bg-[#161616] rounded-t-2xl flex-1 flex flex-col px-5 pb-5 pt-3 min-h-0">
           {description && (
             <p className="text-sm text-[#787878] leading-relaxed line-clamp-2">{description}</p>
           )}
 
           {/* Action buttons */}
-          <div className="flex gap-3 mt-auto pt-3" onClick={(e) => e.preventDefault()}>
+          <div className="flex gap-2.5 mt-auto pt-3" onClick={(e) => e.preventDefault()}>
             {category.actionType === "view" ? (
               category.downloadAllUrl && category.downloadAllUrl !== "#" && (
                 <a
@@ -252,7 +247,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}
-                  className="flex-1 h-[42px] inline-flex items-center justify-center gap-1.5 text-sm font-semibold rounded-[15px] backdrop-blur-[4px] bg-[#161616]/85 border border-[#6f6f6f] text-[#ececec] hover:bg-[#222]/90 transition-all duration-200"
+                  className="flex-1 h-10 inline-flex items-center justify-center gap-1.5 text-sm font-semibold rounded-xl bg-white/[0.06] border border-white/[0.08] text-[#ececec] hover:bg-white/[0.1] transition-all duration-200"
                   title="View"
                 >
                   <Eye size={14} />
@@ -264,7 +259,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
                 <Link
                   href={portalPath(`/${brandSlug}/${category.slug}`)}
                   onClick={(e) => e.stopPropagation()}
-                  className="flex-1 h-[42px] inline-flex items-center justify-center text-sm font-semibold rounded-[15px] backdrop-blur-[4px] bg-[#161616]/85 border border-[#6f6f6f] text-[#ececec] hover:bg-[#222]/90 transition-all duration-200"
+                  className="flex-1 h-10 inline-flex items-center justify-center text-sm font-semibold rounded-xl bg-white/[0.06] border border-white/[0.08] text-[#ececec] hover:bg-white/[0.1] transition-all duration-200"
                 >
                   {isColours ? "Browse palette" : "Browse assets"}
                 </Link>
@@ -273,19 +268,19 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
                     <a
                       href={category.downloadAllUrl}
                       onClick={(e) => e.stopPropagation()}
-                      className="flex-shrink-0 w-[50px] h-[42px] inline-flex items-center justify-center rounded-[15px] bg-white border border-[#6f6f6f] hover:bg-gray-100 active:scale-95 transition-all duration-200"
+                      className="flex-shrink-0 w-10 h-10 inline-flex items-center justify-center rounded-xl bg-white hover:bg-white/90 active:scale-95 transition-all duration-200"
                       title="Download All"
                     >
-                      <Download size={14} className="text-[#1f1f1e]" />
+                      <Download size={14} className="text-[#111]" />
                     </a>
                   ) : (
                     <button
                       onClick={(e) => { e.stopPropagation(); e.preventDefault(); handleDownloadAll(); }}
                       disabled={zipping}
-                      className="flex-shrink-0 w-[50px] h-[42px] inline-flex items-center justify-center rounded-[15px] bg-white border border-[#6f6f6f] hover:bg-gray-100 active:scale-95 transition-all duration-200 disabled:opacity-60"
+                      className="flex-shrink-0 w-10 h-10 inline-flex items-center justify-center rounded-xl bg-white hover:bg-white/90 active:scale-95 transition-all duration-200 disabled:opacity-60"
                       title="Download all assets as ZIP"
                     >
-                      {zipping ? <Loader size={14} className="animate-spin text-[#1f1f1e]" /> : <Download size={14} className="text-[#1f1f1e]" />}
+                      {zipping ? <Loader size={14} className="animate-spin text-[#111]" /> : <Download size={14} className="text-[#111]" />}
                     </button>
                   )
                 )}

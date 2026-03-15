@@ -265,7 +265,7 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
 
   return (
     <div
-      className="glass-card rounded-xl relative overflow-hidden aspect-square group [animation:fade-up_0.3s_ease-out_forwards]"
+      className="glass-card rounded-2xl relative overflow-hidden aspect-square group [animation:fade-up_0.3s_ease-out_forwards]"
       draggable={editMode && !!onDragStart}
       onDragStart={onDragStart ? (e) => onDragStart(e, asset.id) : undefined}
       onDragOver={onDragOver ? (e) => onDragOver(e, asset.id) : undefined}
@@ -278,13 +278,13 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
 
       {/* Layer 2 — Edit overlays */}
       {/* Grip OR internal badge — top-left */}
-      <div className="absolute top-2 left-2 z-10">
+      <div className="absolute top-3 left-3 z-10">
         {editMode && onDragStart ? (
           <div className="cursor-grab active:cursor-grabbing text-[#484848] hover:text-[#888] transition-colors">
             <GripVertical size={14} />
           </div>
         ) : isInternal && showInternal ? (
-          <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-md bg-blue-900/70 text-blue-300 border border-blue-800/50 backdrop-blur-sm">
+          <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-lg bg-blue-900/70 text-blue-300 border border-blue-800/50 backdrop-blur-sm">
             <Lock size={9} />
             Internal
           </span>
@@ -293,17 +293,17 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
 
       {/* Edit/delete buttons — top-right */}
       {editMode && (
-        <div className="absolute top-2 right-2 z-10 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="absolute top-3 right-3 z-10 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             onClick={() => { setInfoOpen(false); setEditing(true); }}
-            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-white/[0.08] transition-colors"
+            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-xl p-1.5 hover:bg-white/[0.08] transition-colors"
             title="Edit"
           >
             <Pencil size={12} className="text-[#ececec]" />
           </button>
           <button
             onClick={() => deleteAsset(asset.id)}
-            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-red-500/20 text-red-400 transition-colors"
+            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-xl p-1.5 hover:bg-red-500/20 text-red-400 transition-colors"
             title="Delete"
           >
             <Trash2 size={12} />
@@ -313,12 +313,12 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
 
       {/* Layer 3 — Dark panel */}
       <div
-        className={`absolute bottom-0 left-0 right-0 bg-[#161616] rounded-t-xl flex flex-col overflow-hidden transition-[height] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+        className={`absolute bottom-0 left-0 right-0 bg-[#161616] rounded-t-2xl flex flex-col overflow-hidden transition-[height] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
           infoOpen ? "h-[calc(100%-48px)]" : "h-[92px]"
         }`}
       >
         {/* Info section — visible when expanded */}
-        <div className={`flex-1 overflow-y-auto px-4 pt-3 pb-2 flex flex-col gap-3 transition-opacity duration-200 ${
+        <div className={`flex-1 overflow-y-auto px-5 pt-3 pb-2 flex flex-col gap-3 transition-opacity duration-200 ${
           infoOpen ? "opacity-100 delay-200" : "opacity-0 pointer-events-none"
         }`}>
           <div className="flex items-end justify-end">
@@ -330,7 +330,7 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
           {asset.tags && asset.tags.length > 0 && (
             <div className="flex flex-wrap gap-1">
               {asset.tags.map((tag, i) => (
-                <span key={i} className="text-[10px] px-1.5 py-0.5 rounded-md bg-white/[0.04] text-[#686868] font-medium">{tag}</span>
+                <span key={i} className="text-[10px] px-2 py-0.5 rounded-lg bg-white/[0.04] text-[#686868] font-medium">{tag}</span>
               ))}
             </div>
           )}
@@ -347,10 +347,10 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
         </div>
 
         {/* Divider — only when info is open */}
-        {infoOpen && <div className="mx-4 border-t border-white/[0.06] shrink-0" />}
+        {infoOpen && <div className="mx-5 border-t border-white/[0.06] shrink-0" />}
 
         {/* Footer bar — always visible */}
-        <div className="mt-auto px-4 pt-3 pb-4 shrink-0">
+        <div className="mt-auto px-5 pt-3 pb-4 shrink-0">
           <span className="font-semibold text-sm text-[#ececec] truncate block">{name}</span>
           <div className="flex items-end justify-between gap-2 mt-1">
             <div className="flex flex-col min-w-0 overflow-hidden">
@@ -361,7 +361,7 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
               {/* Info button */}
               <button
                 onClick={() => setInfoOpen(v => !v)}
-                className={`w-8 h-8 inline-flex items-center justify-center rounded-full border transition-colors ${
+                className={`w-8 h-8 inline-flex items-center justify-center rounded-xl border transition-colors ${
                   infoOpen ? "border-white/20 text-[#ececec]" : "border-white/[0.1] text-[#555] hover:text-[#ececec] hover:border-white/20"
                 }`}
               >
@@ -371,7 +371,7 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
               {brandSlug && categorySlug && (
                 <button
                   onClick={handleShare}
-                  className="w-8 h-8 inline-flex items-center justify-center rounded-full border border-white/[0.1] text-[#555] hover:text-[#ececec] hover:border-white/20 transition-colors"
+                  className="w-8 h-8 inline-flex items-center justify-center rounded-xl border border-white/[0.1] text-[#555] hover:text-[#ececec] hover:border-white/20 transition-colors"
                 >
                   {shareCopied ? <Check size={13} className="text-green-400" /> : <Share2 size={13} />}
                 </button>
@@ -379,12 +379,12 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
               {/* Download/View button */}
               {isView ? (
                 <a href={asset.downloadUrl} target="_blank" rel="noopener noreferrer"
-                  className="w-10 h-10 inline-flex items-center justify-center bg-white text-black rounded-xl hover:bg-white/90 active:scale-95 transition-all">
+                  className="w-10 h-10 inline-flex items-center justify-center bg-white text-[#111] rounded-xl hover:bg-white/90 active:scale-95 transition-all">
                   <Eye size={16} />
                 </a>
               ) : (
                 <button onClick={handleDownload}
-                  className="w-10 h-10 inline-flex items-center justify-center bg-white text-black rounded-xl hover:bg-white/90 active:scale-95 transition-all">
+                  className="w-10 h-10 inline-flex items-center justify-center bg-white text-[#111] rounded-xl hover:bg-white/90 active:scale-95 transition-all">
                   <Download size={16} />
                 </button>
               )}
