@@ -314,7 +314,7 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
       {/* Layer 3 — Dark panel */}
       <div
         className={`absolute bottom-0 left-0 right-0 bg-[#161616] rounded-t-xl flex flex-col overflow-hidden transition-[height] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
-          infoOpen ? "h-[calc(100%-48px)]" : "h-[88px]"
+          infoOpen ? "h-[calc(100%-48px)]" : "h-[92px]"
         }`}
       >
         {/* Info section — visible when expanded */}
@@ -350,7 +350,7 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
         {infoOpen && <div className="mx-4 border-t border-white/[0.06] shrink-0" />}
 
         {/* Footer bar — always visible */}
-        <div className="mt-auto px-4 py-3 shrink-0">
+        <div className="mt-auto px-4 pt-3 pb-4 shrink-0">
           <span className="font-semibold text-sm text-[#ececec] truncate block">{name}</span>
           <div className="flex items-end justify-between gap-2 mt-1">
             <div className="flex flex-col min-w-0 overflow-hidden">
