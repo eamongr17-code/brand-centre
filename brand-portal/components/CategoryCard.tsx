@@ -199,8 +199,8 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
 
         {/* Folder tab overlay — bottom-left of image */}
         <div className="absolute bottom-0 left-0 z-10 flex items-end">
-          <div className="bg-[#161616] rounded-tr-2xl px-3 py-2 min-w-[120px] max-w-[70%]">
-            <p className="font-semibold text-[#ececec] text-sm leading-tight truncate">{name}</p>
+          <div className="bg-[#161616] rounded-tr-2xl px-4 py-2.5 min-w-[130px] max-w-[70%]">
+            <p className="font-semibold text-[#ececec] text-[15px] leading-tight truncate">{name}</p>
             <p className="text-xs text-[#555] mt-0.5">
               {category.actionType === "view"
                 ? "External asset"
@@ -209,10 +209,10 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
                   : `${liveAssetCount} assets`}
             </p>
           </div>
-          {/* Concave right-edge illusion */}
+          {/* Concave right-edge curve */}
           <div
-            className="w-4 h-4 self-end flex-shrink-0"
-            style={{ background: "transparent", borderBottomLeftRadius: "16px", boxShadow: "-8px 8px 0 0 #161616" }}
+            className="w-5 h-5 flex-shrink-0"
+            style={{ background: "radial-gradient(circle at 0 0, transparent 20px, #161616 20px)" }}
           />
         </div>
 

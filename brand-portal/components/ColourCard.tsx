@@ -133,8 +133,8 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
 
       {/* Layer 3 — Dark sliding panel */}
       <div
-        className={`absolute bottom-0 left-0 right-0 bg-[#161616] flex flex-col overflow-hidden transition-[height] duration-300 ease-out ${
-          infoOpen ? "h-[calc(100%-48px)]" : "h-[72px]"
+        className={`absolute bottom-0 left-0 right-0 bg-[#161616] rounded-t-2xl flex flex-col overflow-hidden transition-[height] duration-300 ease-out ${
+          infoOpen ? "h-[calc(100%-48px)]" : "h-[80px]"
         }`}
       >
         {/* Info section — visible when expanded */}
