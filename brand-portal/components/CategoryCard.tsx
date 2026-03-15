@@ -230,8 +230,8 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
                   : `${liveAssetCount} assets`}
             </p>
             {/* Concave corner — connects tab to panel */}
-            <div className="absolute -right-4 bottom-0 w-4 h-4 overflow-hidden">
-              <div className="absolute bottom-0 left-0 w-8 h-8 rounded-full shadow-[0_0_0_20px_#161616]" />
+            <div className="absolute -right-[14px] bottom-0 w-[14px] h-[14px] overflow-hidden">
+              <div className="absolute bottom-0 left-0 w-7 h-7 rounded-full shadow-[0_0_0_20px_#161616]" />
             </div>
           </div>
         </div>
