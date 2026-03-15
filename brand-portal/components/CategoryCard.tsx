@@ -151,12 +151,12 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
       onDragEnd={onDragEnd}
     >
       {/* Layer 1 — Image */}
-      <div className="absolute inset-0 bg-[#111]">
+      <div className="absolute inset-0 bg-white/[0.02]">
         <FadeImg
           src={category.previewImage || publicPath("/placeholder-asset.png")}
           fallbackSrc={publicPath("/placeholder-asset.png")}
           alt={category.name}
-          className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
       </div>
 
