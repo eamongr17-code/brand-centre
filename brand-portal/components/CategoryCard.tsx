@@ -216,8 +216,8 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
 
         {/* Tab — sits at bottom of image, overlapping into panel */}
         <div className="absolute bottom-0 left-0 z-10 flex">
-          <div className="relative bg-[#161616] rounded-t-2xl pl-5 pr-7 pt-3 pb-1 max-w-[70%]">
-            <p className="font-bold text-[#ececec] text-[15px] leading-tight truncate">{name}</p>
+          <div className="relative bg-[#161616] rounded-t-2xl pl-5 pr-7 pt-3 pb-1">
+            <p className="font-bold text-[#ececec] text-[15px] leading-tight">{name}</p>
             <p className="text-[10px] text-[#888] mt-0.5">
               {category.actionType === "view"
                 ? "External asset"
@@ -234,7 +234,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
       </div>
 
       {/* Panel body — flows below image */}
-      <div className="bg-[#161616] flex flex-col px-5 pb-5 pt-4 min-h-0">
+      <div className="bg-[#161616] flex flex-col px-5 pb-4 pt-4 min-h-0">
         {description && (
           <p className="text-sm text-[#787878] leading-relaxed line-clamp-2">{description}</p>
         )}
