@@ -219,9 +219,9 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
       {/* Dark content panel with folder tab shape */}
       <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col" style={{ height: '55%' }}>
         {/* Tab row — fixed height matching the slope SVG */}
-        <div className="flex flex-shrink-0" style={{ height: '43px' }}>
+        <div className="flex flex-shrink-0" style={{ height: '50px' }}>
           {/* Tab — width adapts to content */}
-          <div className="bg-[#161616] rounded-tl-[20px] h-full flex flex-col justify-center pl-6 pr-4 max-w-[60%]">
+          <div className="bg-[#161616] rounded-tl-[20px] h-full flex flex-col justify-end pl-6 pr-4 pb-1.5 max-w-[60%]">
             <p className="font-bold text-[#ececec] text-[15px] leading-tight truncate">{name}</p>
             <p className="text-[10px] text-[#888] mt-0.5">
               {category.actionType === "view"
@@ -232,7 +232,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
             </p>
           </div>
           {/* Slope — extracted from Figma bezier path, fixed size */}
-          <svg width="52" height="43" viewBox="0 0 52 43" fill="#161616" className="block flex-shrink-0">
+          <svg width="60" height="50" viewBox="0 0 52 43" fill="#161616" className="block flex-shrink-0">
             <path d="M 0 0 C 7.2 0 13.95 3.52 18.06 9.44 L 35.44 34.42 C 39.18 39.8 45.31 43 51.86 43 L 0 43 Z" />
           </svg>
         </div>
@@ -240,11 +240,11 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
         {/* Panel body */}
         <div className="bg-[#161616] rounded-tr-[20px] flex-1 flex flex-col px-5 pb-4 pt-1.5 min-h-0">
           {description && (
-            <p className="text-sm text-[#787878] flex-1 leading-relaxed">{description}</p>
+            <p className="text-sm text-[#787878] leading-relaxed line-clamp-2">{description}</p>
           )}
 
           {/* Action buttons */}
-          <div className="flex gap-3 mt-auto pt-2" onClick={(e) => e.preventDefault()}>
+          <div className="flex gap-3 mt-auto pt-3" onClick={(e) => e.preventDefault()}>
             {category.actionType === "view" ? (
               category.downloadAllUrl && category.downloadAllUrl !== "#" && (
                 <a
