@@ -172,8 +172,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
 
   const cardContent = (
     <div
-      className="rounded-2xl relative group flex flex-col [animation:fade-up_0.3s_ease-out_forwards] h-full overflow-hidden border border-white/[0.06] hover:border-white/[0.1] hover:shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300"
-      style={{ minHeight: "380px" }}
+      className="rounded-2xl relative group flex flex-col [animation:fade-up_0.3s_ease-out_forwards] h-full overflow-hidden border border-white/[0.06] hover:border-white/[0.1] hover:shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300 aspect-video"
       draggable={editMode && !!onDragStart}
       onDragStart={onDragStart ? (e) => onDragStart(e, category.id) : undefined}
       onDragOver={onDragOver ? (e) => onDragOver(e, category.id) : undefined}
@@ -217,7 +216,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
       )}
 
       {/* Dark content panel */}
-      <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col" style={{ height: '48%' }}>
+      <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col" style={{ height: '38%' }}>
         {/* Tab — connected to panel with concave corner */}
         <div className="flex flex-shrink-0">
           <div className="relative bg-[#161616] rounded-t-2xl pl-5 pr-7 pt-3 pb-1 max-w-[70%]">
