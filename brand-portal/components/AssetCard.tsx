@@ -320,11 +320,8 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
         {/* Info section — container never changes size, parent clips when collapsed */}
         <div className="flex-1 min-h-0 overflow-hidden">
           {infoOpen && (
-            <div className="relative h-full overflow-y-auto px-5 pt-4 pb-3 flex flex-col gap-3 [animation:fade-in_0.2s_ease-out_0.15s_both]">
-              <button onClick={() => setInfoOpen(false)} className="absolute top-4 right-5 shrink-0 text-[#555] hover:text-[#999] transition-colors">
-                <X size={14} />
-              </button>
-              {description && <p className="text-xs text-[#8a8a8a] leading-relaxed pr-6">{description}</p>}
+            <div className="h-full overflow-y-auto px-5 pt-4 pb-3 flex flex-col gap-3 [animation:fade-in_0.2s_ease-out_0.15s_both]">
+              {description && <p className="text-xs text-[#8a8a8a] leading-relaxed">{description}</p>}
               {asset.tags && asset.tags.length > 0 && (
                 <div className="flex flex-wrap gap-1">
                   {asset.tags.map((tag, i) => (

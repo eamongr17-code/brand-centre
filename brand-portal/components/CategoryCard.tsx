@@ -188,7 +188,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
 
         {/* Tab + divider — sits at bottom of image, wraps around tab */}
         <div className="absolute bottom-0 left-0 right-0 z-10 flex items-end">
-          <div className="relative bg-[#1a1a1a] border-t border-r border-white/[0.07] rounded-t-2xl pl-5 pr-7 pt-3 pb-1">
+          <div className="relative bg-[#1a1a1a] border-t border-r border-white/[0.07] rounded-t-2xl pl-5 pr-7 pt-2.5 pb-[7px]">
             <p className="font-bold text-[#f0f0f0] text-[15px] leading-tight">{name}</p>
             <p className="text-[10px] text-[#888] mt-0.5">
               {category.actionType === "view"
@@ -210,13 +210,13 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
       </div>
 
       {/* Panel body — flows below image */}
-      <div className="bg-[#1a1a1a] flex flex-col px-5 pb-4 pt-4 min-h-0">
+      <div className="bg-[#1a1a1a] flex flex-col px-5 pb-5 pt-5 min-h-0">
         {description && (
           <p className="text-sm text-[#8a8a8a] leading-relaxed line-clamp-1">{description}</p>
         )}
 
         {/* Action buttons */}
-        <div className="flex gap-2.5 mt-auto pt-3" onClick={(e) => e.preventDefault()}>
+        <div className="flex gap-2.5 mt-auto pt-5" onClick={(e) => e.preventDefault()}>
           {category.actionType === "view" ? (
             category.downloadAllUrl && category.downloadAllUrl !== "#" && (
               <a

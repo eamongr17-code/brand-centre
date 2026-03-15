@@ -178,10 +178,7 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
         {/* Info section — container never changes size, parent clips when collapsed */}
         <div className="flex-1 min-h-0 overflow-hidden">
           {infoOpen && (
-            <div className="relative h-full overflow-y-auto px-5 pt-4 pb-3 flex flex-col gap-2 [animation:fade-in_0.2s_ease-out_0.15s_both]">
-              <button onClick={() => setInfoOpen(false)} className="absolute top-4 right-5 shrink-0 text-[#555] hover:text-[#999] transition-colors">
-                <X size={14} />
-              </button>
+            <div className="h-full overflow-y-auto px-5 pt-4 pb-3 flex flex-col gap-2 [animation:fade-in_0.2s_ease-out_0.15s_both]">
               <div className="space-y-1.5">
                 {values.map(({ label, value }) => (
                   <div
