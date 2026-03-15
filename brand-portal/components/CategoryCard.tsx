@@ -231,7 +231,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
             </p>
             {/* Concave corner — connects tab to panel */}
             <div className="absolute -right-4 bottom-0 w-4 h-4 overflow-hidden">
-              <div className="absolute bottom-0 right-0 w-8 h-8 rounded-full shadow-[0_0_0_20px_#161616]" />
+              <div className="absolute bottom-0 left-0 w-8 h-8 rounded-full shadow-[0_0_0_20px_#161616]" />
             </div>
           </div>
         </div>
