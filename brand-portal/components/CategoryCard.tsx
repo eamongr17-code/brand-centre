@@ -218,9 +218,9 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
 
       {/* Dark content panel */}
       <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col" style={{ height: '48%' }}>
-        {/* Tab — clean pill shape */}
-        <div className="flex flex-shrink-0 px-4 pb-2">
-          <div className="bg-[#161616] rounded-xl px-4 py-2 max-w-[70%]">
+        {/* Tab — connected to panel */}
+        <div className="flex flex-shrink-0">
+          <div className="bg-[#161616] rounded-t-2xl pl-5 pr-5 pt-3 pb-1 max-w-[70%]">
             <p className="font-bold text-[#ececec] text-[15px] leading-tight truncate">{name}</p>
             <p className="text-[10px] text-[#888] mt-0.5">
               {category.actionType === "view"
@@ -233,7 +233,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
         </div>
 
         {/* Panel body */}
-        <div className="bg-[#161616] rounded-t-2xl flex-1 flex flex-col px-5 pb-5 pt-3 min-h-0">
+        <div className="bg-[#161616] flex-1 flex flex-col px-5 pb-5 pt-2 min-h-0">
           {description && (
             <p className="text-sm text-[#787878] leading-relaxed line-clamp-2">{description}</p>
           )}
