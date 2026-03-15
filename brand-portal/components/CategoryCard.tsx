@@ -222,8 +222,8 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
       {/* Dark content overlay */}
       <div className="relative z-10">
         {/* Tab row */}
-        <div className="flex items-end">
-          <div className="bg-[#161616] rounded-tr-[20px] px-5 py-3 min-w-[120px] max-w-[70%]">
+        <div className="flex">
+          <div className="relative bg-[#161616] rounded-tr-[16px] px-5 py-1.5 min-w-[120px] max-w-[70%]">
             <p className="font-bold text-[#ececec] text-[15px] leading-tight truncate">{name}</p>
             <p className="text-xs text-[#555] mt-0.5">
               {category.actionType === "view"
@@ -232,15 +232,31 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
                   ? `${getColours(category.id).length} colours`
                   : `${liveAssetCount} assets`}
             </p>
+            {/* Concave corner — top-left of tab (rounds the image edge) */}
+            <svg
+              className="absolute left-0 block"
+              style={{ bottom: '100%' }}
+              width="10" height="10"
+              viewBox="0 0 10 10"
+              fill="#161616"
+            >
+              <path d="M 0 0 L 10 0 Q 10 10 0 10 Z" />
+            </svg>
           </div>
-          {/* Concave curve — connects tab right edge to panel top */}
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="#161616" className="block flex-shrink-0">
-            <path d="M 0 0 L 0 24 L 24 24 Q 24 0 0 0" />
+          {/* Smooth slope — tab right edge flows into panel */}
+          <svg
+            viewBox="0 0 50 50"
+            preserveAspectRatio="none"
+            fill="#161616"
+            className="block flex-shrink-0 self-stretch"
+            style={{ width: '50px' }}
+          >
+            <path d="M 0 0 C 20 0, 0 50, 50 50 L 0 50 Z" />
           </svg>
         </div>
 
         {/* Panel body */}
-        <div className="bg-[#161616] px-5 pb-5 pt-3">
+        <div className="bg-[#161616] rounded-tr-[16px] px-5 pb-5 pt-1.5">
           {description && (
             <p className="text-sm text-[#787878] leading-relaxed">{description}</p>
           )}
