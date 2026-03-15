@@ -217,7 +217,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
       )}
 
       {/* Dark content panel with folder tab shape */}
-      <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col" style={{ height: '55%' }}>
+      <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col" style={{ height: '42%' }}>
         {/* Tab row — fixed height matching the slope SVG */}
         <div className="flex flex-shrink-0" style={{ height: '50px' }}>
           {/* Tab — width adapts to content */}
@@ -238,7 +238,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
         </div>
 
         {/* Panel body */}
-        <div className="bg-[#161616] rounded-tr-[20px] flex-1 flex flex-col px-5 pb-4 pt-1.5 min-h-0">
+        <div className="bg-[#161616] rounded-tr-[20px] flex-1 flex flex-col px-5 pb-4 pt-1.5 min-h-0 -mt-px">
           {description && (
             <p className="text-sm text-[#787878] leading-relaxed line-clamp-2">{description}</p>
           )}
