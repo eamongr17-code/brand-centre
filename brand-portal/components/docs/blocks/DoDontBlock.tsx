@@ -13,7 +13,7 @@ export default function DoDontBlock({ block }: { block: DoDontBlockType }) {
           {block.doImage ? (
             <FadeImg src={block.doImage} alt={block.doCaption} className="w-full h-auto" />
           ) : (
-            <div className="h-40 flex items-center justify-center text-[#444] text-sm">No image</div>
+            <div className="h-40 flex items-center justify-center text-[#505050] text-sm">No image</div>
           )}
         </div>
         <div className="flex items-center gap-1.5">
@@ -29,7 +29,7 @@ export default function DoDontBlock({ block }: { block: DoDontBlockType }) {
           {block.dontImage ? (
             <FadeImg src={block.dontImage} alt={block.dontCaption} className="w-full h-auto" />
           ) : (
-            <div className="h-40 flex items-center justify-center text-[#444] text-sm">No image</div>
+            <div className="h-40 flex items-center justify-center text-[#505050] text-sm">No image</div>
           )}
         </div>
         <div className="flex items-center gap-1.5">

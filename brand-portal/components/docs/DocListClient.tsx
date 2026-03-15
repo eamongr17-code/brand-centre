@@ -48,7 +48,7 @@ export default function DocListClient({ brandSlug }: DocListClientProps) {
       <div className="max-w-6xl mx-auto px-8 py-12 [animation:fade-in_0.3s_ease-out_forwards]">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-xl font-bold text-[#ececec]">Documentation</h1>
+            <h1 className="text-xl font-bold text-[#f0f0f0]">Documentation</h1>
             <p className="text-sm text-[#686868] mt-1">{visiblePages.length} pages</p>
           </div>
         </div>
@@ -75,7 +75,7 @@ export default function DocListClient({ brandSlug }: DocListClientProps) {
         {editMode && canEdit && (
           <button
             onClick={() => addDocPage(brand.id)}
-            className="mt-6 flex items-center gap-2 text-sm text-[#484848] hover:text-[#888] border border-dashed border-white/[0.06] hover:border-white/[0.12] rounded-xl px-5 py-3 transition-all duration-200 w-full justify-center"
+            className="mt-6 flex items-center gap-2 text-sm text-[#555] hover:text-[#888] border border-dashed border-white/[0.07] hover:border-white/[0.12] rounded-xl px-5 py-3 transition-all duration-200 w-full justify-center"
           >
             <Plus size={15} />
             Add documentation page

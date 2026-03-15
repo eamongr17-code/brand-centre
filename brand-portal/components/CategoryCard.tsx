@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Download, Eye, Pencil, Trash2, Check, X, Loader, GripVertical } from "lucide-react";
-import { zipSync } from "fflate";
 import { useEditStore } from "@/lib/edit-store";
+import { downloadAssetsAsZip } from "@/lib/download-zip";
 import { usePortal } from "@/lib/portal-context";
 import ImageUploader from "@/components/ImageUploader";
 import FadeImg from "@/components/FadeImg";
@@ -35,35 +35,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
     if (zipping || visibleAssets.length === 0) return;
     setZipping(true);
     try {
-      const files: Record<string, Uint8Array> = {};
-      const seen = new Set<string>();
-      await Promise.all(
-        visibleAssets
-          .filter((a) => a.downloadUrl && a.downloadUrl !== "#")
-          .map(async (a) => {
-            try {
-              const res = await fetch(a.downloadUrl);
-              const buf = new Uint8Array(await res.arrayBuffer());
-              const ext = a.downloadUrl.split(".").pop()?.split("?")[0] || "bin";
-              let name = (a.name || "asset").replace(/[^a-z0-9.\-_ ]/gi, "_");
-              if (!name.includes(".")) name = `${name}.${ext}`;
-              while (seen.has(name)) name = `_${name}`;
-              seen.add(name);
-              files[name] = buf;
-            } catch {}
-          })
-      );
-      if (Object.keys(files).length === 0) return;
-      const zipped = zipSync(files, { level: 0 });
-      const blob = new Blob([zipped.buffer as ArrayBuffer], { type: "application/zip" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${category.name || "assets"}.zip`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
+      await downloadAssetsAsZip(visibleAssets, category.name || "assets");
     } finally {
       setZipping(false);
     }
@@ -101,7 +73,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
 
   if (editing) {
     return (
-      <div className="border border-[#f77614] rounded-xl bg-[#161616] flex flex-col overflow-hidden [animation:fade-up_0.3s_ease-out_forwards]">
+      <div className="border border-[#f77614] rounded-xl bg-[#1a1a1a] flex flex-col overflow-hidden [animation:fade-up_0.3s_ease-out_forwards]">
         <div className="bg-white/[0.02] h-36 shrink-0 overflow-hidden">
           <FadeImg src={previewImage || publicPath("/placeholder-asset.png")} fallbackSrc={publicPath("/placeholder-asset.png")} alt="" className="h-full w-full object-cover" />
         </div>
@@ -109,13 +81,13 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm font-semibold text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
+            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm font-semibold text-[#f0f0f0] placeholder-[#505050] focus:outline-none focus:border-white/[0.15] transition-colors"
             placeholder="Category name"
           />
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs resize-none text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
+            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs resize-none text-[#f0f0f0] placeholder-[#505050] focus:outline-none focus:border-white/[0.15] transition-colors"
             rows={2}
             placeholder="Description"
           />
@@ -131,14 +103,14 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
                 <button
                   type="button"
                   onClick={() => setActionType("download")}
-                  className={`flex-1 inline-flex items-center justify-center gap-1 py-1.5 rounded-md transition-all duration-200 ${actionType === "download" ? "bg-white/[0.08] text-[#ececec] font-semibold" : "text-[#555] hover:text-[#888]"}`}
+                  className={`flex-1 inline-flex items-center justify-center gap-1 py-1.5 rounded-md transition-all duration-200 ${actionType === "download" ? "bg-white/[0.08] text-[#f0f0f0] font-semibold" : "text-[#555] hover:text-[#888]"}`}
                 >
                   <Download size={10} /> Download
                 </button>
                 <button
                   type="button"
                   onClick={() => setActionType("view")}
-                  className={`flex-1 inline-flex items-center justify-center gap-1 py-1.5 rounded-md transition-all duration-200 ${actionType === "view" ? "bg-white/[0.08] text-[#ececec] font-semibold" : "text-[#555] hover:text-[#888]"}`}
+                  className={`flex-1 inline-flex items-center justify-center gap-1 py-1.5 rounded-md transition-all duration-200 ${actionType === "view" ? "bg-white/[0.08] text-[#f0f0f0] font-semibold" : "text-[#555] hover:text-[#888]"}`}
                 >
                   <Eye size={10} /> View
                 </button>
@@ -160,7 +132,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
             </button>
             <button
               onClick={cancel}
-              className="inline-flex items-center gap-1 text-xs border border-white/[0.08] text-[#ececec] px-3 py-1.5 rounded-lg hover:bg-white/[0.04] transition-colors"
+              className="inline-flex items-center gap-1 text-xs border border-white/[0.08] text-[#f0f0f0] px-3 py-1.5 rounded-lg hover:bg-white/[0.04] transition-colors"
             >
               <X size={11} /> Cancel
             </button>
@@ -172,7 +144,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
 
   const cardContent = (
     <div
-      className="rounded-2xl relative group flex flex-col [animation:fade-up_0.3s_ease-out_forwards] h-full overflow-hidden border border-white/[0.06] hover:border-white/[0.1] hover:shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300"
+      className="rounded-2xl relative group flex flex-col [animation:fade-up_0.3s_ease-out_forwards] h-full overflow-hidden border border-white/[0.07] hover:border-white/[0.1] hover:shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300"
       draggable={editMode && !!onDragStart}
       onDragStart={onDragStart ? (e) => onDragStart(e, category.id) : undefined}
       onDragOver={onDragOver ? (e) => onDragOver(e, category.id) : undefined}
@@ -189,7 +161,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
 
         {/* Grip handle */}
         {editMode && onDragStart && (
-          <div className="absolute bottom-3 right-3 z-20 cursor-grab active:cursor-grabbing text-[#484848] hover:text-[#888] opacity-0 group-hover:opacity-100 transition-all">
+          <div className="absolute bottom-3 right-3 z-20 cursor-grab active:cursor-grabbing text-[#555] hover:text-[#888] opacity-0 group-hover:opacity-100 transition-all">
             <GripVertical size={14} />
           </div>
         )}
@@ -202,7 +174,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
               className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-xl p-1.5 hover:bg-white/[0.08] transition-colors"
               title="Edit"
             >
-              <Pencil size={12} className="text-[#ececec]" />
+              <Pencil size={12} className="text-[#f0f0f0]" />
             </button>
             <button
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); deleteCategory(category.id); }}
@@ -216,8 +188,8 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
 
         {/* Tab — sits at bottom of image, overlapping into panel */}
         <div className="absolute bottom-0 left-0 z-10 flex">
-          <div className="relative bg-[#161616] rounded-t-2xl pl-5 pr-7 pt-3 pb-1">
-            <p className="font-bold text-[#ececec] text-[15px] leading-tight">{name}</p>
+          <div className="relative bg-[#1a1a1a] rounded-t-2xl pl-5 pr-7 pt-3 pb-1">
+            <p className="font-bold text-[#f0f0f0] text-[15px] leading-tight">{name}</p>
             <p className="text-[10px] text-[#888] mt-0.5">
               {category.actionType === "view"
                 ? "External asset"
@@ -227,16 +199,16 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
             </p>
             {/* Concave corner — connects tab to panel */}
             <div className="absolute -right-[12px] bottom-0 w-[12px] h-[12px] overflow-hidden">
-              <div className="absolute bottom-0 left-0 w-6 h-6 rounded-full shadow-[0_0_0_20px_#161616]" />
+              <div className="absolute bottom-0 left-0 w-6 h-6 rounded-full shadow-[0_0_0_20px_#1a1a1a]" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Panel body — flows below image */}
-      <div className="bg-[#161616] flex flex-col px-5 pb-4 pt-4 min-h-0">
+      <div className="bg-[#1a1a1a] border-t border-white/[0.07] flex flex-col px-5 pb-4 pt-4 min-h-0">
         {description && (
-          <p className="text-sm text-[#787878] leading-relaxed line-clamp-2">{description}</p>
+          <p className="text-sm text-[#8a8a8a] leading-relaxed line-clamp-1">{description}</p>
         )}
 
         {/* Action buttons */}
@@ -248,7 +220,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="flex-1 h-10 inline-flex items-center justify-center gap-1.5 text-sm font-semibold rounded-xl bg-white/[0.06] border border-white/[0.08] text-[#ececec] hover:bg-white/[0.1] transition-all duration-200"
+                className="flex-1 h-10 inline-flex items-center justify-center gap-1.5 text-sm font-semibold rounded-xl bg-white/[0.06] border border-white/[0.08] text-[#f0f0f0] hover:bg-white/[0.1] transition-all duration-200"
                 title="View"
               >
                 <Eye size={14} />
@@ -260,7 +232,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
               <Link
                 href={portalPath(`/${brandSlug}/${category.slug}`)}
                 onClick={(e) => e.stopPropagation()}
-                className="flex-1 h-10 inline-flex items-center justify-center text-sm font-semibold rounded-xl bg-white/[0.06] border border-white/[0.08] text-[#ececec] hover:bg-white/[0.1] transition-all duration-200"
+                className="flex-1 h-10 inline-flex items-center justify-center text-sm font-semibold rounded-xl bg-white/[0.06] border border-white/[0.08] text-[#f0f0f0] hover:bg-white/[0.1] transition-all duration-200"
               >
                 {isColours ? "Browse palette" : "Browse assets"}
               </Link>

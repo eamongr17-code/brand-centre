@@ -6,8 +6,8 @@ html {
 }
 
 body {
-  background: #111111;
-  color: #ececec;
+  background: #141414;
+  color: #f0f0f0;
   font-family: "Urbanist", sans-serif;
   letter-spacing: -0.01em;
 }
@@ -20,7 +20,7 @@ a, button, [role="button"], summary, label[for], select {
 /* Custom scrollbar */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #282828; border-radius: 99px; }
+::-webkit-scrollbar-thumb { background: #303030; border-radius: 99px; }
 ::-webkit-scrollbar-thumb:hover { background: #383838; }
 
 /* Entrance animations */
@@ -45,29 +45,24 @@ a, button, [role="button"], summary, label[for], select {
   50% { opacity: 1; }
 }
 
-@keyframes subtle-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
-}
-
 /* Glass card utility */
 .glass-card {
-  background: rgba(22, 22, 22, 0.7);
+  background: rgba(26, 26, 26, 0.75);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 16px;
   transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
 
 .glass-card:hover {
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.12);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 /* Glass navbar */
 .glass-nav {
-  background: rgba(17, 17, 17, 1);
+  background: rgba(20, 20, 20, 1);
 }
 
 /* Stagger children animations */

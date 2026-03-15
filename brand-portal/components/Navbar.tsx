@@ -9,7 +9,7 @@ import { usePortal } from "@/lib/portal-context";
 import { useAuth } from "@/lib/auth-context";
 import SearchBar from "@/components/SearchBar";
 import { publicPath } from "@/lib/public-path";
-import { brands } from "@/data/mock-data";
+import { parseBrandSlug } from "@/lib/parse-brand-slug";
 
 export default function Navbar() {
   const { editMode, toggleEditMode } = useEditStore();
@@ -24,14 +24,7 @@ export default function Navbar() {
   const homeHref = portalPath("/");
   const isPublic = mode === "public";
 
-  const currentBrandSlug = useMemo(() => {
-    const segments = pathname.split("/").filter(Boolean);
-    const slug =
-      segments[0] === "owner" || segments[0] === "internal"
-        ? segments[1]
-        : segments[0];
-    return brands.find((b) => b.slug === slug)?.slug ?? null;
-  }, [pathname]);
+  const currentBrandSlug = useMemo(() => parseBrandSlug(pathname), [pathname]);
 
   const isHomePage = !isPublic && !currentBrandSlug;
   const showCopyLink = mode === "internal" && !!currentBrandSlug;
@@ -78,10 +71,10 @@ export default function Navbar() {
         {!isHomePage && !isPublic && (
           <Link
             href={homeHref}
-            className={`shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-lg border text-[#ececec] transition-all duration-200 ${
+            className={`shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-lg border text-[#f0f0f0] transition-all duration-200 ${
               editMode
                 ? "bg-[#2d1500] border-[#5a2800] hover:bg-[#3a1c00]"
-                : "bg-white/[0.04] border-white/[0.06] hover:bg-white/[0.08] hover:border-white/[0.1]"
+                : "bg-white/[0.04] border-white/[0.07] hover:bg-white/[0.08] hover:border-white/[0.1]"
             }`}
             title="Home"
           >
@@ -95,7 +88,7 @@ export default function Navbar() {
         {showCopyLink && (
           <button
             onClick={copyPublicLink}
-            className="inline-flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border bg-white/[0.04] border-white/[0.06] hover:bg-white/[0.08] hover:border-white/[0.1] transition-all duration-200"
+            className="inline-flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg border bg-white/[0.04] border-white/[0.07] hover:bg-white/[0.08] hover:border-white/[0.1] transition-all duration-200"
           >
             {copied ? (
               <>
@@ -104,8 +97,8 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <Link2 size={14} className="text-[#ececec]" />
-                <span className="text-[#ececec]">Public link</span>
+                <Link2 size={14} className="text-[#f0f0f0]" />
+                <span className="text-[#f0f0f0]">Public link</span>
               </>
             )}
           </button>
@@ -114,10 +107,10 @@ export default function Navbar() {
         {canEdit && (
           <button
             onClick={toggleEditMode}
-            className={`inline-flex items-center gap-2 text-sm font-semibold px-3.5 py-2 rounded-lg border transition-all duration-200 ${
+            className={`inline-flex items-center gap-2 text-sm font-semibold px-3 py-2 rounded-xl border transition-all duration-200 ${
               editMode
                 ? "bg-[#f77614] text-white border-[#f77614] hover:bg-[#e06810] shadow-[0_0_20px_rgba(247,118,20,0.25)]"
-                : "bg-white/[0.04] text-[#ececec] border-white/[0.06] hover:bg-white/[0.08] hover:border-white/[0.1]"
+                : "bg-white/[0.04] text-[#f0f0f0] border-white/[0.07] hover:bg-white/[0.08] hover:border-white/[0.1]"
             }`}
           >
             {editMode ? (
@@ -138,10 +131,10 @@ export default function Navbar() {
           <div className="relative" ref={accountRef}>
             <button
               onClick={() => setAccountOpen((v) => !v)}
-              className={`inline-flex items-center gap-1.5 px-2.5 py-2 rounded-lg border transition-all duration-200 ${
+              className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border transition-all duration-200 ${
                 accountOpen
-                  ? "bg-white/[0.08] border-white/[0.12] text-[#ececec]"
-                  : "bg-white/[0.04] border-white/[0.06] hover:bg-white/[0.08] text-[#555] hover:text-[#ececec]"
+                  ? "bg-white/[0.08] border-white/[0.12] text-[#f0f0f0]"
+                  : "bg-white/[0.04] border-white/[0.07] hover:bg-white/[0.08] text-[#555] hover:text-[#f0f0f0]"
               }`}
               title="Account"
             >
@@ -150,25 +143,25 @@ export default function Navbar() {
             </button>
 
             {accountOpen && (
-              <div className="absolute right-0 top-full mt-2 w-64 bg-[#161616]/95 backdrop-blur-xl border border-white/[0.06] rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.5)] overflow-hidden z-50 [animation:fade-up_0.15s_ease-out_forwards]">
+              <div className="absolute right-0 top-full mt-2 w-64 bg-[#1a1a1a]/95 backdrop-blur-xl border border-white/[0.07] rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.5)] overflow-hidden z-50 [animation:fade-up_0.15s_ease-out_forwards]">
                 {/* User info */}
-                <div className="px-4 pt-4 pb-3 border-b border-white/[0.04]">
-                  <p className="text-sm font-semibold text-[#ececec] truncate">{user?.email ?? "User"}</p>
-                  <p className="text-[11px] text-[#484848] mt-0.5">
+                <div className="px-4 pt-4 pb-3 border-b border-white/[0.05]">
+                  <p className="text-sm font-semibold text-[#f0f0f0] truncate">{user?.email ?? "User"}</p>
+                  <p className="text-[11px] text-[#555] mt-0.5">
                     {isOwner ? "Owner" : "Team member"}
                   </p>
                 </div>
 
                 {/* Portal switching */}
-                <div className="px-2 py-2 border-b border-white/[0.04]">
-                  <p className="px-2 pb-1.5 text-[10px] font-bold text-[#444] uppercase tracking-[0.15em]">Portal</p>
+                <div className="px-2 py-2 border-b border-white/[0.05]">
+                  <p className="px-2 pb-1.5 text-[10px] font-bold text-[#505050] uppercase tracking-[0.15em]">Portal</p>
                   {isOwner && (
                     <button
                       onClick={() => { setAccountOpen(false); router.push("/owner"); }}
                       className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-colors duration-150 ${
                         mode === "owner"
                           ? "bg-[#f77614]/10 text-[#f8a260] font-semibold"
-                          : "text-[#888] hover:bg-white/[0.04] hover:text-[#ececec]"
+                          : "text-[#888] hover:bg-white/[0.04] hover:text-[#f0f0f0]"
                       }`}
                     >
                       <Shield size={13} />
@@ -181,7 +174,7 @@ export default function Navbar() {
                     className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-colors duration-150 ${
                       mode === "internal"
                         ? "bg-[#f77614]/10 text-[#f8a260] font-semibold"
-                        : "text-[#888] hover:bg-white/[0.04] hover:text-[#ececec]"
+                        : "text-[#888] hover:bg-white/[0.04] hover:text-[#f0f0f0]"
                     }`}
                   >
                     <Users size={13} />

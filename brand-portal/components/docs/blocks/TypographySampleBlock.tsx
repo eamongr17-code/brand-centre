@@ -4,10 +4,10 @@ import type { TypographySampleBlock as TypographySampleBlockType } from "@/lib/t
 
 export default function TypographySampleBlock({ block }: { block: TypographySampleBlockType }) {
   return (
-    <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5 space-y-4">
+    <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-5 space-y-4">
       <div>
-        <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#444] mb-1">Font Family</p>
-        <p className="text-lg font-semibold text-[#ececec]" style={{ fontFamily: block.fontFamily }}>
+        <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#505050] mb-1">Font Family</p>
+        <p className="text-lg font-semibold text-[#f0f0f0]" style={{ fontFamily: block.fontFamily }}>
           {block.fontFamily}
         </p>
       </div>

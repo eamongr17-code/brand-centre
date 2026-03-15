@@ -6,6 +6,7 @@ import { Search, FolderOpen, Palette, FileText, BookOpen, X, Download, Eye, Copy
 import { brands } from "@/data/mock-data";
 import { useEditStore } from "@/lib/edit-store";
 import { usePortal } from "@/lib/portal-context";
+import { parseBrandSlug } from "@/lib/parse-brand-slug";
 
 interface CategoryResult {
   type: "category";
@@ -81,12 +82,8 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
 
   const pathBrandId = useMemo(() => {
     if (lockedBrandId) return lockedBrandId;
-    const segments = pathname.split("/").filter(Boolean);
-    const slug =
-      segments[0] === "owner" || segments[0] === "internal"
-        ? segments[1]
-        : segments[0];
-    return brands.find((b) => b.slug === slug)?.id ?? null;
+    const slug = parseBrandSlug(pathname);
+    return slug ? brands.find((b) => b.slug === slug)?.id ?? null : null;
   }, [pathname, lockedBrandId]);
 
   useEffect(() => {
@@ -316,13 +313,13 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
   return (
     <div ref={containerRef} className={`relative w-full ${large ? "max-w-none" : "max-w-lg"}`}>
       <div
-        className={`flex items-center gap-2 bg-white/[0.04] border border-white/[0.06] focus-within:border-white/[0.12] focus-within:bg-white/[0.06] transition-all duration-200 ${
+        className={`flex items-center gap-2 bg-white/[0.04] border border-white/[0.07] focus-within:border-white/[0.12] focus-within:bg-white/[0.06] transition-all duration-200 ${
           large ? "rounded-2xl px-5 py-4" : "rounded-xl px-3.5 py-2.5"
         }`}
       >
         <Search
           size={large ? 16 : 14}
-          className="shrink-0 text-[#484848] pointer-events-none"
+          className="shrink-0 text-[#555] pointer-events-none"
         />
 
         {selectedBrand && !lockedBrandId && open && (
@@ -345,7 +342,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
           onFocus={() => { if (!open) setSelectedBrandId(pathBrandId); setOpen(true); }}
           onKeyDown={handleKeyDown}
           placeholder={selectedBrand ? `Search in ${selectedBrand.name}...` : placeholder}
-          className={`flex-1 bg-transparent text-[#ececec] placeholder-[#3a3a3a] focus:outline-none ${
+          className={`flex-1 bg-transparent text-[#f0f0f0] placeholder-[#3a3a3a] focus:outline-none ${
             large ? "text-base" : "text-sm"
           }`}
         />
@@ -353,7 +350,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
         {(query || (selectedBrand && !lockedBrandId && open)) && (
           <button
             onClick={() => { setQuery(""); if (!lockedBrandId) setSelectedBrandId(null); inputRef.current?.focus(); }}
-            className="shrink-0 text-[#484848] hover:text-[#888] transition-colors"
+            className="shrink-0 text-[#555] hover:text-[#888] transition-colors"
           >
             <X size={13} />
           </button>
@@ -362,9 +359,9 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
 
       {/* Dropdown */}
       {showPanel && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-[#161616]/95 backdrop-blur-xl border border-white/[0.06] rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.5)] z-50 overflow-hidden [animation:fade-up_0.15s_ease-out_forwards]">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-[#1a1a1a]/95 backdrop-blur-xl border border-white/[0.07] rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.5)] z-50 overflow-hidden [animation:fade-up_0.15s_ease-out_forwards]">
           {!lockedBrandId && !selectedBrandId && (
-            <div className="flex gap-1.5 px-3.5 pt-3.5 pb-2.5 border-b border-white/[0.04] flex-wrap">
+            <div className="flex gap-1.5 px-3.5 pt-3.5 pb-2.5 border-b border-white/[0.05] flex-wrap">
               <button
                 onClick={() => setSelectedBrandId(null)}
                 className={`text-xs px-3 py-1 rounded-full font-semibold transition-all duration-200 ${
@@ -389,7 +386,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
 
           <div className="max-h-[min(280px,40vh)] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-[#2a2a2a] [&::-webkit-scrollbar-thumb]:rounded-full">
             {!hasResults && (
-              <div className="px-4 py-8 text-center text-sm text-[#444]">
+              <div className="px-4 py-8 text-center text-sm text-[#505050]">
                 {query ? `No results for "${query}"` : "No categories found"}
               </div>
             )}
@@ -398,7 +395,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
             {results.categories.length > 0 && (
               <div>
                 <div className="px-4 pt-3.5 pb-1.5">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#444]">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#505050]">
                     Categories
                   </span>
                 </div>
@@ -415,7 +412,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold text-[#ececec] truncate">
+                        <span className="text-sm font-semibold text-[#f0f0f0] truncate">
                           {item.name}
                         </span>
                         <span className="shrink-0 text-[10px] px-1.5 py-0.5 rounded-md bg-white/[0.04] text-[#555] font-semibold">
@@ -437,7 +434,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
             {results.colours.length > 0 && (
               <div>
                 <div className="px-4 pt-3.5 pb-1.5">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#444]">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#505050]">
                     Colours
                   </span>
                 </div>
@@ -448,7 +445,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
                     className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/[0.04] transition-colors duration-150 cursor-pointer"
                   >
                     <div
-                      className="shrink-0 w-8 h-8 rounded-lg border border-white/[0.06]"
+                      className="shrink-0 w-8 h-8 rounded-lg border border-white/[0.07]"
                       style={{ backgroundColor: item.hex }}
                     />
                     <div className="flex-1 min-w-0">
@@ -458,13 +455,13 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
                           Colour
                         </span>
                       </div>
-                      <span className="text-xs text-[#484848]">
+                      <span className="text-xs text-[#555]">
                         {item.brandName} · <span className="font-mono">{item.hex}</span>
                       </span>
                     </div>
                     <button
                       onClick={(e) => copyColourHex(item.id, item.hex, e)}
-                      className="shrink-0 p-1.5 rounded-lg hover:bg-white/[0.06] text-[#484848] hover:text-[#ececec] transition-all duration-200"
+                      className="shrink-0 p-1.5 rounded-lg hover:bg-white/[0.06] text-[#555] hover:text-[#f0f0f0] transition-all duration-200"
                       title="Copy hex"
                     >
                       {copiedColourId === item.id ? (
@@ -482,7 +479,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
             {results.docPages.length > 0 && (
               <div>
                 <div className="px-4 pt-3.5 pb-1.5">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#444]">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#505050]">
                     Documentation
                   </span>
                 </div>
@@ -497,7 +494,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold text-[#ececec] truncate">
+                        <span className="text-sm font-semibold text-[#f0f0f0] truncate">
                           {item.name}
                         </span>
                         <span className="shrink-0 text-[10px] px-1.5 py-0.5 rounded-md bg-white/[0.04] text-[#555] font-semibold">
@@ -518,7 +515,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
             {results.assets.length > 0 && (
               <div>
                 <div className="px-4 pt-3.5 pb-1.5">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#444]">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#505050]">
                     Assets
                   </span>
                 </div>
@@ -538,7 +535,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
                           Asset
                         </span>
                       </div>
-                      <span className="text-xs text-[#484848] truncate block">
+                      <span className="text-xs text-[#555] truncate block">
                         {item.categoryName} / {item.brandName}
                         {item.fileType ? ` · ${item.fileType}` : ""}
                       </span>
@@ -548,7 +545,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
                       target={item.actionType === "view" ? "_blank" : undefined}
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="shrink-0 p-1.5 rounded-lg hover:bg-white/[0.06] text-[#484848] hover:text-[#ececec] transition-all duration-200"
+                      className="shrink-0 p-1.5 rounded-lg hover:bg-white/[0.06] text-[#555] hover:text-[#f0f0f0] transition-all duration-200"
                       title={item.actionType === "view" ? "View" : "Download"}
                     >
                       {item.actionType === "view" ? (
@@ -564,8 +561,8 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
           </div>
 
           {hasResults && (
-            <div className="px-4 py-2.5 border-t border-white/[0.04] text-[10px] text-[#333] text-right">
-              Press <kbd className="bg-white/[0.04] border border-white/[0.06] rounded px-1.5 py-0.5 font-mono text-[#555]">Esc</kbd> to close
+            <div className="px-4 py-2.5 border-t border-white/[0.05] text-[10px] text-[#333] text-right">
+              Press <kbd className="bg-white/[0.04] border border-white/[0.07] rounded px-1.5 py-0.5 font-mono text-[#555]">Esc</kbd> to close
             </div>
           )}
         </div>

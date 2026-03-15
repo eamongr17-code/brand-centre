@@ -5,9 +5,9 @@ import type { DownloadCtaBlock as DownloadCtaBlockType } from "@/lib/types";
 
 export default function DownloadCtaBlock({ block }: { block: DownloadCtaBlockType }) {
   return (
-    <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-5 py-4 flex items-center gap-4">
+    <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] px-5 py-4 flex items-center gap-4">
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-[#ececec]">{block.label || "Download"}</p>
+        <p className="text-sm font-semibold text-[#f0f0f0]">{block.label || "Download"}</p>
         {block.description && (
           <p className="text-xs text-[#555] mt-0.5">{block.description}</p>
         )}

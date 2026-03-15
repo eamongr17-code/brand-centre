@@ -132,30 +132,30 @@ export default function DocPageClient({ brandSlug, docSlug }: DocPageClientProps
         <div className="flex-1 min-w-0 max-w-3xl">
           {/* Cover image */}
           {docPage.coverImage && (
-            <div className="rounded-2xl overflow-hidden border border-white/[0.06] mb-8">
+            <div className="rounded-2xl overflow-hidden border border-white/[0.07] mb-8">
               <FadeImg src={docPage.coverImage} alt={docPage.title} className="w-full h-auto max-h-80 object-cover" />
             </div>
           )}
 
           {/* Page header */}
           {editMode && canEdit && editingMeta ? (
-            <div className="space-y-3 mb-10 p-4 border border-[#f77614] rounded-xl bg-[#161616]">
+            <div className="space-y-3 mb-10 p-4 border border-[#f77614] rounded-xl bg-[#1a1a1a]">
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2 text-lg font-bold text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15]"
+                className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2 text-lg font-bold text-[#f0f0f0] placeholder-[#505050] focus:outline-none focus:border-white/[0.15]"
                 placeholder="Page title"
               />
               <input
                 value={slug}
                 onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))}
-                className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm font-mono text-[#888] placeholder-[#444] focus:outline-none focus:border-white/[0.15]"
+                className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm font-mono text-[#888] placeholder-[#505050] focus:outline-none focus:border-white/[0.15]"
                 placeholder="url-slug"
               />
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] resize-none"
+                className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm text-[#f0f0f0] placeholder-[#505050] focus:outline-none focus:border-white/[0.15] resize-none"
                 rows={2}
                 placeholder="Page description"
               />
@@ -163,13 +163,13 @@ export default function DocPageClient({ brandSlug, docSlug }: DocPageClientProps
               <div className="flex gap-1 p-1 bg-white/[0.02] rounded-lg text-xs">
                 <button
                   onClick={() => setVisibility("public")}
-                  className={`flex-1 py-1.5 rounded-md transition-all ${visibility === "public" ? "bg-white/[0.08] text-[#ececec] font-semibold" : "text-[#555] hover:text-[#888]"}`}
+                  className={`flex-1 py-1.5 rounded-md transition-all ${visibility === "public" ? "bg-white/[0.08] text-[#f0f0f0] font-semibold" : "text-[#555] hover:text-[#888]"}`}
                 >
                   Public
                 </button>
                 <button
                   onClick={() => setVisibility("internal")}
-                  className={`flex-1 inline-flex items-center justify-center gap-1 py-1.5 rounded-md transition-all ${visibility === "internal" ? "bg-white/[0.08] text-[#ececec] font-semibold" : "text-[#555] hover:text-[#888]"}`}
+                  className={`flex-1 inline-flex items-center justify-center gap-1 py-1.5 rounded-md transition-all ${visibility === "internal" ? "bg-white/[0.08] text-[#f0f0f0] font-semibold" : "text-[#555] hover:text-[#888]"}`}
                 >
                   <Lock size={10} /> Internal
                 </button>
@@ -178,7 +178,7 @@ export default function DocPageClient({ brandSlug, docSlug }: DocPageClientProps
                 <button onClick={saveMeta} className="inline-flex items-center gap-1 text-xs bg-white text-black px-3 py-1.5 rounded-lg font-semibold hover:bg-white/90">
                   <Check size={11} /> Save
                 </button>
-                <button onClick={() => setEditingMeta(false)} className="inline-flex items-center gap-1 text-xs border border-white/[0.08] text-[#ececec] px-3 py-1.5 rounded-lg hover:bg-white/[0.04]">
+                <button onClick={() => setEditingMeta(false)} className="inline-flex items-center gap-1 text-xs border border-white/[0.08] text-[#f0f0f0] px-3 py-1.5 rounded-lg hover:bg-white/[0.04]">
                   <X size={11} /> Cancel
                 </button>
               </div>
@@ -188,7 +188,7 @@ export default function DocPageClient({ brandSlug, docSlug }: DocPageClientProps
               <div className="flex items-start gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <h1 className="text-3xl font-bold text-[#ececec]">{docPage.title}</h1>
+                    <h1 className="text-3xl font-bold text-[#f0f0f0]">{docPage.title}</h1>
                     {docPage.visibility === "internal" && (
                       <span className="inline-flex items-center gap-1 text-[10px] bg-yellow-500/10 text-yellow-500 px-2 py-0.5 rounded-full font-semibold">
                         <Lock size={9} /> Internal
@@ -203,14 +203,14 @@ export default function DocPageClient({ brandSlug, docSlug }: DocPageClientProps
                   <div className="flex gap-1 opacity-0 group-hover/header:opacity-100 transition-opacity shrink-0">
                     <button
                       onClick={() => setEditingMeta(true)}
-                      className="bg-white/[0.04] border border-white/[0.06] rounded-lg p-1.5 hover:bg-white/[0.08] text-[#686868] hover:text-[#ececec] transition-colors"
+                      className="bg-white/[0.04] border border-white/[0.07] rounded-lg p-1.5 hover:bg-white/[0.08] text-[#686868] hover:text-[#f0f0f0] transition-colors"
                       title="Edit page details"
                     >
                       <Pencil size={12} />
                     </button>
                     <button
                       onClick={() => { if (confirm("Delete this doc page?")) deleteDocPage(docPage.id); }}
-                      className="bg-white/[0.04] border border-white/[0.06] rounded-lg p-1.5 hover:bg-red-500/20 text-[#686868] hover:text-red-400 transition-colors"
+                      className="bg-white/[0.04] border border-white/[0.07] rounded-lg p-1.5 hover:bg-red-500/20 text-[#686868] hover:text-red-400 transition-colors"
                       title="Delete page"
                     >
                       <Trash2 size={12} />

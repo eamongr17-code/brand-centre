@@ -35,7 +35,7 @@ export default function QuickLinksPanel({ brandId, inline }: { brandId: string; 
   if (inline && links.length === 0 && !canEditLinks) return null;
 
   return (
-    <aside className={inline ? "" : "w-full lg:w-56 shrink-0 lg:self-start lg:border-l lg:border-white/[0.04] lg:pl-8"}>
+    <aside className={inline ? "" : "w-full lg:w-56 shrink-0 lg:self-start lg:border-l lg:border-white/[0.05] lg:pl-8"}>
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#555]">
           Quick Links
@@ -43,7 +43,7 @@ export default function QuickLinksPanel({ brandId, inline }: { brandId: string; 
         {canEditLinks && (
           <button
             onClick={() => addQuickLink(brandId)}
-            className="text-[#484848] hover:text-[#888] transition-colors"
+            className="text-[#555] hover:text-[#888] transition-colors"
             title="Add link"
           >
             <Plus size={14} />
@@ -54,17 +54,17 @@ export default function QuickLinksPanel({ brandId, inline }: { brandId: string; 
       <ul className={inline ? "flex flex-wrap gap-2" : "space-y-1"}>
         {links.map((link) =>
           canEditLinks && editingId === link.id ? (
-            <li key={link.id} className="space-y-1 bg-white/[0.02] border border-white/[0.06] rounded-lg p-2">
+            <li key={link.id} className="space-y-1 bg-white/[0.02] border border-white/[0.07] rounded-lg p-2">
               <input
                 value={draftLabel}
                 onChange={(e) => setDraftLabel(e.target.value)}
-                className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-2 py-1 text-xs text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
+                className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-2 py-1 text-xs text-[#f0f0f0] placeholder-[#505050] focus:outline-none focus:border-white/[0.15] transition-colors"
                 placeholder="Label"
               />
               <input
                 value={draftUrl}
                 onChange={(e) => setDraftUrl(e.target.value)}
-                className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-2 py-1 text-xs font-mono text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
+                className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-2 py-1 text-xs font-mono text-[#f0f0f0] placeholder-[#505050] focus:outline-none focus:border-white/[0.15] transition-colors"
                 placeholder="https://"
               />
               <div className="flex gap-1 pt-0.5">
@@ -76,7 +76,7 @@ export default function QuickLinksPanel({ brandId, inline }: { brandId: string; 
                 </button>
                 <button
                   onClick={cancelEdit}
-                  className="inline-flex items-center gap-1 text-xs border border-white/[0.08] text-[#ececec] px-2 py-1 rounded-lg"
+                  className="inline-flex items-center gap-1 text-xs border border-white/[0.08] text-[#f0f0f0] px-2 py-1 rounded-lg"
                 >
                   <X size={10} /> Cancel
                 </button>
@@ -88,13 +88,13 @@ export default function QuickLinksPanel({ brandId, inline }: { brandId: string; 
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`flex items-center gap-1.5 text-sm text-[#787878] hover:text-[#ececec] min-w-0 transition-colors duration-200 ${
+                className={`flex items-center gap-1.5 text-sm text-[#8a8a8a] hover:text-[#f0f0f0] min-w-0 transition-colors duration-200 ${
                   inline
-                    ? "bg-white/[0.03] border border-white/[0.06] rounded-lg px-3 py-1.5 hover:border-white/[0.1]"
+                    ? "bg-white/[0.03] border border-white/[0.07] rounded-lg px-3 py-1.5 hover:border-white/[0.1]"
                     : "flex-1"
                 }`}
               >
-                <ExternalLink size={12} className="shrink-0 text-[#484848]" />
+                <ExternalLink size={12} className="shrink-0 text-[#555]" />
                 <span className="truncate">{link.label}</span>
               </a>
               {canEditLinks && (

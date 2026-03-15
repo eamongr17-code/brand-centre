@@ -189,7 +189,7 @@ export default function BulkUploader({ categoryId }: BulkUploaderProps) {
     return (
       <div className="mb-6 border-2 border-dashed border-white/[0.08] rounded-xl p-6 text-center">
         <Loader size={20} className="animate-spin mx-auto mb-2 text-[#f77614]" />
-        <p className="text-sm text-[#ececec] font-semibold">
+        <p className="text-sm text-[#f0f0f0] font-semibold">
           Uploading {progress.done} / {progress.total}
         </p>
         <div className="mt-3 w-full bg-white/[0.04] rounded-full h-1.5 overflow-hidden">
@@ -207,27 +207,27 @@ export default function BulkUploader({ categoryId }: BulkUploaderProps) {
       className={`mb-6 border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200 ${
         dragOver
           ? "border-[#f77614] bg-[#f77614]/[0.04]"
-          : "border-white/[0.06] hover:border-white/[0.12]"
+          : "border-white/[0.07] hover:border-white/[0.12]"
       }`}
       onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
       onDragLeave={() => setDragOver(false)}
       onDrop={handleDrop}
     >
-      <Upload size={24} className="mx-auto mb-2 text-[#484848]" />
-      <p className="text-sm text-[#787878] mb-3">
+      <Upload size={24} className="mx-auto mb-2 text-[#555]" />
+      <p className="text-sm text-[#8a8a8a] mb-3">
         Drop files or folders here, or choose below
       </p>
       <div className="flex gap-2 justify-center">
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white/[0.04] border border-white/[0.06] text-[#ececec] px-3 py-1.5 rounded-lg hover:bg-white/[0.08] transition-all duration-200"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white/[0.04] border border-white/[0.07] text-[#f0f0f0] px-3 py-1.5 rounded-lg hover:bg-white/[0.08] transition-all duration-200"
         >
           <Upload size={12} />
           Choose files
         </button>
         <button
           onClick={() => folderInputRef.current?.click()}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white/[0.04] border border-white/[0.06] text-[#ececec] px-3 py-1.5 rounded-lg hover:bg-white/[0.08] transition-all duration-200"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white/[0.04] border border-white/[0.07] text-[#f0f0f0] px-3 py-1.5 rounded-lg hover:bg-white/[0.08] transition-all duration-200"
         >
           <FolderUp size={12} />
           Choose folder

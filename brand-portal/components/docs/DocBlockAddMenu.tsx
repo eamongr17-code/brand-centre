@@ -33,20 +33,20 @@ export default function DocBlockAddMenu({ docPageId }: { docPageId: string }) {
     <div className="relative">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-2 text-sm text-[#484848] hover:text-[#888] border border-dashed border-white/[0.06] hover:border-white/[0.12] rounded-xl px-5 py-3 transition-all duration-200 w-full justify-center"
+        className="flex items-center gap-2 text-sm text-[#555] hover:text-[#888] border border-dashed border-white/[0.07] hover:border-white/[0.12] rounded-xl px-5 py-3 transition-all duration-200 w-full justify-center"
       >
         <Plus size={15} />
         Add block
       </button>
 
       {open && (
-        <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 bg-[#161616]/95 backdrop-blur-xl border border-white/[0.06] rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.5)] p-2 z-50 w-64 [animation:fade-up_0.15s_ease-out_forwards]">
+        <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 bg-[#1a1a1a]/95 backdrop-blur-xl border border-white/[0.07] rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.5)] p-2 z-50 w-64 [animation:fade-up_0.15s_ease-out_forwards]">
           <div className="grid grid-cols-2 gap-1">
             {BLOCK_OPTIONS.map((opt) => (
               <button
                 key={opt.type}
                 onClick={() => handleAdd(opt.type)}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-[#888] hover:text-[#ececec] hover:bg-white/[0.04] transition-all duration-150 text-left"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-[#888] hover:text-[#f0f0f0] hover:bg-white/[0.04] transition-all duration-150 text-left"
               >
                 <span className="text-[#555]">{opt.icon}</span>
                 {opt.label}

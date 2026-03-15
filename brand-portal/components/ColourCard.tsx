@@ -63,41 +63,41 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
   if (editing) {
     const previewHex = hex.match(/^#[0-9A-Fa-f]{3,6}$/) ? hex : colour.hex;
     return (
-      <div className="border border-[#f77614] rounded-xl overflow-hidden bg-[#161616]">
+      <div className="border border-[#f77614] rounded-xl overflow-hidden bg-[#1a1a1a]">
         <div className="h-20 transition-colors" style={{ backgroundColor: previewHex }} />
         <div className="p-4 space-y-2">
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
+            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm text-[#f0f0f0] placeholder-[#505050] focus:outline-none focus:border-white/[0.15] transition-colors"
             placeholder="Colour name"
           />
           <input
             value={hex}
             onChange={(e) => setHex(e.target.value)}
-            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs font-mono text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
+            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs font-mono text-[#f0f0f0] placeholder-[#505050] focus:outline-none focus:border-white/[0.15] transition-colors"
             placeholder="#000000"
           />
           <div className="grid grid-cols-[32px_1fr] gap-x-2 gap-y-1.5 items-center">
-            <span className="text-[10px] font-bold text-[#484848]">RGB</span>
+            <span className="text-[10px] font-bold text-[#555]">RGB</span>
             <input
               value={rgbOverride}
               onChange={(e) => setRgbOverride(e.target.value)}
-              className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs font-mono text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
+              className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs font-mono text-[#f0f0f0] placeholder-[#505050] focus:outline-none focus:border-white/[0.15] transition-colors"
               placeholder={`rgb(${hexToRgb(hex.match(/^#[0-9A-Fa-f]{3,6}$/) ? hex : "#000000").r}, ${hexToRgb(hex.match(/^#[0-9A-Fa-f]{3,6}$/) ? hex : "#000000").g}, ${hexToRgb(hex.match(/^#[0-9A-Fa-f]{3,6}$/) ? hex : "#000000").b})`}
             />
-            <span className="text-[10px] font-bold text-[#484848]">HSL</span>
+            <span className="text-[10px] font-bold text-[#555]">HSL</span>
             <input
               value={hslOverride}
               onChange={(e) => setHslOverride(e.target.value)}
-              className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs font-mono text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
+              className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs font-mono text-[#f0f0f0] placeholder-[#505050] focus:outline-none focus:border-white/[0.15] transition-colors"
               placeholder={(() => { const h = hexToHsl(hex.match(/^#[0-9A-Fa-f]{3,6}$/) ? hex : "#000000"); return `hsl(${h.h}°, ${h.s}%, ${h.l}%)`; })()}
             />
-            <span className="text-[10px] font-bold text-[#484848]">CMYK</span>
+            <span className="text-[10px] font-bold text-[#555]">CMYK</span>
             <input
               value={cmykOverride}
               onChange={(e) => setCmykOverride(e.target.value)}
-              className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs font-mono text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
+              className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs font-mono text-[#f0f0f0] placeholder-[#505050] focus:outline-none focus:border-white/[0.15] transition-colors"
               placeholder={(() => { const c = hexToCmyk(hex.match(/^#[0-9A-Fa-f]{3,6}$/) ? hex : "#000000"); return `C:${c.c} M:${c.m} Y:${c.y} K:${c.k}`; })()}
             />
           </div>
@@ -110,7 +110,7 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
             </button>
             <button
               onClick={cancel}
-              className="inline-flex items-center gap-1 text-xs border border-white/[0.08] text-[#ececec] px-3 py-1.5 rounded-lg hover:bg-white/[0.04] transition-colors"
+              className="inline-flex items-center gap-1 text-xs border border-white/[0.08] text-[#f0f0f0] px-3 py-1.5 rounded-lg hover:bg-white/[0.04] transition-colors"
             >
               <X size={11} /> Cancel
             </button>
@@ -131,7 +131,7 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
   ];
 
   return (
-    <div className="glass-card rounded-xl relative overflow-hidden aspect-square group">
+    <div className="glass-card rounded-2xl relative overflow-hidden aspect-video group">
       {/* Layer 1 — Swatch */}
       <button
         onClick={copyHex}
@@ -151,17 +151,17 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
 
       {/* Layer 2 — Edit overlays */}
       {editMode && (
-        <div className="absolute top-2 right-2 z-10 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="absolute top-3 right-3 z-10 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             onClick={() => { setInfoOpen(false); setEditing(true); }}
-            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-white/[0.08] transition-colors"
+            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-xl p-1.5 hover:bg-white/[0.08] transition-colors"
             title="Edit"
           >
-            <Pencil size={12} className="text-[#ececec]" />
+            <Pencil size={12} className="text-[#f0f0f0]" />
           </button>
           <button
             onClick={() => deleteColour(colour.id)}
-            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-red-500/20 text-red-400 transition-colors"
+            className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-xl p-1.5 hover:bg-red-500/20 text-red-400 transition-colors"
             title="Delete"
           >
             <Trash2 size={12} />
@@ -171,12 +171,12 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
 
       {/* Layer 3 — Dark panel */}
       <div
-        className={`absolute bottom-0 left-0 right-0 bg-[#161616] rounded-t-xl flex flex-col overflow-hidden transition-[height] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
-          infoOpen ? "h-[calc(100%-48px)]" : "h-[92px]"
+        className={`absolute bottom-0 left-0 right-0 bg-[#1a1a1a] border-t border-white/[0.07] rounded-t-2xl flex flex-col overflow-hidden transition-[height] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+          infoOpen ? "h-[calc(100%-48px)]" : "h-[100px]"
         }`}
       >
         {/* Info section — visible when expanded */}
-        <div className={`flex-1 overflow-y-auto px-4 pt-3 pb-2 flex flex-col gap-2 transition-opacity duration-200 ${
+        <div className={`flex-1 overflow-y-auto px-5 pt-3 pb-2 flex flex-col gap-2 transition-opacity duration-200 ${
           infoOpen ? "opacity-100 delay-200" : "opacity-0 pointer-events-none"
         }`}>
           <div className="flex items-end justify-end">
@@ -188,13 +188,13 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
             {values.map(({ label, value }) => (
               <div
                 key={label}
-                className="flex items-center gap-2 bg-white/[0.03] border border-white/[0.04] rounded-lg px-2.5 py-2"
+                className="flex items-center gap-2 bg-white/[0.03] border border-white/[0.05] rounded-lg px-2.5 py-2"
               >
-                <span className="text-[10px] font-bold text-[#484848] w-8 shrink-0">{label}</span>
-                <span className="flex-1 text-xs font-mono text-[#ececec] truncate">{value}</span>
+                <span className="text-[10px] font-bold text-[#555] w-8 shrink-0">{label}</span>
+                <span className="flex-1 text-xs font-mono text-[#f0f0f0] truncate">{value}</span>
                 <button
                   onClick={() => copyValue(label, value)}
-                  className="shrink-0 text-[#484848] hover:text-[#999] transition-colors"
+                  className="shrink-0 text-[#555] hover:text-[#999] transition-colors"
                   title={`Copy ${label}`}
                 >
                   {copiedKey === label ? (
@@ -209,19 +209,19 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
         </div>
 
         {/* Divider — only when info is open */}
-        {infoOpen && <div className="mx-4 border-t border-white/[0.06] shrink-0" />}
+        {infoOpen && <div className="mx-5 border-t border-white/[0.07] shrink-0" />}
 
         {/* Footer bar — always visible */}
-        <div className="mt-auto px-4 pt-3 pb-4 shrink-0">
-          <span className="font-semibold text-sm text-[#ececec] truncate block">{colour.name}</span>
+        <div className="mt-auto px-5 pt-2 pb-3 shrink-0">
+          <span className="font-semibold text-sm text-[#f0f0f0] truncate block">{colour.name}</span>
           <div className="flex items-end justify-between gap-2 mt-1">
             <span className="text-xs font-mono text-[#555]">{colour.hex}</span>
             <div className="flex items-center gap-1.5 shrink-0">
               {/* Info button */}
               <button
                 onClick={() => setInfoOpen(v => !v)}
-                className={`w-8 h-8 inline-flex items-center justify-center rounded-full border transition-colors ${
-                  infoOpen ? "border-white/20 text-[#ececec]" : "border-white/[0.1] text-[#555] hover:text-[#ececec] hover:border-white/20"
+                className={`w-8 h-8 inline-flex items-center justify-center rounded-xl border transition-colors ${
+                  infoOpen ? "border-white/20 text-[#f0f0f0]" : "border-white/[0.1] text-[#555] hover:text-[#f0f0f0] hover:border-white/20"
                 }`}
               >
                 <Info size={13} />

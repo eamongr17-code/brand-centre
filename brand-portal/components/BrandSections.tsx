@@ -42,19 +42,19 @@ function SectionHeader({ name, canDelete, onRename, onDelete }: SectionHeaderPro
             if (e.key === "Enter") save();
             if (e.key === "Escape") setEditing(false);
           }}
-          className="text-xl font-bold bg-white/[0.04] border border-[#f77614] rounded-lg px-3 py-1.5 text-[#ececec] w-72 focus:outline-none"
+          className="text-xl font-bold bg-white/[0.04] border border-[#f77614] rounded-lg px-3 py-1.5 text-[#f0f0f0] w-72 focus:outline-none"
           autoFocus
         />
         <button
           onClick={save}
-          className="bg-white/[0.04] border border-white/[0.06] rounded-lg p-1.5 hover:bg-white/[0.08] text-[#ececec] transition-colors"
+          className="bg-white/[0.04] border border-white/[0.07] rounded-lg p-1.5 hover:bg-white/[0.08] text-[#f0f0f0] transition-colors"
           title="Save"
         >
           <Check size={13} />
         </button>
         <button
           onClick={() => setEditing(false)}
-          className="bg-white/[0.04] border border-white/[0.06] rounded-lg p-1.5 hover:bg-white/[0.08] text-[#686868] transition-colors"
+          className="bg-white/[0.04] border border-white/[0.07] rounded-lg p-1.5 hover:bg-white/[0.08] text-[#686868] transition-colors"
           title="Cancel"
         >
           <X size={13} />
@@ -65,12 +65,12 @@ function SectionHeader({ name, canDelete, onRename, onDelete }: SectionHeaderPro
 
   return (
     <div className="flex items-center gap-3 mb-6 group/header">
-      <h2 className="text-xl font-bold text-[#ececec]">{name}</h2>
+      <h2 className="text-xl font-bold text-[#f0f0f0]">{name}</h2>
       {editMode && canEdit && (
         <div className="flex items-center gap-1.5 opacity-0 group-hover/header:opacity-100 transition-opacity">
           <button
             onClick={() => setEditing(true)}
-            className="bg-white/[0.04] border border-white/[0.06] rounded-lg p-1 hover:bg-white/[0.08] text-[#686868] hover:text-[#ececec] transition-colors"
+            className="bg-white/[0.04] border border-white/[0.07] rounded-lg p-1 hover:bg-white/[0.08] text-[#686868] hover:text-[#f0f0f0] transition-colors"
             title="Rename section"
           >
             <Pencil size={12} />
@@ -78,7 +78,7 @@ function SectionHeader({ name, canDelete, onRename, onDelete }: SectionHeaderPro
           {canDelete && onDelete && (
             <button
               onClick={onDelete}
-              className="bg-white/[0.04] border border-white/[0.06] rounded-lg p-1 hover:bg-red-500/20 text-[#686868] hover:text-red-400 transition-colors"
+              className="bg-white/[0.04] border border-white/[0.07] rounded-lg p-1 hover:bg-red-500/20 text-[#686868] hover:text-red-400 transition-colors"
               title="Delete section"
             >
               <Trash2 size={12} />
@@ -155,7 +155,7 @@ export default function BrandSections({ brandId, brandSlug }: BrandSectionsProps
       {showDocSection && (
         <section>
           <div className="flex items-center gap-3 mb-6">
-            <h2 className="text-xl font-bold text-[#ececec]">Documentation</h2>
+            <h2 className="text-xl font-bold text-[#f0f0f0]">Documentation</h2>
             <Link
               href={portalPath(`/${brandSlug}/docs`)}
               className="text-xs text-[#555] hover:text-[#888] transition-colors"
@@ -177,7 +177,7 @@ export default function BrandSections({ brandId, brandSlug }: BrandSectionsProps
           {editMode && canEdit && (
             <button
               onClick={() => addDocPage(brandId)}
-              className="mt-4 flex items-center gap-2 text-sm text-[#484848] hover:text-[#888] border border-dashed border-white/[0.06] hover:border-white/[0.12] rounded-xl px-5 py-3 transition-all duration-200 w-full justify-center"
+              className="mt-4 flex items-center gap-2 text-sm text-[#555] hover:text-[#888] border border-dashed border-white/[0.07] hover:border-white/[0.12] rounded-xl px-5 py-3 transition-all duration-200 w-full justify-center"
             >
               <Plus size={15} />
               Add doc page
@@ -189,7 +189,7 @@ export default function BrandSections({ brandId, brandSlug }: BrandSectionsProps
       {editMode && canEdit && (
         <button
           onClick={() => addSection(brandId)}
-          className="flex items-center gap-2 text-sm text-[#484848] hover:text-[#888] border border-dashed border-white/[0.06] hover:border-white/[0.12] rounded-xl px-5 py-3 transition-all duration-200 w-full justify-center"
+          className="flex items-center gap-2 text-sm text-[#555] hover:text-[#888] border border-dashed border-white/[0.07] hover:border-white/[0.12] rounded-xl px-5 py-3 transition-all duration-200 w-full justify-center"
         >
           <Plus size={15} />
           Add section

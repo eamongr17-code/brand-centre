@@ -9,8 +9,8 @@ function slugify(text: string): string {
 export default function HeadingBlock({ block }: { block: HeadingBlockType }) {
   const Tag = block.level;
   const styles = {
-    h1: "text-3xl font-bold text-[#ececec]",
-    h2: "text-2xl font-bold text-[#ececec]",
+    h1: "text-3xl font-bold text-[#f0f0f0]",
+    h2: "text-2xl font-bold text-[#f0f0f0]",
     h3: "text-xl font-semibold text-[#d0d0d0]",
   };
   const id = slugify(block.text);

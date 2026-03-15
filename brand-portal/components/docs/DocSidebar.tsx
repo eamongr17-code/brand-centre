@@ -66,7 +66,7 @@ export default function DocSidebar({ docPage, allPages, brandSlug }: DocSidebarP
         {/* Section navigation */}
         {headings.length > 0 && (
           <nav>
-            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#444] mb-3">
+            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#505050] mb-3">
               On this page
             </p>
             <ul className="space-y-0.5">
@@ -81,7 +81,7 @@ export default function DocSidebar({ docPage, allPages, brandSlug }: DocSidebarP
                       onClick={() => scrollTo(id)}
                       className={`block w-full text-left text-xs py-1.5 px-3 rounded-lg transition-all duration-200 ${indent} ${
                         isActive
-                          ? "text-[#ececec] bg-white/[0.04] font-semibold"
+                          ? "text-[#f0f0f0] bg-white/[0.04] font-semibold"
                           : "text-[#555] hover:text-[#888] hover:bg-white/[0.02]"
                       } ${heading.level === "h1" ? "font-semibold" : ""}`}
                     >
@@ -97,7 +97,7 @@ export default function DocSidebar({ docPage, allPages, brandSlug }: DocSidebarP
         {/* Other pages in this brand */}
         {allPages.length > 1 && (
           <nav>
-            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#444] mb-3">
+            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#505050] mb-3">
               All docs
             </p>
             <ul className="space-y-0.5">
@@ -109,7 +109,7 @@ export default function DocSidebar({ docPage, allPages, brandSlug }: DocSidebarP
                       href={portalPath(`/${brandSlug}/docs/${page.slug}`)}
                       className={`flex items-center gap-2 text-xs py-1.5 px-3 rounded-lg transition-all duration-200 ${
                         isCurrent
-                          ? "text-[#ececec] bg-white/[0.04] font-semibold"
+                          ? "text-[#f0f0f0] bg-white/[0.04] font-semibold"
                           : "text-[#555] hover:text-[#888] hover:bg-white/[0.02]"
                       }`}
                     >

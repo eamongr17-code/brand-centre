@@ -136,7 +136,7 @@ const EMPTY: PersistedData = {
   deletedDocPageIds: [],
 };
 
-function genId() {
+function genId(): string {
   return Math.random().toString(36).slice(2, 10);
 }
 

@@ -10,15 +10,27 @@ interface AssetGridProps {
   categoryId: string;
   brandSlug?: string;
   categorySlug?: string;
+  filterQuery?: string;
 }
 
-export default function AssetGrid({ categoryId, brandSlug, categorySlug }: AssetGridProps) {
+export default function AssetGrid({ categoryId, brandSlug, categorySlug, filterQuery }: AssetGridProps) {
   const { editMode, getAssets, addAsset, reorderAssets } = useEditStore();
   const { canEdit, showInternal } = usePortal();
   const allAssets = getAssets(categoryId);
-  const assets = showInternal
+  const visibleAssets = showInternal
     ? allAssets
     : allAssets.filter((a) => a.visibility !== "internal");
+  const assets = filterQuery
+    ? visibleAssets.filter((a) => {
+        const q = filterQuery.toLowerCase();
+        return (
+          a.name.toLowerCase().includes(q) ||
+          a.description.toLowerCase().includes(q) ||
+          a.fileType.toLowerCase().includes(q) ||
+          (a.tags ?? []).some((t) => t.toLowerCase().includes(q))
+        );
+      })
+    : visibleAssets;
 
   const [dragId, setDragId] = useState<string | null>(null);
   const [hoverId, setHoverId] = useState<string | null>(null);
@@ -52,7 +64,7 @@ export default function AssetGrid({ categoryId, brandSlug, categorySlug }: Asset
   return (
     <div>
       {assets.length === 0 && !editMode && (
-        <p className="text-[#484848] text-sm">No assets in this category yet.</p>
+        <p className="text-[#555] text-sm">No assets in this category yet.</p>
       )}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 stagger-children">
         {assets.map((asset) => (
@@ -70,7 +82,7 @@ export default function AssetGrid({ categoryId, brandSlug, categorySlug }: Asset
         {editMode && canEdit && (
           <button
             onClick={() => addAsset(categoryId)}
-            className="border-2 border-dashed border-white/[0.06] rounded-xl aspect-square flex flex-col items-center justify-center gap-2 text-[#484848] hover:text-[#888] hover:border-white/[0.12] transition-all duration-200"
+            className="border-2 border-dashed border-white/[0.07] rounded-xl aspect-video flex flex-col items-center justify-center gap-2 text-[#555] hover:text-[#888] hover:border-white/[0.12] transition-all duration-200"
           >
             <Plus size={22} />
             <span className="text-sm font-medium">Add asset</span>

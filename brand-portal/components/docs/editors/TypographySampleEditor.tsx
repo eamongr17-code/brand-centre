@@ -18,7 +18,7 @@ export default function TypographySampleEditor({ block, onSave, onCancel }: { bl
       <input
         value={fontFamily}
         onChange={(e) => setFontFamily(e.target.value)}
-        className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15]"
+        className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm text-[#f0f0f0] placeholder-[#505050] focus:outline-none focus:border-white/[0.15]"
         placeholder="Font family (e.g. Inter, Roboto)"
         autoFocus
       />
@@ -29,7 +29,7 @@ export default function TypographySampleEditor({ block, onSave, onCancel }: { bl
             <input
               value={w}
               onChange={(e) => updateWeight(i, e.target.value)}
-              className="w-24 bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1 text-sm font-mono text-[#ececec] focus:outline-none focus:border-white/[0.15]"
+              className="w-24 bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1 text-sm font-mono text-[#f0f0f0] focus:outline-none focus:border-white/[0.15]"
               placeholder="400"
             />
             <button onClick={() => removeWeight(i)} className="text-[#555] hover:text-red-400 transition-colors">
@@ -44,7 +44,7 @@ export default function TypographySampleEditor({ block, onSave, onCancel }: { bl
       <textarea
         value={sampleText}
         onChange={(e) => setSampleText(e.target.value)}
-        className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] resize-none"
+        className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm text-[#f0f0f0] placeholder-[#505050] focus:outline-none focus:border-white/[0.15] resize-none"
         rows={2}
         placeholder="Sample text"
       />
@@ -52,7 +52,7 @@ export default function TypographySampleEditor({ block, onSave, onCancel }: { bl
         <button onClick={() => onSave({ fontFamily, weights, sampleText })} className="inline-flex items-center gap-1 text-xs bg-white text-black px-3 py-1.5 rounded-lg font-semibold hover:bg-white/90">
           <Check size={11} /> Save
         </button>
-        <button onClick={onCancel} className="inline-flex items-center gap-1 text-xs border border-white/[0.08] text-[#ececec] px-3 py-1.5 rounded-lg hover:bg-white/[0.04]">
+        <button onClick={onCancel} className="inline-flex items-center gap-1 text-xs border border-white/[0.08] text-[#f0f0f0] px-3 py-1.5 rounded-lg hover:bg-white/[0.04]">
           <X size={11} /> Cancel
         </button>
       </div>

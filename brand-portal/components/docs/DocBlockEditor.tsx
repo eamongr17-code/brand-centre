@@ -87,7 +87,7 @@ export default function DocBlockEditor({ block, docPageId, onDragStart, onDragOv
 
   if (editing) {
     return (
-      <div className="border border-[#f77614] rounded-xl bg-[#161616] p-4 [animation:fade-up_0.15s_ease-out_forwards]">
+      <div className="border border-[#f77614] rounded-xl bg-[#1a1a1a] p-4 [animation:fade-up_0.15s_ease-out_forwards]">
         <div className="flex items-center justify-between mb-3">
           <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#f77614]">
             {BLOCK_LABELS[block.type] ?? block.type}
@@ -115,14 +115,14 @@ export default function DocBlockEditor({ block, docPageId, onDragStart, onDragOv
       <div className="absolute -right-8 top-0 flex flex-col gap-1 opacity-0 group-hover/block:opacity-100 transition-opacity">
         <button
           onClick={() => setEditing(true)}
-          className="bg-white/[0.04] border border-white/[0.06] rounded-lg p-1 hover:bg-white/[0.08] text-[#686868] hover:text-[#ececec] transition-colors"
+          className="bg-white/[0.04] border border-white/[0.07] rounded-lg p-1 hover:bg-white/[0.08] text-[#686868] hover:text-[#f0f0f0] transition-colors"
           title="Edit block"
         >
           <Pencil size={11} />
         </button>
         <button
           onClick={() => deleteDocBlock(docPageId, block.id)}
-          className="bg-white/[0.04] border border-white/[0.06] rounded-lg p-1 hover:bg-red-500/20 text-[#686868] hover:text-red-400 transition-colors"
+          className="bg-white/[0.04] border border-white/[0.07] rounded-lg p-1 hover:bg-red-500/20 text-[#686868] hover:text-red-400 transition-colors"
           title="Delete block"
         >
           <Trash2 size={11} />
@@ -130,7 +130,7 @@ export default function DocBlockEditor({ block, docPageId, onDragStart, onDragOv
       </div>
 
       {/* Block content */}
-      <div className="rounded-xl border border-transparent hover:border-white/[0.04] p-2 -m-2 transition-colors">
+      <div className="rounded-xl border border-transparent hover:border-white/[0.05] p-2 -m-2 transition-colors">
         <DocBlockRenderer block={block} />
       </div>
     </div>

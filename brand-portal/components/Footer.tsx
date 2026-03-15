@@ -29,7 +29,7 @@ export default function Footer() {
   const hasLinks = links.length > 0 || isEditing;
 
   return (
-    <footer className="border-t border-white/[0.04] mt-auto py-7 px-8 w-full">
+    <footer className="border-t border-white/[0.05] mt-auto py-7 px-8 w-full">
       <div
         className={`max-w-5xl mx-auto flex flex-col gap-4 ${
           hasLinks ? "sm:flex-row items-center justify-between" : "items-center justify-center"
@@ -50,7 +50,7 @@ export default function Footer() {
             {isEditing && (
               <button
                 onClick={addFooterLink}
-                className="inline-flex items-center gap-1 text-xs text-[#444] hover:text-[#777] transition-colors"
+                className="inline-flex items-center gap-1 text-xs text-[#505050] hover:text-[#777] transition-colors"
               >
                 <Plus size={11} />
                 Add link
@@ -101,7 +101,7 @@ function FooterText({
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter") save(); if (e.key === "Escape") cancel(); }}
-          className="bg-[#1a1a1a] border border-[#f77614] rounded-lg px-3 py-1 text-xs text-[#ececec] w-72 focus:outline-none"
+          className="bg-[#1a1a1a] border border-[#f77614] rounded-lg px-3 py-1 text-xs text-[#f0f0f0] w-72 focus:outline-none"
           autoFocus
         />
         <button onClick={save} className="text-green-400 hover:text-green-300"><Check size={11} /></button>
@@ -120,7 +120,7 @@ function FooterText({
       {canEdit && (
         <button
           onClick={() => { setDraft(text); setEditing(true); }}
-          className="opacity-0 group-hover/footertext:opacity-100 transition-opacity text-[#444] hover:text-[#888]"
+          className="opacity-0 group-hover/footertext:opacity-100 transition-opacity text-[#505050] hover:text-[#888]"
           title="Edit footer text"
         >
           <Pencil size={10} />
@@ -165,14 +165,14 @@ function FooterLinkItem({
           value={editLabel}
           onChange={(e) => setEditLabel(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter") save(); if (e.key === "Escape") cancel(); }}
-          className="bg-[#1a1a1a] border border-[#f77614] rounded-lg px-2 py-0.5 text-xs text-[#ececec] w-24 focus:outline-none"
+          className="bg-[#1a1a1a] border border-[#f77614] rounded-lg px-2 py-0.5 text-xs text-[#f0f0f0] w-24 focus:outline-none"
           autoFocus
         />
         <input
           value={editHref}
           onChange={(e) => setEditHref(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter") save(); if (e.key === "Escape") cancel(); }}
-          className="bg-[#1a1a1a] border border-[#333] rounded-lg px-2 py-0.5 text-xs font-mono text-[#ececec] w-32 focus:outline-none"
+          className="bg-[#1a1a1a] border border-[#333] rounded-lg px-2 py-0.5 text-xs font-mono text-[#f0f0f0] w-32 focus:outline-none"
           placeholder="https://..."
         />
         <button onClick={save} className="text-green-400 hover:text-green-300"><Check size={11} /></button>
@@ -183,21 +183,21 @@ function FooterLinkItem({
 
   return (
     <span className="inline-flex items-center gap-1 group/link">
-      <a href={href} className="text-xs text-[#484848] hover:text-[#888] transition-colors duration-200">
+      <a href={href} className="text-xs text-[#555] hover:text-[#888] transition-colors duration-200">
         {label}
       </a>
       {isEditing && (
         <span className="opacity-0 group-hover/link:opacity-100 transition-opacity inline-flex items-center gap-0.5">
           <button
             onClick={() => { setEditLabel(label); setEditHref(href); setEditing(true); }}
-            className="text-[#444] hover:text-[#888] transition-colors"
+            className="text-[#505050] hover:text-[#888] transition-colors"
             title="Edit"
           >
             <Pencil size={10} />
           </button>
           <button
             onClick={onDelete}
-            className="text-[#444] hover:text-red-400 transition-colors"
+            className="text-[#505050] hover:text-red-400 transition-colors"
             title="Delete"
           >
             <Trash2 size={10} />

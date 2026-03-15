@@ -47,14 +47,14 @@ export default function ImageUploader({
         <input
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="flex-1 bg-[#2d2d2d] border border-[#444] rounded px-2 py-1 text-xs font-mono text-[#e8e8e8] placeholder-[#666] min-w-0"
+          className="flex-1 bg-[#303030] border border-[#505050] rounded px-2 py-1 text-xs font-mono text-[#f0f0f0] placeholder-[#636363] min-w-0"
           placeholder={placeholder}
         />
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
           disabled={uploading}
-          className="shrink-0 px-2 py-1 bg-[#2d2d2d] border border-[#444] rounded text-[#888] hover:text-[#e8e8e8] hover:border-[#666] transition-colors disabled:opacity-50"
+          className="shrink-0 px-2 py-1 bg-[#303030] border border-[#505050] rounded text-[#888] hover:text-[#f0f0f0] hover:border-[#636363] transition-colors disabled:opacity-50"
           title="Upload file"
         >
           {uploading ? <Loader size={12} className="animate-spin" /> : <Upload size={12} />}

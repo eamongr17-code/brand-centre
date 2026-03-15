@@ -34,17 +34,17 @@ export default function DocPageCard({ docPage, brandSlug }: DocPageCardProps) {
 
   if (editing) {
     return (
-      <div className="border border-[#f77614] rounded-xl bg-[#161616] p-4 space-y-2 [animation:fade-up_0.3s_ease-out_forwards]">
+      <div className="border border-[#f77614] rounded-xl bg-[#1a1a1a] p-4 space-y-2 [animation:fade-up_0.3s_ease-out_forwards]">
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm font-semibold text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15]"
+          className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm font-semibold text-[#f0f0f0] placeholder-[#505050] focus:outline-none focus:border-white/[0.15]"
           placeholder="Page title"
         />
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs resize-none text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15]"
+          className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs resize-none text-[#f0f0f0] placeholder-[#505050] focus:outline-none focus:border-white/[0.15]"
           rows={2}
           placeholder="Description"
         />
@@ -52,7 +52,7 @@ export default function DocPageCard({ docPage, brandSlug }: DocPageCardProps) {
           <button onClick={save} className="inline-flex items-center gap-1 text-xs bg-white text-black px-3 py-1.5 rounded-lg font-semibold hover:bg-white/90">
             <Check size={11} /> Save
           </button>
-          <button onClick={() => setEditing(false)} className="inline-flex items-center gap-1 text-xs border border-white/[0.08] text-[#ececec] px-3 py-1.5 rounded-lg hover:bg-white/[0.04]">
+          <button onClick={() => setEditing(false)} className="inline-flex items-center gap-1 text-xs border border-white/[0.08] text-[#f0f0f0] px-3 py-1.5 rounded-lg hover:bg-white/[0.04]">
             <X size={11} /> Cancel
           </button>
         </div>
@@ -62,7 +62,7 @@ export default function DocPageCard({ docPage, brandSlug }: DocPageCardProps) {
 
   return (
     <Link href={portalPath(`/${brandSlug}/docs/${docPage.slug}`)} className="block h-full">
-      <div className="rounded-2xl relative group flex flex-col [animation:fade-up_0.3s_ease-out_forwards] h-full overflow-hidden border border-white/[0.06] hover:border-white/[0.1] hover:shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300" style={{ minHeight: "260px" }}>
+      <div className="rounded-2xl relative group flex flex-col [animation:fade-up_0.3s_ease-out_forwards] h-full overflow-hidden border border-white/[0.07] hover:border-white/[0.1] hover:shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300" style={{ minHeight: "260px" }}>
         {/* Cover image or icon */}
         <div className="absolute inset-0">
           {docPage.coverImage ? (
@@ -82,7 +82,7 @@ export default function DocPageCard({ docPage, brandSlug }: DocPageCardProps) {
               className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-lg p-1.5 hover:bg-white/[0.08] transition-colors"
               title="Edit"
             >
-              <Pencil size={12} className="text-[#ececec]" />
+              <Pencil size={12} className="text-[#f0f0f0]" />
             </button>
             <button
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); deleteDocPage(docPage.id); }}
@@ -98,9 +98,9 @@ export default function DocPageCard({ docPage, brandSlug }: DocPageCardProps) {
         <div className="flex-1 min-h-[100px]" />
 
         {/* Dark panel */}
-        <div className="relative z-10 bg-[#161616] px-5 py-4">
+        <div className="relative z-10 bg-[#1a1a1a] px-5 py-4">
           <div className="flex items-center gap-2">
-            <p className="font-bold text-[#ececec] text-[15px] leading-tight truncate">{docPage.title}</p>
+            <p className="font-bold text-[#f0f0f0] text-[15px] leading-tight truncate">{docPage.title}</p>
             {docPage.visibility === "internal" && (
               <Lock size={11} className="text-yellow-500 shrink-0" />
             )}
@@ -108,7 +108,7 @@ export default function DocPageCard({ docPage, brandSlug }: DocPageCardProps) {
           {docPage.description && (
             <p className="text-xs text-[#555] mt-1 line-clamp-2">{docPage.description}</p>
           )}
-          <p className="text-xs text-[#444] mt-2">{docPage.blocks.length} blocks</p>
+          <p className="text-xs text-[#505050] mt-2">{docPage.blocks.length} blocks</p>
         </div>
       </div>
     </Link>

@@ -20,7 +20,7 @@ export default function AllBrandsPage() {
           src={publicPath("/atlas-wordmark.svg")}
           alt="Atlas"
           className="h-12 w-auto mb-14 opacity-90"
-          style={{ animation: "subtle-float 4s ease-in-out infinite" }}
+
         />
         <div className="w-full max-w-2xl">
           <SearchBar large placeholder="Find what you need across any brand..." />
@@ -33,7 +33,7 @@ export default function AllBrandsPage() {
               <Link
                 key={brand.id}
                 href={portalPath(`/${brand.slug}`)}
-                className="group relative rounded-xl border border-white/[0.05] bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/[0.1] transition-all duration-300 overflow-hidden aspect-[2/1] hover:scale-[1.02] hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)]"
+                className="group relative rounded-xl border border-white/[0.07] bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/[0.1] transition-all duration-300 overflow-hidden aspect-[2/1] hover:scale-[1.02] hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)]"
               >
                 <FadeImg
                   src={publicPath(`/${brand.slug}-card.png`)}

@@ -112,9 +112,9 @@ export default function AssetDetailView({ brandSlug, categorySlug, assetId }: As
           {/* Right — Details */}
           <div className="lg:w-80 xl:w-96 shrink-0 space-y-5">
             <div>
-              <h1 className="text-xl font-bold text-[#ececec]">{asset.name}</h1>
+              <h1 className="text-xl font-bold text-[#f0f0f0]">{asset.name}</h1>
               {asset.description && (
-                <p className="text-sm text-[#787878] mt-2 leading-relaxed">{asset.description}</p>
+                <p className="text-sm text-[#8a8a8a] mt-2 leading-relaxed">{asset.description}</p>
               )}
             </div>
 
@@ -132,31 +132,31 @@ export default function AssetDetailView({ brandSlug, categorySlug, assetId }: As
             {/* Metadata */}
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-[#555]">Type</span>
-                <span className="text-[#ececec] font-medium">{asset.fileType}</span>
+                <span className="text-[#636363]">Type</span>
+                <span className="text-[#f0f0f0] font-medium">{asset.fileType}</span>
               </div>
               {asset.fileSize && (
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-[#555]">Size</span>
-                  <span className="text-[#ececec] font-medium">{asset.fileSize}</span>
+                  <span className="text-[#636363]">Size</span>
+                  <span className="text-[#f0f0f0] font-medium">{asset.fileSize}</span>
                 </div>
               )}
               {asset.lastEditedAt && (
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-[#555]">Updated</span>
-                  <span className="text-[#ececec] font-medium">{timeAgo(asset.lastEditedAt)}</span>
+                  <span className="text-[#636363]">Updated</span>
+                  <span className="text-[#f0f0f0] font-medium">{timeAgo(asset.lastEditedAt)}</span>
                 </div>
               )}
             </div>
 
             {/* Usage rules */}
             {asset.rules && asset.rules.length > 0 && (
-              <div className="bg-white/[0.02] border border-white/[0.04] rounded-xl p-4">
-                <p className="text-[10px] font-bold text-[#444] uppercase tracking-[0.15em] mb-2">Usage rules</p>
+              <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4">
+                <p className="text-[10px] font-bold text-[#505050] uppercase tracking-[0.15em] mb-2">Usage rules</p>
                 <ul className="space-y-1.5">
                   {asset.rules.map((rule, i) => (
-                    <li key={i} className="flex gap-1.5 text-xs text-[#787878] leading-snug">
-                      <span className="shrink-0 text-[#444]">—</span>
+                    <li key={i} className="flex gap-1.5 text-xs text-[#8a8a8a] leading-snug">
+                      <span className="shrink-0 text-[#505050]">—</span>
                       <span>{rule}</span>
                     </li>
                   ))}
@@ -202,7 +202,7 @@ export default function AssetDetailView({ brandSlug, categorySlug, assetId }: As
               )}
               <button
                 onClick={handleShare}
-                className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold border border-white/[0.06] text-[#686868] hover:text-[#ececec] hover:border-white/[0.12] px-4 py-2.5 rounded-lg transition-all duration-200"
+                className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold border border-white/[0.07] text-[#686868] hover:text-[#f0f0f0] hover:border-white/[0.12] px-4 py-2.5 rounded-lg transition-all duration-200"
                 title={shareCopied ? "Copied!" : "Copy link"}
               >
                 {shareCopied ? <Check size={15} className="text-green-400" /> : <Share2 size={15} />}

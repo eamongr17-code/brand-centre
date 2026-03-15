@@ -10,7 +10,7 @@ export default function ParagraphBlock({ block }: { block: ParagraphBlockType })
     <p className="text-[15px] text-[#888] leading-relaxed">
       {parts.map((part, i) => {
         if (part.startsWith("**") && part.endsWith("**")) {
-          return <strong key={i} className="text-[#ececec] font-semibold">{part.slice(2, -2)}</strong>;
+          return <strong key={i} className="text-[#f0f0f0] font-semibold">{part.slice(2, -2)}</strong>;
         }
         if (part.startsWith("*") && part.endsWith("*")) {
           return <em key={i}>{part.slice(1, -1)}</em>;

@@ -48,12 +48,12 @@ export default function AssetEmbedEditor({ block, onSave, onCancel }: { block: A
   return (
     <div className="space-y-3">
       {selectedAsset && (
-        <div className="flex items-center gap-3 bg-white/[0.02] border border-white/[0.06] rounded-lg px-3 py-2">
-          <div className="w-10 h-10 rounded-lg overflow-hidden bg-white/[0.02] border border-white/[0.04] shrink-0">
+        <div className="flex items-center gap-3 bg-white/[0.02] border border-white/[0.07] rounded-lg px-3 py-2">
+          <div className="w-10 h-10 rounded-lg overflow-hidden bg-white/[0.02] border border-white/[0.05] shrink-0">
             <FadeImg src={selectedAsset.previewImage || publicPath("/placeholder-asset.png")} fallbackSrc={publicPath("/placeholder-asset.png")} alt={selectedAsset.name} className="w-full h-full object-cover" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-[#ececec] truncate">{selectedAsset.name}</p>
+            <p className="text-sm font-semibold text-[#f0f0f0] truncate">{selectedAsset.name}</p>
             <p className="text-xs text-[#555]">{selectedAsset.fileType}</p>
           </div>
           <button onClick={() => setAssetId("")} className="text-[#555] hover:text-red-400 transition-colors">
@@ -63,11 +63,11 @@ export default function AssetEmbedEditor({ block, onSave, onCancel }: { block: A
       )}
 
       <div className="relative">
-        <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#444]" />
+        <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#505050]" />
         <input
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg pl-8 pr-3 py-1.5 text-sm text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15]"
+          className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg pl-8 pr-3 py-1.5 text-sm text-[#f0f0f0] placeholder-[#505050] focus:outline-none focus:border-white/[0.15]"
           placeholder="Search assets..."
         />
       </div>
@@ -81,21 +81,21 @@ export default function AssetEmbedEditor({ block, onSave, onCancel }: { block: A
               assetId === a.id ? "bg-white/[0.06] border border-white/[0.08]" : "hover:bg-white/[0.03]"
             }`}
           >
-            <div className="w-8 h-8 rounded-md overflow-hidden bg-white/[0.02] border border-white/[0.04] shrink-0">
+            <div className="w-8 h-8 rounded-md overflow-hidden bg-white/[0.02] border border-white/[0.05] shrink-0">
               {a.previewImage ? (
                 <FadeImg src={a.previewImage} fallbackSrc={publicPath("/placeholder-asset.png")} alt={a.name} className="w-full h-full object-cover" />
               ) : (
-                <div className="w-full h-full flex items-center justify-center"><FileText size={12} className="text-[#444]" /></div>
+                <div className="w-full h-full flex items-center justify-center"><FileText size={12} className="text-[#505050]" /></div>
               )}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-xs font-semibold text-[#d0d0d0] truncate">{a.name}</p>
-              <p className="text-[10px] text-[#444] truncate">{a.brandName} / {a.categoryName}</p>
+              <p className="text-[10px] text-[#505050] truncate">{a.brandName} / {a.categoryName}</p>
             </div>
           </button>
         ))}
         {filtered.length === 0 && (
-          <p className="text-xs text-[#444] text-center py-4">No assets found</p>
+          <p className="text-xs text-[#505050] text-center py-4">No assets found</p>
         )}
       </div>
 
@@ -103,7 +103,7 @@ export default function AssetEmbedEditor({ block, onSave, onCancel }: { block: A
         <button onClick={() => onSave({ assetId })} className="inline-flex items-center gap-1 text-xs bg-white text-black px-3 py-1.5 rounded-lg font-semibold hover:bg-white/90">
           <Check size={11} /> Save
         </button>
-        <button onClick={onCancel} className="inline-flex items-center gap-1 text-xs border border-white/[0.08] text-[#ececec] px-3 py-1.5 rounded-lg hover:bg-white/[0.04]">
+        <button onClick={onCancel} className="inline-flex items-center gap-1 text-xs border border-white/[0.08] text-[#f0f0f0] px-3 py-1.5 rounded-lg hover:bg-white/[0.04]">
           <X size={11} /> Cancel
         </button>
       </div>

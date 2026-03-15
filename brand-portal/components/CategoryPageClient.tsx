@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Download, Eye, Code2, Check, Loader, Link2 } from "lucide-react";
-import { zipSync } from "fflate";
+import { Download, Eye, Code2, Check, Loader, Link2, Search } from "lucide-react";
+import { downloadAssetsAsZip } from "@/lib/download-zip";
 import Breadcrumb from "@/components/Breadcrumb";
 import AssetGrid from "@/components/AssetGrid";
 import ColourGrid from "@/components/ColourGrid";
@@ -25,6 +25,7 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
   const [embedCopied, setEmbedCopied] = useState(false);
   const [zipping, setZipping] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const embedRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     setMounted(true);
@@ -82,35 +83,7 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
     if (zipping || visibleAssets.length === 0) return;
     setZipping(true);
     try {
-      const files: Record<string, Uint8Array> = {};
-      const seen = new Set<string>();
-      await Promise.all(
-        visibleAssets
-          .filter((a) => a.downloadUrl && a.downloadUrl !== "#")
-          .map(async (a) => {
-            try {
-              const res = await fetch(a.downloadUrl);
-              const buf = new Uint8Array(await res.arrayBuffer());
-              const ext = a.downloadUrl.split(".").pop()?.split("?")[0] || "bin";
-              let name = (a.name || "asset").replace(/[^a-z0-9.\-_ ]/gi, "_");
-              if (!name.includes(".")) name = `${name}.${ext}`;
-              while (seen.has(name)) name = `_${name}`;
-              seen.add(name);
-              files[name] = buf;
-            } catch {}
-          })
-      );
-      if (Object.keys(files).length === 0) return;
-      const zipped = zipSync(files, { level: 0 });
-      const blob = new Blob([zipped.buffer as ArrayBuffer], { type: "application/zip" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${category.name || "assets"}.zip`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
+      await downloadAssetsAsZip(visibleAssets, category.name || "assets");
     } finally {
       setZipping(false);
     }
@@ -128,7 +101,7 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
       <div className="max-w-6xl mx-auto px-8 py-12 [animation:fade-in_0.3s_ease-out_forwards]">
         <div className="flex items-start justify-between mb-8 gap-4">
           <div className="flex-1 min-w-0">
-            <h1 className="text-xl font-bold text-[#ececec]">{category.name}</h1>
+            <h1 className="text-xl font-bold text-[#f0f0f0]">{category.name}</h1>
             {!isColours && category.actionType !== "view" && (
               <p className="text-sm text-[#686868] mt-1">{liveCount} assets</p>
             )}
@@ -142,7 +115,7 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
                 setLinkCopied(true);
                 setTimeout(() => setLinkCopied(false), 1500);
               }}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold border border-white/[0.06] text-[#686868] hover:text-[#ececec] hover:border-white/[0.12] px-3 py-2 rounded-lg transition-all duration-200"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold border border-white/[0.07] text-[#686868] hover:text-[#f0f0f0] hover:border-white/[0.12] px-3 py-2 rounded-lg transition-all duration-200"
               title={linkCopied ? "Copied!" : "Copy link"}
             >
               {linkCopied ? <Check size={13} className="text-green-400" /> : <Link2 size={13} />}
@@ -152,17 +125,17 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
             <div className="relative" ref={embedRef}>
               <button
                 onClick={() => setEmbedOpen((v) => !v)}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold border border-white/[0.06] text-[#686868] hover:text-[#ececec] hover:border-white/[0.12] px-3 py-2 rounded-lg transition-all duration-200"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold border border-white/[0.07] text-[#686868] hover:text-[#f0f0f0] hover:border-white/[0.12] px-3 py-2 rounded-lg transition-all duration-200"
                 title="Get embed code"
               >
                 <Code2 size={13} />
                 Embed
               </button>
               {embedOpen && (
-                <div className="absolute right-0 top-full mt-2 w-80 bg-[#161616]/95 backdrop-blur-xl border border-white/[0.06] rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.5)] p-4 z-50 [animation:fade-up_0.15s_ease-out_forwards]">
-                  <p className="text-xs font-semibold text-[#ececec] mb-2">Embed this category</p>
-                  <p className="text-[11px] text-[#555] mb-3">Paste into Notion, Confluence, or any tool that supports iframes.</p>
-                  <code className="block text-[10px] bg-white/[0.02] border border-white/[0.04] rounded-lg px-3 py-2.5 text-[#686868] break-all leading-relaxed select-all font-mono">
+                <div className="absolute right-0 top-full mt-2 w-80 bg-[#1a1a1a]/95 backdrop-blur-xl border border-white/[0.07] rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.5)] p-4 z-50 [animation:fade-up_0.15s_ease-out_forwards]">
+                  <p className="text-xs font-semibold text-[#f0f0f0] mb-2">Embed this category</p>
+                  <p className="text-[11px] text-[#636363] mb-3">Paste into Notion, Confluence, or any tool that supports iframes.</p>
+                  <code className="block text-[10px] bg-white/[0.02] border border-white/[0.05] rounded-lg px-3 py-2.5 text-[#686868] break-all leading-relaxed select-all font-mono">
                     {`<iframe src="${typeof window !== "undefined" ? window.location.origin : ""}/embed/${brandSlug}/${categorySlug}" width="100%" height="600" frameborder="0" style="border-radius:8px"></iframe>`}
                   </code>
                   <button
@@ -187,7 +160,7 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
                     href={category.downloadAllUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-sm font-semibold bg-white text-black px-4 py-2 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold bg-white text-black px-4 py-2 rounded-xl hover:bg-white/90 active:scale-95 transition-all duration-200"
                     title="View"
                   >
                     <Eye size={14} />
@@ -198,7 +171,7 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
                   category.downloadAllUrl && category.downloadAllUrl !== "#" ? (
                     <a
                       href={category.downloadAllUrl}
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold bg-white text-black px-4 py-2 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200"
+                      className="inline-flex items-center gap-1.5 text-sm font-semibold bg-white text-black px-4 py-2 rounded-xl hover:bg-white/90 active:scale-95 transition-all duration-200"
                       title="Download All"
                     >
                       <Download size={14} />
@@ -208,7 +181,7 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
                     <button
                       onClick={handleDownloadAll}
                       disabled={zipping}
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold bg-white text-black px-4 py-2 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200 disabled:opacity-60"
+                      className="inline-flex items-center gap-1.5 text-sm font-semibold bg-white text-black px-4 py-2 rounded-xl hover:bg-white/90 active:scale-95 transition-all duration-200 disabled:opacity-60"
                       title="Download all assets as ZIP"
                     >
                       {zipping ? <Loader size={14} className="animate-spin" /> : <Download size={14} />}
@@ -224,17 +197,29 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
           <BulkUploader categoryId={category.id} />
         )}
 
+        {category.actionType !== "view" && liveCount > 6 && (
+          <div className="relative mb-6">
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#636363] pointer-events-none" />
+            <input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={isColours ? "Filter colours..." : "Filter assets..."}
+              className="w-full bg-white/[0.05] border border-white/[0.07] rounded-xl pl-9 pr-3 py-2 text-sm text-[#f0f0f0] placeholder-[#505050] focus:outline-none focus:border-white/[0.12] transition-colors"
+            />
+          </div>
+        )}
+
         {category.actionType === "view" ? (
           category.downloadAllUrl && category.downloadAllUrl !== "#" && (
             <div className="mt-4">
               {category.description && (
-                <p className="text-sm text-[#787878] mb-6 leading-relaxed">{category.description}</p>
+                <p className="text-sm text-[#8a8a8a] mb-6 leading-relaxed">{category.description}</p>
               )}
               <a
                 href={category.downloadAllUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-semibold bg-white text-black px-5 py-2.5 rounded-lg hover:bg-white/90 active:scale-95 transition-all duration-200"
+                className="inline-flex items-center gap-2 text-sm font-semibold bg-white text-black px-4 py-2 rounded-xl hover:bg-white/90 active:scale-95 transition-all duration-200"
               >
                 <Eye size={15} />
                 Open document
@@ -242,8 +227,8 @@ export default function CategoryPageClient({ brandSlug, categorySlug }: Category
             </div>
           )
         ) : isColours
-          ? <ColourGrid categoryId={category.id} />
-          : <AssetGrid categoryId={category.id} brandSlug={brandSlug} categorySlug={categorySlug} />}
+          ? <ColourGrid categoryId={category.id} filterQuery={searchQuery} />
+          : <AssetGrid categoryId={category.id} brandSlug={brandSlug} categorySlug={categorySlug} filterQuery={searchQuery} />}
       </div>
     </main>
   );

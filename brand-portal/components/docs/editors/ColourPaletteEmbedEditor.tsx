@@ -25,7 +25,7 @@ export default function ColourPaletteEmbedEditor({ block, onSave, onCancel }: { 
             <button
               key={b.id}
               onClick={() => { setBrandId(b.id); setCategoryId(""); }}
-              className={`text-xs px-3 py-1.5 rounded-lg font-semibold transition-all ${brandId === b.id ? "bg-white/[0.08] text-[#ececec] border border-white/[0.12]" : "bg-white/[0.02] text-[#555] border border-white/[0.04] hover:text-[#888]"}`}
+              className={`text-xs px-3 py-1.5 rounded-lg font-semibold transition-all ${brandId === b.id ? "bg-white/[0.08] text-[#f0f0f0] border border-white/[0.12]" : "bg-white/[0.02] text-[#555] border border-white/[0.05] hover:text-[#888]"}`}
             >
               {b.name}
             </button>
@@ -37,7 +37,7 @@ export default function ColourPaletteEmbedEditor({ block, onSave, onCancel }: { 
           <span className="text-xs text-[#555] mb-1 block">Colour Palette</span>
           <div className="max-h-48 overflow-y-auto space-y-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-[#2a2a2a] [&::-webkit-scrollbar-thumb]:rounded-full">
             {palettes.length === 0 ? (
-              <p className="text-xs text-[#444] py-4 text-center">No colour palettes found for this brand</p>
+              <p className="text-xs text-[#505050] py-4 text-center">No colour palettes found for this brand</p>
             ) : palettes.map((cat) => {
               const colours = getColours(cat.id);
               return (
@@ -49,7 +49,7 @@ export default function ColourPaletteEmbedEditor({ block, onSave, onCancel }: { 
                   <Palette size={14} className="text-[#555] shrink-0" />
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-semibold text-[#d0d0d0] truncate">{cat.name}</p>
-                    <p className="text-[10px] text-[#444]">{colours.length} colours</p>
+                    <p className="text-[10px] text-[#505050]">{colours.length} colours</p>
                   </div>
                   {colours.length > 0 && (
                     <div className="flex -space-x-1">
@@ -68,7 +68,7 @@ export default function ColourPaletteEmbedEditor({ block, onSave, onCancel }: { 
         <button onClick={() => onSave({ categoryId, brandId })} className="inline-flex items-center gap-1 text-xs bg-white text-black px-3 py-1.5 rounded-lg font-semibold hover:bg-white/90">
           <Check size={11} /> Save
         </button>
-        <button onClick={onCancel} className="inline-flex items-center gap-1 text-xs border border-white/[0.08] text-[#ececec] px-3 py-1.5 rounded-lg hover:bg-white/[0.04]">
+        <button onClick={onCancel} className="inline-flex items-center gap-1 text-xs border border-white/[0.08] text-[#f0f0f0] px-3 py-1.5 rounded-lg hover:bg-white/[0.04]">
           <X size={11} /> Cancel
         </button>
       </div>

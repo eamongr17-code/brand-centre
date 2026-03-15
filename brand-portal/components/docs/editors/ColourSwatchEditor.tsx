@@ -32,13 +32,13 @@ export default function ColourSwatchEditor({ block, onSave, onCancel }: { block:
           <input
             value={c.name}
             onChange={(e) => updateColour(i, "name", e.target.value)}
-            className="flex-1 bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15]"
+            className="flex-1 bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm text-[#f0f0f0] placeholder-[#505050] focus:outline-none focus:border-white/[0.15]"
             placeholder="Colour name"
           />
           <input
             value={c.hex}
             onChange={(e) => updateColour(i, "hex", e.target.value)}
-            className="w-24 bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs font-mono text-[#888] placeholder-[#444] focus:outline-none focus:border-white/[0.15]"
+            className="w-24 bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs font-mono text-[#888] placeholder-[#505050] focus:outline-none focus:border-white/[0.15]"
             placeholder="#000000"
           />
           <button onClick={() => removeColour(i)} className="text-[#555] hover:text-red-400 transition-colors p-1">
@@ -53,7 +53,7 @@ export default function ColourSwatchEditor({ block, onSave, onCancel }: { block:
         <button onClick={() => onSave({ colours })} className="inline-flex items-center gap-1 text-xs bg-white text-black px-3 py-1.5 rounded-lg font-semibold hover:bg-white/90">
           <Check size={11} /> Save
         </button>
-        <button onClick={onCancel} className="inline-flex items-center gap-1 text-xs border border-white/[0.08] text-[#ececec] px-3 py-1.5 rounded-lg hover:bg-white/[0.04]">
+        <button onClick={onCancel} className="inline-flex items-center gap-1 text-xs border border-white/[0.08] text-[#f0f0f0] px-3 py-1.5 rounded-lg hover:bg-white/[0.04]">
           <X size={11} /> Cancel
         </button>
       </div>

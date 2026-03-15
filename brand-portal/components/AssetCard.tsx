@@ -90,7 +90,7 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
 
   if (editing) {
     return (
-      <div className="border border-[#f77614] rounded-xl bg-[#161616] flex flex-col overflow-hidden [animation:fade-up_0.3s_ease-out_forwards]">
+      <div className="border border-[#f77614] rounded-xl bg-[#1a1a1a] flex flex-col overflow-hidden [animation:fade-up_0.3s_ease-out_forwards]">
         <div className="bg-white/[0.02] h-36 shrink-0 rounded-t-xl overflow-hidden">
           <FadeImg src={previewImage || publicPath("/placeholder-asset.png")} fallbackSrc={publicPath("/placeholder-asset.png")} alt="" className="h-full w-full object-cover" />
         </div>
@@ -98,20 +98,20 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm font-semibold text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
+            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-sm font-semibold text-[#f0f0f0] placeholder-[#505050] focus:outline-none focus:border-white/[0.15] transition-colors"
             placeholder="Asset name"
           />
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs resize-none text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
+            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs resize-none text-[#f0f0f0] placeholder-[#505050] focus:outline-none focus:border-white/[0.15] transition-colors"
             rows={2}
             placeholder="Description"
           />
           <input
             value={fileType}
             onChange={(e) => setFileType(e.target.value)}
-            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
+            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs text-[#f0f0f0] placeholder-[#505050] focus:outline-none focus:border-white/[0.15] transition-colors"
             placeholder="File type (e.g. SVG + PNG)"
           />
           <div className="space-y-1.5">
@@ -125,7 +125,7 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
                     if (i === rulesLines.length - 1 && e.target.value) next.push("");
                     setRulesLines(next);
                   }}
-                  className="flex-1 bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
+                  className="flex-1 bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs text-[#f0f0f0] placeholder-[#505050] focus:outline-none focus:border-white/[0.15] transition-colors"
                   placeholder={i === rulesLines.length - 1 ? (i === 0 ? "e.g. Use on dark backgrounds only" : "Add another rule...") : ""}
                 />
                 {rule !== "" && (
@@ -147,7 +147,7 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
           <input
             value={tagsInput}
             onChange={(e) => setTagsInput(e.target.value)}
-            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs text-[#ececec] placeholder-[#444] focus:outline-none focus:border-white/[0.15] transition-colors"
+            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs text-[#f0f0f0] placeholder-[#505050] focus:outline-none focus:border-white/[0.15] transition-colors"
             placeholder="Tags (comma-separated)"
           />
           <ImageUploader
@@ -169,7 +169,7 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
               onClick={() => setActionType("download")}
               className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md transition-all duration-200 ${
                 actionType === "download"
-                  ? "bg-white/[0.08] text-[#ececec] font-semibold"
+                  ? "bg-white/[0.08] text-[#f0f0f0] font-semibold"
                   : "text-[#555] hover:text-[#888]"
               }`}
             >
@@ -181,7 +181,7 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
               onClick={() => setActionType("view")}
               className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md transition-all duration-200 ${
                 actionType === "view"
-                  ? "bg-white/[0.08] text-[#ececec] font-semibold"
+                  ? "bg-white/[0.08] text-[#f0f0f0] font-semibold"
                   : "text-[#555] hover:text-[#888]"
               }`}
             >
@@ -198,7 +198,7 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
                 onClick={() => setVisibility("public")}
                 className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md transition-all duration-200 ${
                   visibility === "public"
-                    ? "bg-white/[0.08] text-[#ececec] font-semibold"
+                    ? "bg-white/[0.08] text-[#f0f0f0] font-semibold"
                     : "text-[#555] hover:text-[#888]"
                 }`}
               >
@@ -228,7 +228,7 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
             </button>
             <button
               onClick={cancel}
-              className="inline-flex items-center gap-1 text-xs border border-white/[0.08] text-[#ececec] px-3 py-1.5 rounded-lg hover:bg-white/[0.04] transition-colors"
+              className="inline-flex items-center gap-1 text-xs border border-white/[0.08] text-[#f0f0f0] px-3 py-1.5 rounded-lg hover:bg-white/[0.04] transition-colors"
             >
               <X size={11} /> Cancel
             </button>
@@ -265,7 +265,7 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
 
   return (
     <div
-      className="glass-card rounded-2xl relative overflow-hidden aspect-square group [animation:fade-up_0.3s_ease-out_forwards]"
+      className="glass-card rounded-2xl relative overflow-hidden aspect-video group [animation:fade-up_0.3s_ease-out_forwards]"
       draggable={editMode && !!onDragStart}
       onDragStart={onDragStart ? (e) => onDragStart(e, asset.id) : undefined}
       onDragOver={onDragOver ? (e) => onDragOver(e, asset.id) : undefined}
@@ -280,7 +280,7 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
       {/* Grip OR internal badge — top-left */}
       <div className="absolute top-3 left-3 z-10">
         {editMode && onDragStart ? (
-          <div className="cursor-grab active:cursor-grabbing text-[#484848] hover:text-[#888] transition-colors">
+          <div className="cursor-grab active:cursor-grabbing text-[#555] hover:text-[#888] transition-colors">
             <GripVertical size={14} />
           </div>
         ) : isInternal && showInternal ? (
@@ -299,7 +299,7 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
             className="bg-[#111]/80 backdrop-blur-sm border border-white/[0.08] rounded-xl p-1.5 hover:bg-white/[0.08] transition-colors"
             title="Edit"
           >
-            <Pencil size={12} className="text-[#ececec]" />
+            <Pencil size={12} className="text-[#f0f0f0]" />
           </button>
           <button
             onClick={() => deleteAsset(asset.id)}
@@ -313,12 +313,12 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
 
       {/* Layer 3 — Dark panel */}
       <div
-        className={`absolute bottom-0 left-0 right-0 bg-[#161616] rounded-t-2xl flex flex-col overflow-hidden transition-[height] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
-          infoOpen ? "h-[calc(100%-48px)]" : "h-[92px]"
+        className={`absolute bottom-0 left-0 right-0 bg-[#1a1a1a] border-t border-white/[0.07] rounded-t-2xl flex flex-col overflow-hidden transition-[height] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+          infoOpen ? "h-[calc(100%-48px)]" : "h-[100px]"
         }`}
       >
         {/* Info section — visible when expanded */}
-        <div className={`flex-1 overflow-y-auto px-5 pt-3 pb-2 flex flex-col gap-3 transition-opacity duration-200 ${
+        <div className={`flex-1 overflow-y-auto px-5 pt-2 pb-2 flex flex-col gap-3 transition-opacity duration-200 ${
           infoOpen ? "opacity-100 delay-200" : "opacity-0 pointer-events-none"
         }`}>
           <div className="flex items-end justify-end">
@@ -326,7 +326,7 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
               <X size={14} />
             </button>
           </div>
-          {description && <p className="text-xs text-[#787878] leading-relaxed">{description}</p>}
+          {description && <p className="text-xs text-[#8a8a8a] leading-relaxed">{description}</p>}
           {asset.tags && asset.tags.length > 0 && (
             <div className="flex flex-wrap gap-1">
               {asset.tags.map((tag, i) => (
@@ -337,7 +337,7 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
           {asset.rules && asset.rules.length > 0 && (
             <ul className="space-y-1.5">
               {asset.rules.map((rule, i) => (
-                <li key={i} className="flex gap-1.5 text-[11px] text-[#787878] leading-snug">
+                <li key={i} className="flex gap-1.5 text-[11px] text-[#8a8a8a] leading-snug">
                   <span className="shrink-0 text-[#444]">—</span>
                   <span>{rule}</span>
                 </li>
@@ -347,22 +347,22 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
         </div>
 
         {/* Divider — only when info is open */}
-        {infoOpen && <div className="mx-5 border-t border-white/[0.06] shrink-0" />}
+        {infoOpen && <div className="mx-5 border-t border-white/[0.07] shrink-0" />}
 
         {/* Footer bar — always visible */}
-        <div className="mt-auto px-5 pt-3 pb-4 shrink-0">
-          <span className="font-semibold text-sm text-[#ececec] truncate block">{name}</span>
+        <div className="mt-auto px-5 pt-2 pb-3 shrink-0">
+          <span className="font-semibold text-sm text-[#f0f0f0] truncate block">{name}</span>
           <div className="flex items-end justify-between gap-2 mt-1">
             <div className="flex flex-col min-w-0 overflow-hidden">
-              <span className="text-xs text-[#555]">{fileType}{fileSize ? ` · ${fileSize}` : ""}</span>
-              {asset.lastEditedAt && <span className="text-[10px] text-[#444]">{timeAgo(asset.lastEditedAt)}</span>}
+              <span className="text-xs text-[#636363]">{fileType}{fileSize ? ` · ${fileSize}` : ""}</span>
+              {asset.lastEditedAt && <span className="text-[10px] text-[#555]">{timeAgo(asset.lastEditedAt)}</span>}
             </div>
             <div className="flex items-center gap-1.5 shrink-0">
               {/* Info button */}
               <button
                 onClick={() => setInfoOpen(v => !v)}
                 className={`w-8 h-8 inline-flex items-center justify-center rounded-xl border transition-colors ${
-                  infoOpen ? "border-white/20 text-[#ececec]" : "border-white/[0.1] text-[#555] hover:text-[#ececec] hover:border-white/20"
+                  infoOpen ? "border-white/20 text-[#f0f0f0]" : "border-white/[0.1] text-[#555] hover:text-[#f0f0f0] hover:border-white/20"
                 }`}
               >
                 <Info size={13} />
@@ -371,7 +371,7 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
               {brandSlug && categorySlug && (
                 <button
                   onClick={handleShare}
-                  className="w-8 h-8 inline-flex items-center justify-center rounded-xl border border-white/[0.1] text-[#555] hover:text-[#ececec] hover:border-white/20 transition-colors"
+                  className="w-8 h-8 inline-flex items-center justify-center rounded-xl border border-white/[0.1] text-[#555] hover:text-[#f0f0f0] hover:border-white/20 transition-colors"
                 >
                   {shareCopied ? <Check size={13} className="text-green-400" /> : <Share2 size={13} />}
                 </button>

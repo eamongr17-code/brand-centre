@@ -14,14 +14,14 @@ export default function CodeSnippetBlock({ block }: { block: CodeSnippetBlockTyp
   };
 
   return (
-    <div className="rounded-xl border border-white/[0.06] overflow-hidden">
-      <div className="flex items-center justify-between px-4 py-2 bg-white/[0.02] border-b border-white/[0.04]">
-        <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#444]">
+    <div className="rounded-xl border border-white/[0.07] overflow-hidden">
+      <div className="flex items-center justify-between px-4 py-2 bg-white/[0.02] border-b border-white/[0.05]">
+        <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#505050]">
           {block.language}
         </span>
         <button
           onClick={copyCode}
-          className="text-[#484848] hover:text-[#ececec] transition-colors p-1"
+          className="text-[#555] hover:text-[#f0f0f0] transition-colors p-1"
           title="Copy code"
         >
           {copied ? <Check size={12} className="text-green-400" /> : <Copy size={12} />}
