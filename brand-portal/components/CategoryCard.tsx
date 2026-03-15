@@ -172,8 +172,8 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
 
   const cardContent = (
     <div
-      className="rounded-2xl relative group flex flex-col [animation:fade-up_0.3s_ease-out_forwards] h-full overflow-hidden border border-white/[0.06] hover:border-white/[0.1] hover:shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300"
-      style={{ minHeight: "340px" }}
+      className="rounded-[20px] relative group flex flex-col [animation:fade-up_0.3s_ease-out_forwards] h-full overflow-hidden border border-white/[0.06] hover:border-white/[0.1] hover:shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300"
+      style={{ minHeight: "380px" }}
       draggable={editMode && !!onDragStart}
       onDragStart={onDragStart ? (e) => onDragStart(e, category.id) : undefined}
       onDragOver={onDragOver ? (e) => onDragOver(e, category.id) : undefined}
@@ -216,14 +216,24 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
         </div>
       )}
 
-      {/* Spacer — pushes dark panel to bottom */}
-      <div className="flex-1 min-h-[140px]" />
+      {/* Dark content panel with folder tab shape */}
+      <div className="absolute bottom-0 left-0 right-0 z-10" style={{ height: '55%' }}>
+        <svg
+          className="absolute inset-0 w-full h-full"
+          fill="none"
+          preserveAspectRatio="none"
+          viewBox="0 0 401 214"
+        >
+          <path
+            d="M401 194C401 205.046 392.046 214 381 214H20C8.95431 214 0 205.046 0 194V20C0 8.9543 8.95431 0 20 0H119.992C127.193 0 133.939 3.52422 138.052 9.43555L155.435 34.4218C159.173 39.7959 165.306 43 171.852 43H381C392.046 43 401 51.9543 401 63V194Z"
+            fill="#161616"
+          />
+        </svg>
 
-      {/* Dark content overlay */}
-      <div className="relative z-10">
-        {/* Tab row */}
-        <div className="flex">
-          <div className="relative bg-[#161616] rounded-tr-[16px] px-5 py-1.5 min-w-[120px] max-w-[70%]">
+        {/* Content overlay */}
+        <div className="relative z-10 flex flex-col h-full px-5 pt-2.5 pb-4">
+          {/* Title and asset count (sits inside the tab area) */}
+          <div className="mb-3">
             <p className="font-bold text-[#ececec] text-[15px] leading-tight truncate">{name}</p>
             <p className="text-xs text-[#555] mt-0.5">
               {category.actionType === "view"
@@ -232,35 +242,15 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
                   ? `${getColours(category.id).length} colours`
                   : `${liveAssetCount} assets`}
             </p>
-            {/* Concave corner — top-left of tab (rounds the image edge) */}
-            <svg
-              className="absolute left-0 block"
-              style={{ bottom: '100%' }}
-              width="10" height="10"
-              viewBox="0 0 10 10"
-              fill="#161616"
-            >
-              <path d="M 0 0 L 10 0 Q 10 10 0 10 Z" />
-            </svg>
           </div>
-          {/* Smooth slope — tab right edge flows into panel */}
-          <svg
-            viewBox="0 0 50 50"
-            preserveAspectRatio="none"
-            fill="#161616"
-            className="block flex-shrink-0 self-stretch"
-            style={{ width: '50px' }}
-          >
-            <path d="M 0 0 C 20 0, 0 50, 50 50 L 0 50 Z" />
-          </svg>
-        </div>
 
-        {/* Panel body */}
-        <div className="bg-[#161616] rounded-tr-[16px] px-5 pb-5 pt-1.5">
+          {/* Description */}
           {description && (
-            <p className="text-sm text-[#787878] leading-relaxed">{description}</p>
+            <p className="text-sm text-[#787878] flex-1 leading-relaxed">{description}</p>
           )}
-          <div className="flex gap-2 mt-3" onClick={(e) => e.preventDefault()}>
+
+          {/* Action buttons */}
+          <div className="flex gap-3 mt-auto pt-2" onClick={(e) => e.preventDefault()}>
             {category.actionType === "view" ? (
               category.downloadAllUrl && category.downloadAllUrl !== "#" && (
                 <a
@@ -268,7 +258,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 text-sm font-semibold border border-white/[0.12] text-[#ececec] px-4 py-2.5 rounded-xl hover:bg-white/[0.06] transition-all duration-200"
+                  className="flex-1 h-[42px] inline-flex items-center justify-center gap-1.5 text-sm font-semibold rounded-[15px] backdrop-blur-[4px] bg-[#161616]/85 border border-[#6f6f6f] text-[#ececec] hover:bg-[#222]/90 transition-all duration-200"
                   title="View"
                 >
                   <Eye size={14} />
@@ -280,7 +270,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
                 <Link
                   href={portalPath(`/${brandSlug}/${category.slug}`)}
                   onClick={(e) => e.stopPropagation()}
-                  className="flex-1 inline-flex items-center justify-center text-sm font-semibold border border-white/[0.12] text-[#ececec] px-4 py-2.5 rounded-xl hover:bg-white/[0.06] transition-all duration-200"
+                  className="flex-1 h-[42px] inline-flex items-center justify-center text-sm font-semibold rounded-[15px] backdrop-blur-[4px] bg-[#161616]/85 border border-[#6f6f6f] text-[#ececec] hover:bg-[#222]/90 transition-all duration-200"
                 >
                   {isColours ? "Browse palette" : "Browse assets"}
                 </Link>
@@ -289,19 +279,19 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
                     <a
                       href={category.downloadAllUrl}
                       onClick={(e) => e.stopPropagation()}
-                      className="inline-flex items-center justify-center bg-white text-black p-2.5 rounded-xl hover:bg-white/90 active:scale-95 transition-all duration-200"
+                      className="flex-shrink-0 w-[50px] h-[42px] inline-flex items-center justify-center rounded-[15px] bg-white border border-[#6f6f6f] hover:bg-gray-100 active:scale-95 transition-all duration-200"
                       title="Download All"
                     >
-                      <Download size={16} />
+                      <Download size={14} className="text-[#1f1f1e]" />
                     </a>
                   ) : (
                     <button
                       onClick={(e) => { e.stopPropagation(); e.preventDefault(); handleDownloadAll(); }}
                       disabled={zipping}
-                      className="inline-flex items-center justify-center bg-white text-black p-2.5 rounded-xl hover:bg-white/90 active:scale-95 transition-all duration-200 disabled:opacity-60"
+                      className="flex-shrink-0 w-[50px] h-[42px] inline-flex items-center justify-center rounded-[15px] bg-white border border-[#6f6f6f] hover:bg-gray-100 active:scale-95 transition-all duration-200 disabled:opacity-60"
                       title="Download all assets as ZIP"
                     >
-                      {zipping ? <Loader size={16} className="animate-spin" /> : <Download size={16} />}
+                      {zipping ? <Loader size={14} className="animate-spin text-[#1f1f1e]" /> : <Download size={14} className="text-[#1f1f1e]" />}
                     </button>
                   )
                 )}
