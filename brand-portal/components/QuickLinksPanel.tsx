@@ -5,7 +5,7 @@ import { ExternalLink, Plus, Trash2, Pencil, Check, X } from "lucide-react";
 import { useEditStore } from "@/lib/edit-store";
 import { usePortal } from "@/lib/portal-context";
 
-export default function QuickLinksPanel({ brandId }: { brandId: string }) {
+export default function QuickLinksPanel({ brandId, inline }: { brandId: string; inline?: boolean }) {
   const { editMode, getQuickLinks, addQuickLink, updateQuickLink, deleteQuickLink } =
     useEditStore();
   const { canEdit } = usePortal();
@@ -31,8 +31,11 @@ export default function QuickLinksPanel({ brandId }: { brandId: string }) {
 
   const cancelEdit = () => setEditingId(null);
 
+  if (!inline && links.length === 0 && !canEditLinks) return null;
+  if (inline && links.length === 0 && !canEditLinks) return null;
+
   return (
-    <aside className="w-full lg:w-56 shrink-0 lg:self-start lg:border-l lg:border-white/[0.04] lg:pl-8">
+    <aside className={inline ? "" : "w-full lg:w-56 shrink-0 lg:self-start lg:border-l lg:border-white/[0.04] lg:pl-8"}>
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#555]">
           Quick Links
@@ -48,11 +51,7 @@ export default function QuickLinksPanel({ brandId }: { brandId: string }) {
         )}
       </div>
 
-      {links.length === 0 && !canEditLinks && (
-        <p className="text-xs text-[#484848]">No quick links yet.</p>
-      )}
-
-      <ul className="space-y-1">
+      <ul className={inline ? "flex flex-wrap gap-2" : "space-y-1"}>
         {links.map((link) =>
           canEditLinks && editingId === link.id ? (
             <li key={link.id} className="space-y-1 bg-white/[0.02] border border-white/[0.06] rounded-lg p-2">
@@ -89,7 +88,11 @@ export default function QuickLinksPanel({ brandId }: { brandId: string }) {
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-sm text-[#787878] hover:text-[#ececec] flex-1 min-w-0 transition-colors duration-200"
+                className={`flex items-center gap-1.5 text-sm text-[#787878] hover:text-[#ececec] min-w-0 transition-colors duration-200 ${
+                  inline
+                    ? "bg-white/[0.03] border border-white/[0.06] rounded-lg px-3 py-1.5 hover:border-white/[0.1]"
+                    : "flex-1"
+                }`}
               >
                 <ExternalLink size={12} className="shrink-0 text-[#484848]" />
                 <span className="truncate">{link.label}</span>
