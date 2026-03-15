@@ -8,8 +8,9 @@ import {
   useCallback,
   ReactNode,
 } from "react";
-import type { QuickLink, Asset, Category, BrandColour, BrandColourEntry, BrandSection, FooterLink } from "./types";
+import type { QuickLink, Asset, Category, BrandColour, BrandColourEntry, BrandSection, FooterLink, DocPage, DocBlock } from "./types";
 import {
+  brands,
   quickLinks as mockQuickLinks,
   getAssetsForCategory as getMockAssets,
   getCategoriesForBrand as getMockBrandCategories,
@@ -66,6 +67,17 @@ interface EditStoreContextType {
   // Footer text
   getFooterText: () => string;
   setFooterText: (text: string) => void;
+  // Doc pages
+  getDocPages: (brandId: string) => DocPage[];
+  getDocPageBySlug: (brandId: string, slug: string) => DocPage | undefined;
+  addDocPage: (brandId: string) => void;
+  updateDocPage: (id: string, changes: Partial<Pick<DocPage, "title" | "slug" | "description" | "coverImage" | "visibility">>) => void;
+  deleteDocPage: (id: string) => void;
+  addDocBlock: (docPageId: string, blockType: DocBlock["type"]) => void;
+  updateDocBlock: (docPageId: string, blockId: string, changes: Partial<DocBlock>) => void;
+  deleteDocBlock: (docPageId: string, blockId: string) => void;
+  reorderDocBlocks: (docPageId: string, orderedIds: string[]) => void;
+  getAssetById: (assetId: string) => Asset | undefined;
 }
 
 const EditStoreContext = createContext<EditStoreContextType | null>(null);
@@ -97,6 +109,8 @@ interface PersistedData {
   colourOverrides: Record<string, Partial<BrandColour>>;
   footerLinks: FooterLink[] | null;
   footerText: string | null;
+  docPages: DocPage[];
+  deletedDocPageIds: string[];
 }
 
 const EMPTY: PersistedData = {
@@ -118,6 +132,8 @@ const EMPTY: PersistedData = {
   colourOverrides: {},
   footerLinks: null,
   footerText: null,
+  docPages: [],
+  deletedDocPageIds: [],
 };
 
 function genId() {
@@ -745,6 +761,190 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
     [persist]
   );
 
+  // ── Doc pages ────────────────────────────────────────────────────────────
+
+
+  const getDocPages = useCallback(
+    (brandId: string): DocPage[] =>
+      data.docPages
+        .filter((d) => d.brandId === brandId && !data.deletedDocPageIds.includes(d.id))
+        .sort((a, b) => a.sortOrder - b.sortOrder),
+    [data]
+  );
+
+  const getDocPageBySlug = useCallback(
+    (brandId: string, slug: string): DocPage | undefined =>
+      data.docPages.find(
+        (d) => d.brandId === brandId && d.slug === slug && !data.deletedDocPageIds.includes(d.id)
+      ),
+    [data]
+  );
+
+  const addDocPage = useCallback(
+    (brandId: string) => {
+      const id = `doc-${genId()}`;
+      const slug = `doc-${genId()}`;
+      const newPage: DocPage = {
+        id,
+        brandId,
+        title: "New page",
+        slug,
+        description: "",
+        blocks: [],
+        sortOrder: 999,
+        lastEditedAt: new Date().toISOString(),
+      };
+      persist((prev) => ({ ...prev, docPages: [...prev.docPages, newPage] }));
+    },
+    [persist]
+  );
+
+  const updateDocPage = useCallback(
+    (id: string, changes: Partial<Pick<DocPage, "title" | "slug" | "description" | "coverImage" | "visibility">>) => {
+      persist((prev) => ({
+        ...prev,
+        docPages: prev.docPages.map((d) =>
+          d.id === id ? { ...d, ...changes, lastEditedAt: new Date().toISOString() } : d
+        ),
+      }));
+    },
+    [persist]
+  );
+
+  const deleteDocPage = useCallback(
+    (id: string) => {
+      persist((prev) => ({
+        ...prev,
+        docPages: prev.docPages.filter((d) => d.id !== id),
+        deletedDocPageIds: [...prev.deletedDocPageIds, id],
+      }));
+    },
+    [persist]
+  );
+
+  const addDocBlock = useCallback(
+    (docPageId: string, blockType: DocBlock["type"]) => {
+      const blockId = `block-${genId()}`;
+      const baseBlock = { id: blockId, sortOrder: 999 };
+      let newBlock: DocBlock;
+      switch (blockType) {
+        case "heading":
+          newBlock = { ...baseBlock, type: "heading", text: "New heading", level: "h2" };
+          break;
+        case "paragraph":
+          newBlock = { ...baseBlock, type: "paragraph", text: "Enter text here..." };
+          break;
+        case "image":
+          newBlock = { ...baseBlock, type: "image", url: "", alt: "", caption: "" };
+          break;
+        case "do-dont":
+          newBlock = { ...baseBlock, type: "do-dont", doImage: "", doCaption: "Do", dontImage: "", dontCaption: "Don't" };
+          break;
+        case "colour-swatch":
+          newBlock = { ...baseBlock, type: "colour-swatch", colours: [{ name: "Primary", hex: "#000000" }] };
+          break;
+        case "asset-embed":
+          newBlock = { ...baseBlock, type: "asset-embed", assetId: "" };
+          break;
+        case "category-embed":
+          newBlock = { ...baseBlock, type: "category-embed", categoryId: "", brandId: "" };
+          break;
+        case "colour-palette-embed":
+          newBlock = { ...baseBlock, type: "colour-palette-embed", categoryId: "", brandId: "" };
+          break;
+        case "download-cta":
+          newBlock = { ...baseBlock, type: "download-cta", label: "Download", url: "", description: "" };
+          break;
+        case "divider":
+          newBlock = { ...baseBlock, type: "divider" };
+          break;
+        case "code-snippet":
+          newBlock = { ...baseBlock, type: "code-snippet", language: "html", code: "" };
+          break;
+        case "typography-sample":
+          newBlock = { ...baseBlock, type: "typography-sample", fontFamily: "Inter", weights: ["400", "700"], sampleText: "The quick brown fox jumps over the lazy dog" };
+          break;
+      }
+      persist((prev) => ({
+        ...prev,
+        docPages: prev.docPages.map((d) =>
+          d.id === docPageId
+            ? { ...d, blocks: [...d.blocks, newBlock], lastEditedAt: new Date().toISOString() }
+            : d
+        ),
+      }));
+    },
+    [persist]
+  );
+
+  const updateDocBlock = useCallback(
+    (docPageId: string, blockId: string, changes: Partial<DocBlock>) => {
+      persist((prev) => ({
+        ...prev,
+        docPages: prev.docPages.map((d) =>
+          d.id === docPageId
+            ? {
+                ...d,
+                blocks: d.blocks.map((b) => (b.id === blockId ? { ...b, ...changes } as DocBlock : b)),
+                lastEditedAt: new Date().toISOString(),
+              }
+            : d
+        ),
+      }));
+    },
+    [persist]
+  );
+
+  const deleteDocBlock = useCallback(
+    (docPageId: string, blockId: string) => {
+      persist((prev) => ({
+        ...prev,
+        docPages: prev.docPages.map((d) =>
+          d.id === docPageId
+            ? { ...d, blocks: d.blocks.filter((b) => b.id !== blockId), lastEditedAt: new Date().toISOString() }
+            : d
+        ),
+      }));
+    },
+    [persist]
+  );
+
+  const reorderDocBlocks = useCallback(
+    (docPageId: string, orderedIds: string[]) => {
+      persist((prev) => ({
+        ...prev,
+        docPages: prev.docPages.map((d) =>
+          d.id === docPageId
+            ? {
+                ...d,
+                blocks: d.blocks
+                  .map((b) => ({ ...b, sortOrder: orderedIds.indexOf(b.id) }))
+                  .sort((a, b) => a.sortOrder - b.sortOrder),
+                lastEditedAt: new Date().toISOString(),
+              }
+            : d
+        ),
+      }));
+    },
+    [persist]
+  );
+
+  const getAssetById = useCallback(
+    (assetId: string): Asset | undefined => {
+      const custom = data.customAssets.find((a) => a.id === assetId);
+      if (custom) return custom;
+      const allMockCategories = brands.flatMap((b) => getMockBrandCategories(b.id));
+      for (const cat of allMockCategories) {
+        const asset = getMockAssets(cat.id).find((a) => a.id === assetId);
+        if (asset) {
+          return data.assetOverrides[assetId] ? { ...asset, ...data.assetOverrides[assetId] } : asset;
+        }
+      }
+      return undefined;
+    },
+    [data]
+  );
+
   return (
     <EditStoreContext.Provider
       value={{
@@ -786,6 +986,16 @@ export function EditStoreProvider({ children }: { children: ReactNode }) {
         deleteFooterLink,
         getFooterText,
         setFooterText,
+        getDocPages,
+        getDocPageBySlug,
+        addDocPage,
+        updateDocPage,
+        deleteDocPage,
+        addDocBlock,
+        updateDocBlock,
+        deleteDocBlock,
+        reorderDocBlocks,
+        getAssetById,
       }}
     >
       {children}

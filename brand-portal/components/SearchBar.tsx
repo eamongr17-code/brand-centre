@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { Search, FolderOpen, Palette, FileText, X, Download, Eye, Copy, Check } from "lucide-react";
+import { Search, FolderOpen, Palette, FileText, BookOpen, X, Download, Eye, Copy, Check } from "lucide-react";
 import { brands } from "@/data/mock-data";
 import { useEditStore } from "@/lib/edit-store";
 import { usePortal } from "@/lib/portal-context";
@@ -49,12 +49,23 @@ interface ColourResult {
   categoryId: string;
 }
 
-type SearchItem = CategoryResult | AssetResult | ColourResult;
+interface DocPageResult {
+  type: "docpage";
+  id: string;
+  name: string;
+  description: string;
+  brandId: string;
+  brandName: string;
+  brandSlug: string;
+  docSlug: string;
+}
+
+type SearchItem = CategoryResult | AssetResult | ColourResult | DocPageResult;
 
 export default function SearchBar({ large = false, placeholder: placeholderOverride }: { large?: boolean; placeholder?: string }) {
   const router = useRouter();
   const pathname = usePathname();
-  const { editMode, getCategories, getAssets, getColours } = useEditStore();
+  const { editMode, getCategories, getAssets, getColours, getDocPages } = useEditStore();
   const { brandScope, showInternal, portalPath, mode } = usePortal();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
@@ -198,19 +209,35 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
           }
         }
       }
+
+      // Doc pages
+      const docPages = getDocPages(brand.id);
+      for (const doc of docPages) {
+        if (!showInternal && doc.visibility === "internal") continue;
+        items.push({
+          type: "docpage",
+          id: doc.id,
+          name: doc.title,
+          description: doc.description,
+          brandId: brand.id,
+          brandName: brand.name,
+          brandSlug: brand.slug,
+          docSlug: doc.slug,
+        });
+      }
     }
     return items;
-  }, [editMode, showInternal, lockedBrandId, getCategories, getAssets, getColours]);
+  }, [editMode, showInternal, lockedBrandId, getCategories, getAssets, getColours, getDocPages]);
 
-  const results = useMemo<{ categories: CategoryResult[]; assets: AssetResult[]; colours: ColourResult[] }>(() => {
+  const results = useMemo<{ categories: CategoryResult[]; assets: AssetResult[]; colours: ColourResult[]; docPages: DocPageResult[] }>(() => {
     const q = query.trim().toLowerCase();
     const showAll = !q && !!selectedBrandId;
 
-    if (!q && !showAll) return { categories: [], assets: [], colours: [] };
+    if (!q && !showAll) return { categories: [], assets: [], colours: [], docPages: [] };
 
     const filtered = searchIndex.filter((item) => {
       if (selectedBrandId && item.brandId !== selectedBrandId) return false;
-      if (!q) return item.type === "category";
+      if (!q) return item.type === "category" || item.type === "docpage";
       const haystack = [
         item.name,
         item.type === "colour" ? item.hex : "",
@@ -218,6 +245,7 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
         item.type === "asset" ? item.fileType : "",
         item.type === "asset" ? item.categoryName : "",
         item.type === "asset" && item.tags ? item.tags.join(" ") : "",
+        item.type === "docpage" ? item.description : "",
       ]
         .join(" ")
         .toLowerCase();
@@ -228,10 +256,11 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
       categories: filtered.filter((i): i is CategoryResult => i.type === "category").slice(0, 5),
       assets: filtered.filter((i): i is AssetResult => i.type === "asset").slice(0, 8),
       colours: filtered.filter((i): i is ColourResult => i.type === "colour").slice(0, 6),
+      docPages: filtered.filter((i): i is DocPageResult => i.type === "docpage").slice(0, 5),
     };
   }, [query, selectedBrandId, searchIndex]);
 
-  const hasResults = results.categories.length > 0 || results.assets.length > 0 || results.colours.length > 0;
+  const hasResults = results.categories.length > 0 || results.assets.length > 0 || results.colours.length > 0 || results.docPages.length > 0;
   const showPanel = open && (query.trim().length > 0 || !!selectedBrandId || !!pathBrandId);
 
   const navigate = useCallback(
@@ -444,6 +473,42 @@ export default function SearchBar({ large = false, placeholder: placeholderOverr
                         <Copy size={13} />
                       )}
                     </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Doc Pages */}
+            {results.docPages.length > 0 && (
+              <div>
+                <div className="px-4 pt-3.5 pb-1.5">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#444]">
+                    Documentation
+                  </span>
+                </div>
+                {results.docPages.map((item) => (
+                  <div
+                    key={item.id}
+                    onClick={() => navigate(`/${item.brandSlug}/docs/${item.docSlug}`)}
+                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/[0.04] transition-colors duration-150 cursor-pointer"
+                  >
+                    <div className="shrink-0 w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
+                      <BookOpen size={14} className="text-[#686868]" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-semibold text-[#ececec] truncate">
+                          {item.name}
+                        </span>
+                        <span className="shrink-0 text-[10px] px-1.5 py-0.5 rounded-md bg-white/[0.04] text-[#555] font-semibold">
+                          Doc
+                        </span>
+                      </div>
+                      <span className="text-xs text-[#555] truncate block">
+                        {item.brandName}
+                        {item.description ? ` · ${item.description}` : ""}
+                      </span>
+                    </div>
                   </div>
                 ))}
               </div>
