@@ -318,8 +318,8 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
         }`}
       >
         {/* Info section — visible when expanded */}
-        <div className={`overflow-y-auto px-5 pt-2 pb-2 flex flex-col gap-3 transition-opacity duration-200 ${
-          infoOpen ? "flex-1 opacity-100 delay-200" : "h-0 opacity-0 pointer-events-none"
+        <div className={`flex flex-col gap-3 transition-opacity duration-200 ${
+          infoOpen ? "flex-1 overflow-y-auto px-5 pt-2 pb-2 opacity-100 delay-200" : "h-0 overflow-hidden opacity-0 pointer-events-none"
         }`}>
           <div className="flex items-end justify-end">
             <button onClick={() => setInfoOpen(false)} className="shrink-0 text-[#555] hover:text-[#999] transition-colors">
