@@ -217,25 +217,13 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
       )}
 
       {/* Dark content panel with folder tab shape */}
-      <div className="absolute bottom-0 left-0 right-0 z-10" style={{ height: '55%' }}>
-        <svg
-          className="absolute inset-0 w-full h-full"
-          fill="none"
-          preserveAspectRatio="none"
-          viewBox="0 0 401 214"
-        >
-          <path
-            d="M401 194C401 205.046 392.046 214 381 214H20C8.95431 214 0 205.046 0 194V20C0 8.9543 8.95431 0 20 0H119.992C127.193 0 133.939 3.52422 138.052 9.43555L155.435 34.4218C159.173 39.7959 165.306 43 171.852 43H381C392.046 43 401 51.9543 401 63V194Z"
-            fill="#161616"
-          />
-        </svg>
-
-        {/* Content overlay */}
-        <div className="relative z-10 flex flex-col h-full px-5 pt-2.5 pb-4">
-          {/* Title and asset count (sits inside the tab area) */}
-          <div className="mb-3">
+      <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col" style={{ height: '55%' }}>
+        {/* Tab row — fixed height matching the slope SVG */}
+        <div className="flex flex-shrink-0" style={{ height: '43px' }}>
+          {/* Tab — width adapts to content */}
+          <div className="bg-[#161616] rounded-tl-[20px] h-full flex flex-col justify-center pl-6 pr-4 max-w-[60%]">
             <p className="font-bold text-[#ececec] text-[15px] leading-tight truncate">{name}</p>
-            <p className="text-xs text-[#555] mt-0.5">
+            <p className="text-[10px] text-[#888] mt-0.5">
               {category.actionType === "view"
                 ? "External asset"
                 : isColours
@@ -243,8 +231,14 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
                   : `${liveAssetCount} assets`}
             </p>
           </div>
+          {/* Slope — extracted from Figma bezier path, fixed size */}
+          <svg width="52" height="43" viewBox="0 0 52 43" fill="#161616" className="block flex-shrink-0">
+            <path d="M 0 0 C 7.2 0 13.95 3.52 18.06 9.44 L 35.44 34.42 C 39.18 39.8 45.31 43 51.86 43 L 0 43 Z" />
+          </svg>
+        </div>
 
-          {/* Description */}
+        {/* Panel body */}
+        <div className="bg-[#161616] rounded-tr-[20px] flex-1 flex flex-col px-5 pb-4 pt-1.5 min-h-0">
           {description && (
             <p className="text-sm text-[#787878] flex-1 leading-relaxed">{description}</p>
           )}
