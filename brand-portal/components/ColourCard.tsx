@@ -172,7 +172,7 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
       {/* Layer 3 — Dark sliding panel */}
       <div
         className={`absolute bottom-0 left-0 right-0 bg-[#161616] rounded-t-2xl flex flex-col overflow-hidden transition-[height] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
-          infoOpen ? "h-[calc(100%-48px)]" : "h-[96px]"
+          infoOpen ? "h-[calc(100%-48px)]" : "h-[82px]"
         }`}
       >
         {/* Info section — visible when expanded */}
@@ -212,7 +212,7 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
         {infoOpen && <div className="mx-4 border-t border-white/[0.06] shrink-0" />}
 
         {/* Footer bar — always visible */}
-        <div className="mt-auto px-4 py-4 flex items-end justify-between gap-2 shrink-0">
+        <div className="mt-auto px-4 pt-2 pb-4 flex items-end justify-between gap-2 shrink-0">
           <div className="flex flex-col min-w-0 overflow-hidden">
             <span className="font-semibold text-sm text-[#ececec] truncate mb-0.5">{colour.name}</span>
             <span className="text-xs font-mono text-[#555]">{colour.hex}</span>
