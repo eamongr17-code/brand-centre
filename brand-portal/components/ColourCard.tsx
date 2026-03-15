@@ -169,17 +169,17 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
         </div>
       )}
 
-      {/* Layer 3 — Dark sliding panel */}
+      {/* Layer 3 — Dark panel */}
       <div
-        className={`absolute bottom-0 left-0 right-0 bg-[#161616] rounded-t-2xl flex flex-col overflow-hidden transition-[height] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
-          infoOpen ? "h-[calc(100%-48px)]" : "h-[82px]"
+        className={`absolute bottom-0 left-0 right-0 bg-[#161616] rounded-t-xl flex flex-col overflow-hidden transition-[height] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+          infoOpen ? "h-[calc(100%-48px)]" : "h-[88px]"
         }`}
       >
         {/* Info section — visible when expanded */}
-        <div className={`flex-1 overflow-y-auto px-4 pt-4 pb-2 flex flex-col gap-2 transition-opacity duration-200 ${
+        <div className={`flex-1 overflow-y-auto px-4 pt-3 pb-2 flex flex-col gap-2 transition-opacity duration-200 ${
           infoOpen ? "opacity-100 delay-200" : "opacity-0 pointer-events-none"
         }`}>
-          <div className="flex items-end justify-end gap-2 mb-1">
+          <div className="flex items-end justify-end">
             <button onClick={() => setInfoOpen(false)} className="shrink-0 text-[#555] hover:text-[#999] transition-colors">
               <X size={14} />
             </button>
@@ -212,29 +212,29 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
         {infoOpen && <div className="mx-4 border-t border-white/[0.06] shrink-0" />}
 
         {/* Footer bar — always visible */}
-        <div className="mt-auto px-4 pt-2 pb-4 flex items-end justify-between gap-2 shrink-0">
-          <div className="flex flex-col min-w-0 overflow-hidden">
-            <span className="font-semibold text-sm text-[#ececec] truncate mb-0.5">{colour.name}</span>
+        <div className="mt-auto px-4 py-3 shrink-0">
+          <span className="font-semibold text-sm text-[#ececec] truncate block">{colour.name}</span>
+          <div className="flex items-end justify-between gap-2 mt-1">
             <span className="text-xs font-mono text-[#555]">{colour.hex}</span>
-          </div>
-          <div className="flex items-center gap-1.5 shrink-0">
-            {/* Info button */}
-            <button
-              onClick={() => setInfoOpen(v => !v)}
-              className={`w-8 h-8 inline-flex items-center justify-center rounded-full border transition-colors ${
-                infoOpen ? "border-white/20 text-[#ececec]" : "border-white/[0.1] text-[#555] hover:text-[#ececec] hover:border-white/20"
-              }`}
-            >
-              <Info size={13} />
-            </button>
-            {/* Copy hex button */}
-            <button
-              onClick={copyHex}
-              className="w-10 h-10 inline-flex items-center justify-center bg-white text-black rounded-xl hover:bg-white/90 active:scale-95 transition-all"
-              title={`Copy ${colour.hex}`}
-            >
-              {copied ? <Check size={16} className="text-green-600" /> : <Copy size={16} />}
-            </button>
+            <div className="flex items-center gap-1.5 shrink-0">
+              {/* Info button */}
+              <button
+                onClick={() => setInfoOpen(v => !v)}
+                className={`w-8 h-8 inline-flex items-center justify-center rounded-full border transition-colors ${
+                  infoOpen ? "border-white/20 text-[#ececec]" : "border-white/[0.1] text-[#555] hover:text-[#ececec] hover:border-white/20"
+                }`}
+              >
+                <Info size={13} />
+              </button>
+              {/* Copy hex button */}
+              <button
+                onClick={copyHex}
+                className="w-10 h-10 inline-flex items-center justify-center bg-white text-black rounded-xl hover:bg-white/90 active:scale-95 transition-all"
+                title={`Copy ${colour.hex}`}
+              >
+                {copied ? <Check size={16} className="text-green-600" /> : <Copy size={16} />}
+              </button>
+            </div>
           </div>
         </div>
       </div>
