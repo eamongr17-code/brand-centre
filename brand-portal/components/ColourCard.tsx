@@ -131,7 +131,7 @@ export default function ColourCard({ colour }: { colour: BrandColour }) {
   ];
 
   return (
-    <div className="glass-card rounded-2xl relative overflow-hidden aspect-video group">
+    <div className="glass-card rounded-2xl relative overflow-hidden aspect-[16/12] group">
       {/* Layer 1 — Swatch */}
       <button
         onClick={copyHex}

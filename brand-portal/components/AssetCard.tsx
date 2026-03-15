@@ -265,7 +265,7 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
 
   return (
     <div
-      className="glass-card rounded-2xl relative overflow-hidden aspect-video group [animation:fade-up_0.3s_ease-out_forwards]"
+      className="glass-card rounded-2xl relative overflow-hidden aspect-[16/12] group [animation:fade-up_0.3s_ease-out_forwards]"
       draggable={editMode && !!onDragStart}
       onDragStart={onDragStart ? (e) => onDragStart(e, asset.id) : undefined}
       onDragOver={onDragOver ? (e) => onDragOver(e, asset.id) : undefined}
