@@ -220,7 +220,7 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
       <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col" style={{ height: '48%' }}>
         {/* Tab — connected to panel with concave corner */}
         <div className="flex flex-shrink-0">
-          <div className="relative bg-[#161616] rounded-t-2xl pl-5 pr-5 pt-3 pb-1 max-w-[70%]">
+          <div className="relative bg-[#161616] rounded-t-2xl pl-5 pr-7 pt-3 pb-1 max-w-[70%]">
             <p className="font-bold text-[#ececec] text-[15px] leading-tight truncate">{name}</p>
             <p className="text-[10px] text-[#888] mt-0.5">
               {category.actionType === "view"
@@ -230,8 +230,8 @@ export default function CategoryCard({ category, brandSlug, onDragStart, onDragO
                   : `${liveAssetCount} assets`}
             </p>
             {/* Concave corner — connects tab to panel */}
-            <div className="absolute -right-[14px] bottom-0 w-[14px] h-[14px] overflow-hidden">
-              <div className="absolute bottom-0 left-0 w-7 h-7 rounded-full shadow-[0_0_0_20px_#161616]" />
+            <div className="absolute -right-[12px] bottom-0 w-[12px] h-[12px] overflow-hidden">
+              <div className="absolute bottom-0 left-0 w-6 h-6 rounded-full shadow-[0_0_0_20px_#161616]" />
             </div>
           </div>
         </div>
