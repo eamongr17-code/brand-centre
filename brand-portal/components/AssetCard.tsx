@@ -313,13 +313,13 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
 
       {/* Layer 3 — Dark sliding panel */}
       <div
-        className={`absolute bottom-0 left-0 right-0 bg-[#161616] rounded-t-2xl flex flex-col overflow-hidden transition-[height] duration-300 ease-out ${
+        className={`absolute bottom-0 left-0 right-0 bg-[#161616] rounded-t-2xl flex flex-col overflow-hidden transition-[height] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
           infoOpen ? "h-[calc(100%-48px)]" : "h-[96px]"
         }`}
       >
         {/* Info section — visible when expanded */}
-        <div className={`flex-1 overflow-y-auto px-4 pt-4 pb-2 flex flex-col gap-3 transition-opacity duration-150 ${
-          infoOpen ? "opacity-100 delay-150" : "opacity-0 pointer-events-none"
+        <div className={`flex-1 overflow-y-auto px-4 pt-4 pb-2 flex flex-col gap-3 transition-opacity duration-200 ${
+          infoOpen ? "opacity-100 delay-200" : "opacity-0 pointer-events-none"
         }`}>
           <div className="flex items-start justify-between gap-2">
             <h3 className="font-semibold text-sm text-[#ececec] flex-1 min-w-0">{name}</h3>
@@ -347,12 +347,13 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
           )}
         </div>
 
+        {/* Divider */}
+        <div className="mx-4 border-t border-white/[0.06] shrink-0" />
+
         {/* Footer bar — always visible */}
-        <div className="mt-auto px-4 py-3 flex items-end justify-between gap-2 shrink-0">
+        <div className="mt-auto px-4 py-4 flex items-end justify-between gap-2 shrink-0">
           <div className="flex flex-col min-w-0 overflow-hidden">
-            {!infoOpen && (
-              <span className="font-semibold text-sm text-[#ececec] truncate mb-0.5">{name}</span>
-            )}
+            <span className="font-semibold text-sm text-[#ececec] truncate mb-0.5">{name}</span>
             <span className="text-xs text-[#555]">{fileType}{fileSize ? ` · ${fileSize}` : ""}</span>
             {asset.lastEditedAt && <span className="text-[10px] text-[#444]">{timeAgo(asset.lastEditedAt)}</span>}
           </div>
