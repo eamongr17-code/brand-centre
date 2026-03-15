@@ -321,8 +321,7 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
         <div className={`flex-1 overflow-y-auto px-4 pt-4 pb-2 flex flex-col gap-3 transition-opacity duration-200 ${
           infoOpen ? "opacity-100 delay-200" : "opacity-0 pointer-events-none"
         }`}>
-          <div className="flex items-start justify-between gap-2">
-            <h3 className="font-semibold text-sm text-[#ececec] flex-1 min-w-0">{name}</h3>
+          <div className="flex items-end justify-end gap-2">
             <button onClick={() => setInfoOpen(false)} className="shrink-0 text-[#555] hover:text-[#999] transition-colors">
               <X size={14} />
             </button>
@@ -347,8 +346,8 @@ export default function AssetCard({ asset, brandSlug, categorySlug, onDragStart,
           )}
         </div>
 
-        {/* Divider */}
-        <div className="mx-4 border-t border-white/[0.06] shrink-0" />
+        {/* Divider — only when info is open */}
+        {infoOpen && <div className="mx-4 border-t border-white/[0.06] shrink-0" />}
 
         {/* Footer bar — always visible */}
         <div className="mt-auto px-4 py-4 flex items-end justify-between gap-2 shrink-0">

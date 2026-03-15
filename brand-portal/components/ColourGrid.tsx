@@ -13,7 +13,7 @@ export default function ColourGrid({ categoryId }: { categoryId: string }) {
       {colours.length === 0 && !editMode && (
         <p className="text-[#484848] text-sm">No colours in this palette yet.</p>
       )}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 stagger-children">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 stagger-children">
         {colours.map((colour) => (
           <ColourCard key={colour.id} colour={colour} />
         ))}

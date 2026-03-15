@@ -54,7 +54,7 @@ export default function AssetGrid({ categoryId, brandSlug, categorySlug }: Asset
       {assets.length === 0 && !editMode && (
         <p className="text-[#484848] text-sm">No assets in this category yet.</p>
       )}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 stagger-children">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 stagger-children">
         {assets.map((asset) => (
           <div key={asset.id} className={`${hoverId === asset.id && dragId ? "ring-2 ring-blue-500/50 rounded-xl" : ""}`}>
             <AssetCard
